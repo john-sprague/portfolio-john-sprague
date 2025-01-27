@@ -1,4 +1,8 @@
 import { Link } from "react-router-dom";
+import JavaScriptIcon from "../assets/icons/javascript.svg";
+import TypeScriptIcon from "../assets/icons/typescript.svg";
+import ReactIcon from "../assets/icons/react.svg";
+import NodeJSIcon from "../assets/icons/nodejs.svg";
 
 const Home = () => {
   const navigation = [
@@ -42,6 +46,12 @@ const Home = () => {
           UX, and complex problem solving, producing code and features that
           strengthened applications for IBM.
         </h2>
+        <div className="flex items-center justify-center">
+          <JavaScriptIcon/>
+          <TypeScriptIcon/>
+          <ReactIcon/>
+          <NodeJSIcon/>
+        </div>
       </div>
     </div>
   );
