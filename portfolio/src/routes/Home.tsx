@@ -3,6 +3,7 @@ import JavaScriptIcon from "../assets/icons/javascript.svg";
 import TypeScriptIcon from "../assets/icons/typescript.svg";
 import ReactIcon from "../assets/icons/react.svg";
 import NodeJSIcon from "../assets/icons/nodejs.svg";
+import SqlDeveloperIcon from "../assets/icons/sqldeveloper.svg";
 
 const Home = () => {
   const navigation = [
@@ -47,10 +48,11 @@ const Home = () => {
           strengthened applications for IBM.
         </h2>
         <div className="flex items-center justify-center">
-          <JavaScriptIcon/>
-          <TypeScriptIcon/>
-          <ReactIcon/>
-          <NodeJSIcon/>
+          <JavaScriptIcon />
+          <TypeScriptIcon />
+          <ReactIcon />
+          <NodeJSIcon />
+          <SqlDeveloperIcon />
         </div>
       </div>
     </div>
