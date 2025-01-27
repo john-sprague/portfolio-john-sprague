@@ -50,7 +50,7 @@ const Home = () => {
           UX, and complex problem solving, producing code and features that
           strengthened applications for IBM.
         </h2>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center gap-2 mt-5">
           <JavaScriptIcon />
           <TypeScriptIcon />
           <ReactIcon />
