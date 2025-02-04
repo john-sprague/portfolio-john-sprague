@@ -2,54 +2,63 @@
  * Finds the length of the longest substring without repeating characters.
  *
  * @param {string} s - The input string to analyze.
- * @returns {number} The length of the longest substring without repeating characters.
- *                  Returns `0` if the input string is empty.
+ * @return {number} - The length of the longest substring without repeating characters.
  *
  * @example
- * // Example 1:
- * lengthOfLongestSubstring("abcabcbb"); // Returns 3
- * // Explanation: The longest substring without repeating characters is "abc", which has a length of 3.
- *
- * @example
- * // Example 2:
- * lengthOfLongestSubstring("bbbbb"); // Returns 1
- * // Explanation: The longest substring without repeating characters is "b", which has a length of 1.
- *
- * @example
- * // Example 3:
- * lengthOfLongestSubstring("pwwkew"); // Returns 3
- * // Explanation: The longest substring without repeating characters is "wke", which has a length of 3.
- *
- * @example
- * // Example 4:
- * lengthOfLongestSubstring(""); // Returns 0
- * // Explanation: The input string is empty, so the result is 0.
+ * lengthOfLongestSubstring("abcabcbb"); // 3 ("abc")
+ * lengthOfLongestSubstring("bbbbb");    // 1 ("b")
+ * lengthOfLongestSubstring("pwwkew");   // 3 ("wke")
  *
  * @description
- * This function uses a sliding window approach to find the longest substring without repeating characters.
- * It maintains a set of unique characters within the current window and adjusts the window when a duplicate character is encountered.
- * The time complexity is O(n), where n is the length of the input string, and the space complexity is O(min(m, n)), where m is the size of the character set.
+ * This function uses a sliding window approach with a Set to track unique characters.
+ * - It iterates through the string, expanding the window when characters are unique.
+ * - When a repeating character is found, it shrinks the window from the left until the repeating character is removed.
+ * - The maximum length of the window is tracked and returned.
+ *
+ * Constraints:
+ * - 0 <= s.length <= 5 * 10^4
+ * - The string `s` consists of English letters, digits, symbols, and spaces.
+ *
+ * Edge Cases:
+ * - Empty string: Returns 0.
+ * - All unique characters: Returns the length of the string.
+ * - All repeating characters: Returns 1.
+ * - Spaces and special characters: Treated as unique characters.
+ * - Case sensitivity: "a" and "A" are treated as distinct characters.
+ *
+ * Time Complexity:
+ * - Best Case: O(n) (no repeating characters).
+ * - Worst Case: O(n^2) (all repeating characters, e.g., "aaaaa").
+ *
+ * Space Complexity:
+ * - O(min(m, n)), where `m` is the size of the character set and `n` is the length of the string.
+ *   - For lowercase English letters, `m = 26`.
+ *   - For Unicode characters, `m` can be much larger.
  */
-function lengthOfLongestSubstring(s) {
-    let start = 0; // Start of the sliding window
-    let maxLength = 0; // Maximum length of substring without repeating characters
-    const set = new Set(); // Set to track unique characters in the current window
+var lengthOfLongestSubstring = function(s) {
+    let max = 0; // Tracks the maximum length of the substring
+    if (s.length === 0) return max; // Handle empty string case
+
+    const set = new Set(); // Tracks unique characters in the current window
+    let start = 0; // Start index of the sliding window
 
     for (let end = 0; end < s.length; end++) {
-        let curr = s.charAt(end); // Current character
+        let endLetter = s[end]; // Current character
 
-        // If the current character is already in the set, move the start pointer
-        while (set.has(curr)) {
-            set.delete(s.charAt(start)); // Remove the character at the start pointer
-            start++; // Move the start pointer forward
+        // If the character is already in the set, shrink the window from the left
+        if (set.has(endLetter)) {
+            while (set.has(endLetter)) {
+                set.delete(s[start]); // Remove the leftmost character
+                start++; // Move the window's start to the right
+            }
         }
 
         // Add the current character to the set
-        set.add(curr);
+        set.add(s[end]);
 
-        // Update the maximum length if the current window is larger
-        maxLength = Math.max(maxLength, end - start + 1);
+        // Update the maximum length of the window
+        max = max > set.size ? max : set.size;
     }
 
-    return maxLength;
-}
+    return max; // Return the length of the longest substring
+};
