@@ -120,8 +120,6 @@ Total (30,400) / Capacity (30,000)
 = 1 Server
 Total Servers we need is 2 servers, with 3x replications = 6 Servers
 
----
-
 ### Scale App Tier - Network (Amount of data coming in + amount of data going out)  
 
 **createPaste**
@@ -149,36 +147,9 @@ Total = 1kb
 1 server capacity = 1.25 GB/s (10Gbit)
 1 server to handle network traffic
 
---- 
-
-## Scale App Tier - Network (Amount of data coming in + amount of data going out)  
-
-**createPaste**
-
-user_id (int64), expires_in(timestamp), unique_url(char60)
-8bytes + 12bytes + 60 bytes + 1kb (overhead) = 1.1kb
-
-Total = 1.1kb
-
-**readPaste**
-
-user_id(int64), unique_url(char60)
-8bytes + 60bytes + 1kb (overhead) 
-
-Total = 1kb
-
-**Totals**
-
-(1.1kb * 10rps)  + (1kb * 30,000 rps) 
-= 40,000kb/s 
-= 40MB/s
-
-1 server capacity = 1.25 GB/s (10Gbit)
-1 server to handle network traffic
-
 ---
 
-##Scale Storage Tier 
+### Scale Storage Tier 
 
 **Requirements for storage**
 - The large data content needs to be stored in object storage like S3 and 
