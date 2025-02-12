@@ -9,14 +9,10 @@ Design a web service that allows users to paste or upload text and generate uniq
 3. Data and links should expire after a specific time span automatically, and users should also be able to specify expiration time.
 4. The system should not have any downtime, offer minimum latency, and no data should be lost.
 
----
-
 ### Deliverables
 1. Implementation of top-down steps of a system design interview for the use case.
 2. **Extension 1:** Identify all the APIs involved.
 3. **Extension 2:** Come up with the database schema.
-
----
 
 ### Clarifying Questions
 
