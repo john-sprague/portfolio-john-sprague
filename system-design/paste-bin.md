@@ -9,7 +9,7 @@ Design a web service that allows users to paste or upload text and generate uniq
 3. Data and links should expire after a specific time span automatically, and users should also be able to specify expiration time.
 4. The system should not have any downtime, offer minimum latency, and no data should be lost.
 
-### Deliverables
+### Deliverables`	
 1. Implementation of top-down steps of a system design interview for the use case.
 2. **Extension 1:** Identify all the APIs involved.
 3. **Extension 2:** Come up with the database schema.
@@ -85,6 +85,77 @@ Design a web service that allows users to paste or upload text and generate uniq
 
 --- 
 
+## Scale App Tier 
+### APIs 
+Here is the extracted text from the image:
+
+---
+
+**Scale App Tier**  
+
+### APIS  
+
+#### createPaste  
+- **Input:** `userId (int64)`, `data (text)`, `expiresIn (timestamp)`, `uniqueUrl (char60)`  
+- **Output:** `uniqueUrl`  
+  - Three API calls in parallel:  
+    - Cache the file in a CDN for low latency access  
+    - Get presigned URL & Upload data (text) to S3 for durability  
+    - Send data to API Gateway?  
+  - Assumption: If user created a unique URL, don’t create a system-generated URL  
+  - Create system-generated URL (Use a distributed ID generator)  
+  - Persist metadata in NoSQL Database with a TTL Index  
+  - Add `id:uniqueUrl` to metadata cache  
+  - Return `uniqueUrl` to user  
+
+#### readPaste  
+- **Input:** `userId (int64)`, `uniqueUrl (char60)`  
+- **Output:** `content`, `expiresAt`  
+  - Check cache for metadata using `uniqueUrl`  
+    - Cache hit, return to user  
+    - Cache miss, proceed to fetch from DB and store in cache  
+  - Fetch content from CDN  
+  - Return content if not expired / return expired message  
+
+Here is the extracted text from the image:
+
+---
+
+## Scale App Tier - CPU  
+
+### createPaste  
+- Three API calls in parallel:  
+  - Cache the file in a CDN for low latency access  
+  - Get presigned URL & Upload data (text) to S3 for durability  
+  - Send data to API Gateway  
+- Assumption: If user created a unique URL, don’t create a system-generated URL  
+- Create system-generated URL (Use a distributed ID generator) **15ms**  
+- Persist metadata in NoSQL Database with a TTL Index **20ms**  
+- Add `id:uniqueUrl` to metadata cache **5ms**  
+- Return `uniqueUrl` to User  
+- **Total ~ 40ms**  
+
+### readPaste  
+- Check cache for `id`, if found, return content **5ms**  
+- Check DB for `uniqueUrl`, if not expired, return **20ms**  
+- Add `uniqueUrl` to Cache **5ms**  
+- Return **1ms**  
+- **Total 30ms**  
+
+### RPS (Requests Per Second)  
+1 million pastes per day / 100,000 (seconds per day)  
+= **10 RPS** × **40ms**  
+= **400ms CPU time/sec**  
+
+100 million reads per day / 100,000 (seconds per day)  
+= **1000 RPS** × **30ms**  
+= **30,000ms CPU time/sec**  
+
+Total **(30,400) / Capacity (30,000)**  
+= **1 Server**  
+
+Total servers needed = **2 servers, with 3x replications = 6 Servers**  
+
 ## Scale App Tier - CPU 
 
 **createPaste**
@@ -149,7 +220,7 @@ Total = 1kb
 
 ---
 
-### Scale Storage Tier 
+## Scale Storage Tier 
 
 **Requirements for storage**
 - The large data content needs to be stored in object storage like S3 and 
