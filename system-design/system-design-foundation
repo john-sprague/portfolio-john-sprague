@@ -358,3 +358,96 @@ CREATE TABLE OrderDetails (
     Quantity INT,
     PRIMARY KEY (OrderID, ProductID)
 );
+
+## **🔍 SQL ACID Transactions – A Detailed Breakdown**  
+
+In SQL databases, **ACID** properties ensure reliable processing of transactions. A **transaction** is a sequence of operations performed as a single logical unit of work. The **ACID principles** guarantee that even in case of failures, the database remains consistent and accurate.  
+
+---
+
+## **🔥 What is ACID?**  
+ACID stands for **Atomicity, Consistency, Isolation, and Durability**—four key properties that ensure safe and reliable database transactions.  
+
+### **1️⃣ Atomicity – "All or Nothing"**  
+✅ Ensures that a transaction is **fully completed or fully rolled back**.  
+✅ If any part of the transaction fails, the entire transaction is undone.  
+
+🔹 **Example:**  
+Imagine transferring $100 from Alice’s account to Bob’s account:  
+
+```sql
+BEGIN TRANSACTION;
+UPDATE Accounts SET Balance = Balance - 100 WHERE Name = 'Alice'; 
+UPDATE Accounts SET Balance = Balance + 100 WHERE Name = 'Bob';
+COMMIT;
+```
+- If the **first update succeeds** but the **second update fails**, the entire transaction is rolled back to prevent data inconsistency.  
+
+💡 **Think of it like a flight booking:** If the payment fails, you don’t get a ticket.  
+
+---
+
+### **2️⃣ Consistency – "Maintaining Valid Data"**  
+✅ Ensures that the database **moves from one valid state to another**.  
+✅ Prevents invalid data (e.g., negative balances) from being inserted.  
+
+🔹 **Example:**  
+A banking system should **never allow** an account balance to go negative. If a transaction would violate this rule, the system rejects it.  
+
+```sql
+BEGIN TRANSACTION;
+UPDATE Accounts SET Balance = Balance - 500 WHERE Name = 'Charlie';
+-- If Charlie has only $300, rollback the transaction
+IF (SELECT Balance FROM Accounts WHERE Name = 'Charlie') < 0
+   ROLLBACK;
+ELSE
+   COMMIT;
+```
+
+💡 **Think of it like a vending machine:** You must insert the correct amount of money before getting a product.  
+
+---
+
+### **3️⃣ Isolation – "No Interference Between Transactions"**  
+✅ Ensures that concurrent transactions **don’t interfere** with each other.  
+✅ Prevents issues like **dirty reads**, **non-repeatable reads**, and **phantom reads**.  
+
+🔹 **Example:**  
+Two users simultaneously trying to buy the last concert ticket:  
+
+```sql
+BEGIN TRANSACTION;
+SELECT Tickets_Available FROM Concerts WHERE Concert_ID = 1; 
+-- If Tickets_Available > 0, proceed with the purchase
+UPDATE Concerts SET Tickets_Available = Tickets_Available - 1 WHERE Concert_ID = 1;
+COMMIT;
+```
+- Without isolation, **both users might see 1 available ticket** and purchase it, causing overselling.  
+
+💡 **Think of it like online shopping:** If two people try to buy the last item, only one should succeed.  
+
+🔹 **SQL Isolation Levels:**  
+1. **Read Uncommitted** – Allows dirty reads (least strict).  
+2. **Read Committed** – Prevents dirty reads but allows non-repeatable reads.  
+3. **Repeatable Read** – Prevents non-repeatable reads but allows phantom reads.  
+4. **Serializable** – The strictest level, fully isolates transactions.  
+
+---
+
+### **4️⃣ Durability – "Data is Permanently Saved"**  
+✅ Once a transaction is committed, **it remains saved even if a system crash occurs**.  
+
+🔹 **Example:**  
+After a bank transfer, the system writes the final balance to disk before confirming the transaction:  
+
+```sql
+BEGIN TRANSACTION;
+UPDATE Accounts SET Balance = Balance - 100 WHERE Name = 'David';
+UPDATE Accounts SET Balance = Balance + 100 WHERE Name = 'Emma';
+COMMIT; -- Ensures changes are stored permanently
+```
+- Even if the power goes out **right after COMMIT**, the changes remain safe.  
+
+💡 **Think of it like writing a final exam:** Once you submit it, your answers are stored and can’t be changed.  
+
+---
