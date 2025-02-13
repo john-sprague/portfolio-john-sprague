@@ -162,3 +162,199 @@ CRDTs guarantee **eventual consistency**, meaning updates will propagate and mer
 Want to go deeper? Try **Delta CRDTs** for efficiency or explore **LWW-Registers (Last Write Wins) for timestamped values.**
 
 ![alt text](image.png)
+
+# **Detailed Breakdown of SQL Normalization Levels**  
+
+**Normalization** is the process of organizing a database to reduce redundancy and improve data integrity. It involves dividing a database into smaller, more manageable tables and defining relationships between them.  
+
+Here’s a simple breakdown of each **normal form (NF):**  
+
+#### **First Normal Form (1NF) – Atomicity**  
+✅ Each column contains only atomic (indivisible) values.  
+✅ No repeating groups or arrays in a single row.  
+
+**Example (Before 1NF - Bad Table Design)**  
+| OrderID | Customer | Products Purchased  |  
+|---------|---------|---------------------|  
+| 101     | Alice   | Apples, Bananas     |  
+| 102     | Bob     | Oranges, Apples     |  
+
+**Problem:** The "Products Purchased" column has multiple values in a single cell.  
+
+**After 1NF - Good Table Design**  
+| OrderID | Customer | Product   |  
+|---------|---------|---------|  
+| 101     | Alice   | Apples   |  
+| 101     | Alice   | Bananas  |  
+| 102     | Bob     | Oranges  |  
+| 102     | Bob     | Apples   |  
+
+---
+
+#### **Second Normal Form (2NF) – No Partial Dependencies**  
+✅ 1NF is satisfied.  
+✅ Every non-key column must depend on the whole primary key, not just part of it.  
+
+**Example (Before 2NF - Bad Table Design)**  
+| OrderID | Customer | Product  | Customer Address  |  
+|---------|---------|---------|-----------------|  
+| 101     | Alice   | Apples   | 123 Green St   |  
+| 102     | Bob     | Oranges  | 456 Blue St    |  
+
+**Problem:** The **Customer Address** only depends on "Customer" but not the whole "OrderID + Product" composite key.  
+
+**After 2NF - Good Table Design (Splitting into Two Tables)**  
+✅ **Orders Table**  
+| OrderID | CustomerID | Product  |  
+|---------|-----------|---------|  
+| 101     | 1         | Apples  |  
+| 102     | 2         | Oranges |  
+
+✅ **Customers Table**  
+| CustomerID | Customer Name | Address        |  
+|-----------|--------------|--------------|  
+| 1         | Alice        | 123 Green St  |  
+| 2         | Bob          | 456 Blue St   |  
+
+---
+
+#### **Third Normal Form (3NF) – No Transitive Dependencies**  
+✅ 2NF is satisfied.  
+✅ No non-key column should depend on another non-key column.  
+
+**Example (Before 3NF - Bad Table Design)**  
+| OrderID | Product  | Supplier Name | Supplier Address  |  
+|---------|---------|--------------|-----------------|  
+| 101     | Apples  | Fresh Farms  | 789 Orchard Rd  |  
+| 102     | Oranges | Citrus Co.   | 456 Orange St   |  
+
+**Problem:** "Supplier Address" depends on "Supplier Name," not directly on "OrderID."  
+
+**After 3NF - Good Table Design (Splitting into Two Tables)**  
+✅ **Orders Table**  
+| OrderID | Product  | SupplierID |  
+|---------|---------|-----------|  
+| 101     | Apples  | 1         |  
+| 102     | Oranges | 2         |  
+
+✅ **Suppliers Table**  
+| SupplierID | Supplier Name | Supplier Address  |  
+|-----------|--------------|-----------------|  
+| 1         | Fresh Farms  | 789 Orchard Rd  |  
+| 2         | Citrus Co.   | 456 Orange St   |  
+
+---
+
+# **Detailed Breakdown of SQL Primary Keys & Foreign Keys**  
+
+In relational databases, **Primary Keys (PK)** and **Foreign Keys (FK)** play a crucial role in maintaining data integrity and defining relationships between tables.  
+
+---
+
+## **🔑 Primary Key (PK)**
+### **Definition**  
+A **Primary Key** is a column (or a set of columns) that uniquely identifies each row in a table.  
+
+### **Key Characteristics**  
+✅ **Unique** – No two rows can have the same primary key value.  
+✅ **Non-null** – A primary key cannot contain NULL values.  
+✅ **Immutable** – Once assigned, primary key values should not change.  
+✅ **Minimal** – It contains only the necessary columns to uniquely identify a row.  
+
+### **Example**  
+#### **Customers Table (With Primary Key)**  
+| CustomerID (PK) | Name  | Email           |  
+|----------------|-------|----------------|  
+| 1             | Alice | alice@email.com |  
+| 2             | Bob   | bob@email.com   |  
+
+Here, `CustomerID` is the **Primary Key** because it uniquely identifies each customer.  
+
+### **Composite Primary Key**  
+A **Composite Primary Key** consists of **two or more columns** that together form a unique identifier.  
+
+#### **Example: Order Details Table (With Composite PK)**  
+| OrderID (PK) | ProductID (PK) | Quantity |  
+|-------------|--------------|----------|  
+| 101         | A1           | 2        |  
+| 101         | B3           | 5        |  
+| 102         | A1           | 3        |  
+
+Here, the **combination** of `OrderID` and `ProductID` ensures uniqueness.
+
+---
+
+## **🔗 Foreign Key (FK)**
+### **Definition**  
+A **Foreign Key** is a column (or a set of columns) that **references a Primary Key** in another table. It establishes a relationship between tables, enforcing referential integrity.  
+
+### **Key Characteristics**  
+✅ **References a Primary Key** in another table.  
+✅ **Maintains Data Integrity** – Prevents invalid data entry.  
+✅ **Supports Relationships** – Enables One-to-Many or Many-to-Many relationships.  
+✅ **Can Contain NULLs** if the relationship is optional.  
+
+### **Example: Orders and Customers Relationship**  
+#### **Customers Table (With Primary Key)**  
+| CustomerID (PK) | Name  | Email           |  
+|----------------|-------|----------------|  
+| 1             | Alice | alice@email.com |  
+| 2             | Bob   | bob@email.com   |  
+
+#### **Orders Table (With Foreign Key)**  
+| OrderID (PK) | CustomerID (FK) | OrderDate  |  
+|-------------|----------------|-----------|  
+| 101         | 1              | 2024-02-01 |  
+| 102         | 2              | 2024-02-05 |  
+| 103         | 1              | 2024-02-10 |  
+
+Here, `CustomerID` in the **Orders Table** is a **Foreign Key**, linking to the `CustomerID` in the **Customers Table**.
+
+---
+
+## **🔗 Relationships Between Tables**
+### **One-to-Many Relationship**  
+- **Example:** One customer can place multiple orders.  
+- **Implementation:** A **Foreign Key in the Orders Table** referencing the **Primary Key in the Customers Table**.  
+
+### **Many-to-Many Relationship**  
+- **Example:** Students can enroll in multiple courses, and each course can have multiple students.  
+- **Implementation:** Use a **junction table** with Foreign Keys referencing both tables.  
+
+#### **Example: Enrollment Table (Many-to-Many Relationship)**
+| StudentID (FK) | CourseID (FK) | EnrollmentDate |  
+|---------------|-------------|---------------|  
+| 1            | 101         | 2024-01-15    |  
+| 2            | 102         | 2024-01-16    |  
+| 1            | 103         | 2024-01-17    |  
+
+---
+
+## **🔹 SQL Commands for Primary and Foreign Keys**
+### **Creating a Table with a Primary Key**
+```sql
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100) UNIQUE
+);
+```
+
+### **Creating a Table with a Foreign Key**
+```sql
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+```
+
+### **Defining a Composite Primary Key**
+```sql
+CREATE TABLE OrderDetails (
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    PRIMARY KEY (OrderID, ProductID)
+);
