@@ -1,3 +1,23 @@
+
+# Table of contents
+- [CRDTs (Conflict-Free Replicated Data Types)](#crdts-conflict-free-replicated-data-types)
+- [Detailed Breakdown of SQL Normalization Levels](#detailed-breakdown-of-sql-normalization-levels)
+- [🔍 SQL ACID Transactions:  A Detailed Breakdown](#sql-acid-transactions-a-detailed-breakdown)
+- [🔍 Understanding Quadtrees: A Detailed Breakdown](#understanding-quadtrees-a-detailed-breakdown)
+- [Key Takeaways: GeoHashes vs. QuadTrees](#key-takeaways-geohashes-vs-quadtrees);
+- [🚀 Sharding + Scatter-Gather for Scalable Distributed Systems](#sharding-scatter-gather-for-scalable-distributed-systems)
+- [🚀 Sharding 101: The Essentials](#sharding-101-the-essentials)
+
+# Intro: Always do two things in system design. 
+
+1. **Connect the dots** 
+- If i know how to design yelp, then I know how to design tinder, and how is tinder different then yelp? 
+
+2. Check out the **tech blogs** for the actually companies to figure out what they did.
+
+-- 
+
+
 # CRDTs (Conflict-Free Replicated Data Types) 
 CRDTs (Conflict-Free Replicated Data Types) are data structures designed for distributed systems that ensure eventual consistency without requiring complex synchronization mechanisms like locks or consensus protocols. They are particularly useful when multiple nodes update shared data independently.
 
@@ -163,7 +183,7 @@ Want to go deeper? Try **Delta CRDTs** for efficiency or explore **LWW-Registers
 
 ![alt text](image.png)
 
-# **Detailed Breakdown of SQL Normalization Levels**  
+# Detailed Breakdown of SQL Normalization Levels
 
 **Normalization** is the process of organizing a database to reduce redundancy and improve data integrity. It involves dividing a database into smaller, more manageable tables and defining relationships between them.  
 
@@ -360,7 +380,7 @@ CREATE TABLE OrderDetails (
 );
 ```
 
-## **🔍 SQL ACID Transactions – A Detailed Breakdown**  
+## SQL ACID Transactions: A Detailed Breakdown
 
 In SQL databases, **ACID** properties ensure reliable processing of transactions. A **transaction** is a sequence of operations performed as a single logical unit of work. The **ACID principles** guarantee that even in case of failures, the database remains consistent and accurate.  
 
@@ -453,7 +473,7 @@ COMMIT; -- Ensures changes are stored permanently
 
 ---
 
-# **🔍 Understanding Quadtrees: A Detailed Breakdown**  
+## Understanding Quadtrees: A Detailed Breakdown
 
 A **quadtree** is a tree data structure used to divide a two-dimensional space into four quadrants (regions). It is widely used in **spatial indexing, computer graphics, image processing, GIS (Geographic Information Systems), and collision detection in games**.  
 
@@ -544,37 +564,49 @@ The **final tree structure** represents a compressed spatial map, allowing fast 
 
 ## **🔧 Code Example: Implementing a Simple Quadtree in Python**  
 
-```python
-class Quadtree:
-    def __init__(self, x, y, width, height, capacity=1):
-        self.boundary = (x, y, width, height)
-        self.capacity = capacity
-        self.points = []
-        self.divided = False
+```javascript
+class Quadtree {
+    constructor(x, y, width, height, capacity = 1) {
+        this.boundary = { x, y, width, height };
+        this.capacity = capacity;
+        this.points = [];
+        this.divided = false;
+    }
 
-    def subdivide(self):
-        x, y, w, h = self.boundary
-        self.northeast = Quadtree(x + w/2, y, w/2, h/2)
-        self.northwest = Quadtree(x, y, w/2, h/2)
-        self.southeast = Quadtree(x + w/2, y + h/2, w/2, h/2)
-        self.southwest = Quadtree(x, y + h/2, w/2, h/2)
-        self.divided = True
+    subdivide() {
+        const { x, y, width, height } = this.boundary;
+        const halfWidth = width / 2;
+        const halfHeight = height / 2;
 
-    def insert(self, point):
-        if len(self.points) < self.capacity:
-            self.points.append(point)
-        else:
-            if not self.divided:
-                self.subdivide()
-            self.northeast.insert(point)
-            self.northwest.insert(point)
-            self.southeast.insert(point)
-            self.southwest.insert(point)
+        this.northeast = new Quadtree(x + halfWidth, y, halfWidth, halfHeight, this.capacity);
+        this.northwest = new Quadtree(x, y, halfWidth, halfHeight, this.capacity);
+        this.southeast = new Quadtree(x + halfWidth, y + halfHeight, halfWidth, halfHeight, this.capacity);
+        this.southwest = new Quadtree(x, y + halfHeight, halfWidth, halfHeight, this.capacity);
 
-# Example Usage
-qt = Quadtree(0, 0, 100, 100)
-qt.insert((30, 40))
-qt.insert((60, 70))
+        this.divided = true;
+    }
+
+    insert(point) {
+        if (this.points.length < this.capacity) {
+            this.points.push(point);
+        } else {
+            if (!this.divided) {
+                this.subdivide();
+            }
+            this.northeast.insert(point);
+            this.northwest.insert(point);
+            this.southeast.insert(point);
+            this.southwest.insert(point);
+        }
+    }
+}
+
+![alt text](image-1.png)
+
+// Example Usage
+const qt = new Quadtree(0, 0, 100, 100);
+qt.insert([30, 40]);
+qt.insert([60, 70]);
 ```
 This simple **quadtree implementation** divides space and inserts points dynamically.
 
@@ -624,12 +656,257 @@ This simple **quadtree implementation** divides space and inserts points dynamic
 
 ---
 
-## **📚 How to Use These Flashcards with Spaced Repetition**  
-1. **Day 1:** Read through and explain each flashcard out loud.  
-2. **Day 3:** Try to recall the answers without looking.  
-3. **Day 7:** Apply concepts in a coding project or problem-solving session.  
-4. **Day 14+:** Review periodically to reinforce understanding.  
+## **Key Takeaways: GeoHashes vs. QuadTrees**  
 
-Would you like a **digital version** of these flashcards for interactive learning? 😊
+Both **GeoHashes** and **QuadTrees** are spatial indexing techniques used for **efficient geospatial searching**, but they have different strengths and trade-offs.  
 
-😃 :blush: 
+---
+
+## **📌 GeoHashes**  
+✅ **What It Is:**  
+- A **string-based** encoding system that recursively divides the world into grid-like regions.  
+- Converts latitude/longitude into a **hash string**, where shorter hashes represent larger areas, and longer hashes represent smaller, more precise areas.  
+
+✅ **Key Properties:**  
+- **Hierarchical**: Shorter GeoHashes cover larger areas, while longer ones refine the location.  
+- **Prefix-based proximity**: Nearby locations often share common hash prefixes.  
+- **Fixed grid size**: Divides space into **predefined rectangular regions**.  
+
+✅ **Advantages:**  
+✔ **Fast Lookups** – GeoHashes can be used as **keys in a database** for quick searches.  
+✔ **Efficient for Proximity Searches** – Nearby places often share hash prefixes.  
+✔ **Compact Storage** – GeoHashes use short strings instead of floating-point numbers.  
+✔ **Works Well with Distributed Databases** – Can be used for sharding.  
+
+✅ **Disadvantages:**  
+❌ **Grid Distortion** – GeoHashes use **rectangular grids**, which don’t align well with the Earth's curvature.  
+❌ **Edge Cases** – Queries across hash boundaries require multiple hash lookups.  
+❌ **Fixed Partitioning** – Cannot dynamically adjust to data density.  
+
+✅ **Best For:**  
+- **Fast approximate search** in large-scale applications (e.g., **caching** & **database sharding**).  
+- **Hash-based geospatial indexing** (e.g., **Redis, Elasticsearch, MongoDB**).  
+
+---
+
+## **📌 QuadTrees**  
+✅ **What It Is:**  
+- A **tree-based** spatial partitioning structure that recursively divides the world into **four quadrants** at each level.  
+- Each region is subdivided **only if needed**, making it more flexible than fixed grid systems like GeoHashes.  
+
+✅ **Key Properties:**  
+- **Adaptive Resolution** – More subdivisions in dense areas, fewer in sparse areas.  
+- **Recursive Tree Structure** – Each node has **four child nodes**, forming a hierarchy.  
+- **Efficient Range Queries** – Optimized for finding points in a given area.  
+
+✅ **Advantages:**  
+✔ **Better Space Adaptation** – **Denser regions** get more refined subdivisions.  
+✔ **Efficient for Range Queries** – Queries can traverse the tree to find all points in a bounding box.  
+✔ **No Grid Distortion** – Works well across different regions.  
+
+✅ **Disadvantages:**  
+❌ **More Complex Implementation** – Requires a tree structure instead of simple hashes.  
+❌ **Slower Lookups in Large Datasets** – Compared to hash-based lookups.  
+❌ **Storage Overhead** – Each node in the tree consumes additional memory.  
+
+✅ **Best For:**  
+- **Precise geospatial indexing** with **adaptive resolution** (e.g., **mapping applications, game engines**).  
+- **Efficient range queries** in variable-density datasets.  
+
+---
+
+## **🚀 Key Differences & Trade-offs**  
+| Feature         | **GeoHashes** ✅ | **QuadTrees** ✅ |
+|---------------|----------------|----------------|
+| **Structure** | **Grid-based hashing** | **Tree-based partitioning** |
+| **Spatial Adaptability** | ❌ Fixed partitions | ✅ Dynamically subdivides dense areas |
+| **Lookup Speed** | ✅ Fast (simple hash lookup) | ❌ Slower (tree traversal) |
+| **Proximity Queries** | ✅ Good (shared hash prefixes) | ✅ Better (adaptive resolution) |
+| **Range Queries** | ❌ Requires multiple hash lookups | ✅ Optimized for bounding box queries |
+| **Edge Cases Handling** | ❌ Requires multiple GeoHashes for boundary cases | ✅ Handles boundaries more naturally |
+| **Implementation Complexity** | ✅ Simple (just hashing) | ❌ More complex (tree structure) |
+| **Storage Overhead** | ✅ Low (compact string encoding) | ❌ Higher (tree nodes take space) |
+| **Best Use Case** | **Fast approximate searches** (e.g., caching, distributed DBs) | **Precise spatial queries** (e.g., maps, games, GIS) |
+
+---
+
+## **🚀 Which One Should You Use?**  
+✅ **GeoHashes** → **If you need fast, approximate lookups** (e.g., caching, DB indexing).  
+✅ **QuadTrees** → **If you need precise spatial queries** (e.g., detailed mapping, adaptive partitioning).  
+
+For a **Yelp-like search service**, a **hybrid approach** is often best:  
+- Use **GeoHashes for fast lookup** & database sharding.  
+- Use **QuadTrees for refined spatial queries** in high-density areas.  
+
+Would you like a deeper dive into how to implement these in a database? 🚀
+
+Absolutely! Scatter-Gather is a crucial pattern when working with **sharded** or **distributed systems**, especially in query execution. Let’s integrate it into the **80/20 rule** for sharding.
+
+---
+
+Absolutely! Sharding is a critical technique for scaling distributed systems, and understanding the **20% of concepts that deliver 80% of the results** can save you a lot of time and complexity. Here’s how to approach it effectively.
+
+---
+
+## Sharding 101: The Essentials
+Sharding is the process of **splitting data** across multiple nodes (shards) to distribute load and increase scalability.
+
+### 🔥 **The 20% That Delivers 80% of the Results**
+1. **Choose the Right Sharding Strategy**
+2. **Prevent Hotspots**
+3. **Handle Rebalancing**
+4. **Minimize Cross-Shard Queries**
+5. **Ensure Fault Tolerance & Failover**
+
+---
+
+## 1️⃣ **Choose the Right Sharding Strategy**
+The way you distribute data across shards impacts performance. Here are the three most common strategies:
+
+### ✅ **1. Range-Based Sharding**  
+- **How it works**: Data is partitioned based on a range of values (e.g., `user_id 1-1M in shard A, 1M-2M in shard B`).
+- **Best for**: Sequential or range-based queries (e.g., time-series data).
+- **Pros**:
+  - Fast range queries.
+  - Easy to implement.
+- **Cons**:
+  - Can lead to hotspots if certain ranges are more popular.
+  - Harder to balance load dynamically.
+
+---
+
+### ✅ **2. Hash-Based Sharding**  
+- **How it works**: Data is assigned to a shard using a hash function (e.g., `hash(user_id) % num_shards`).
+- **Best for**: Evenly distributing data across shards (e.g., user profiles, orders).
+- **Pros**:
+  - Avoids hotspots (even load distribution).
+  - Scales well for random-access queries.
+- **Cons**:
+  - Slower range queries since data is spread across shards.
+  - Harder to rebalance when adding/removing shards.
+
+---
+
+### ✅ **3. Directory-Based (Lookup Table) Sharding**  
+- **How it works**: A central lookup table maps keys to shards dynamically.
+- **Best for**: Cases where sharding logic is complex or changes frequently.
+- **Pros**:
+  - Fully flexible; you can move shards dynamically.
+- **Cons**:
+  - The lookup table becomes a **single point of failure**.
+  - Requires an extra query to resolve the shard location.
+
+---
+
+## 2️⃣ **Prevent Hotspots**
+Hotspots occur when some shards get significantly more load than others.
+
+🔹 **Solution**:  
+- If using **range-based sharding**, distribute load evenly (e.g., by sharding on time buckets instead of raw timestamps).
+- If using **hash-based sharding**, ensure a good hash function to evenly distribute data.
+- Use **consistent hashing** (e.g., **Ketama hashing**) to reduce impact when adding/removing shards.
+
+---
+
+## 3️⃣ **Handle Rebalancing (Adding/Removing Shards)**
+When you add a new shard, you must redistribute data efficiently.
+
+🔹 **Common Approaches**:
+1. **Predefined Fixed Shards**: Plan ahead for extra empty shards, so adding a new one doesn’t require moving data.
+2. **Consistent Hashing**: Minimizes data movement when increasing the number of shards.
+3. **Automated Rebalancing**: Use tools like **Apache Kafka, Vitess, or DynamoDB** that support automatic rebalancing.
+
+---
+
+## 4️⃣ **Minimize Cross-Shard Queries**
+Querying multiple shards slows down performance.
+
+🔹 **How to optimize**:
+- **Query Routing**: Use an index to send queries only to relevant shards.
+- **Denormalization**: Store frequently joined data in the same shard.
+- **Scatter-Gather**: If cross-shard queries are unavoidable, optimize the gather phase.
+
+Example: If searching for a user’s posts, store **users and posts in the same shard** instead of querying multiple shards.
+
+---
+
+## 5️⃣ **Ensure Fault Tolerance & Failover**
+Sharding introduces new failure points. If one shard goes down, part of your data is unavailable.
+
+🔹 **Solutions**:
+- Use **replication**: Each shard should have replicas.
+- Implement **failover strategies**: If a shard fails, redirect queries to a replica.
+- **Use a load balancer**: Distribute requests evenly across shards.
+
+---
+
+## 🔥 **80/20 Takeaways**
+✅ Pick a **sharding strategy** that fits your data & query patterns.  
+✅ Prevent **hotspots** to avoid overload on a single shard.  
+✅ Plan for **rebalancing** before you need it.  
+✅ Reduce **cross-shard queries** to improve performance.  
+✅ Use **replication & failover** to ensure high availability.  
+
+---
+
+# Sharding: Scatter Gather for Scalable Distributed Systems
+Sharding distributes data, but Scatter-Gather **efficiently queries** that data across shards.
+
+## 🔥 **The 20% That Delivers 80% of the Results**
+1️⃣ **Sharding Strategies** (Hash, Range, Lookup Table)  
+2️⃣ **Preventing Hotspots** (Load Balancing)  
+3️⃣ **Handling Rebalancing** (Adding/Removing Shards)  
+4️⃣ **Scatter-Gather for Query Execution**  
+5️⃣ **Ensuring Fault Tolerance & Failover**  
+
+---
+
+## 4️⃣ **Scatter-Gather for Query Execution**
+Sharding improves scalability, but querying across shards can be expensive. **Scatter-Gather** solves this problem.
+
+### ✅ **What is Scatter-Gather?**
+It's a distributed query pattern where:
+1. The request is **scattered** to all relevant shards.
+2. Each shard **processes** the request independently.
+3. The results are **gathered** and combined.
+
+### ✅ **Best Use Cases**
+- **Search Engines** (Google, Elasticsearch)  
+- **Distributed Databases** (MongoDB, Cassandra, DynamoDB)  
+- **Analytics Queries** (Summing data across shards)  
+
+---
+
+### 🔥 **Optimizing Scatter-Gather for Performance**
+🔹 **Query Routing**: Send queries only to relevant shards (avoid unnecessary work).  
+🔹 **Parallel Execution**: Run queries in parallel across shards to reduce latency.  
+🔹 **Pre-Aggregation**: Process data at the shard level before merging results.  
+🔹 **Load Balancing**: Ensure no single shard gets overloaded.  
+
+---
+
+### ✅ **Example: Scatter-Gather in Action**
+Imagine you have a **sharded e-commerce database** where each shard stores orders based on `user_id` (hash-based sharding).  
+You need to find the **total revenue for the last 30 days**.
+
+1️⃣ **Scatter Phase**  
+- The query (`SUM(order_amount) WHERE date > last 30 days`) is sent to **all shards**.  
+
+2️⃣ **Shard Processing**  
+- Each shard **calculates a local sum** of `order_amount`.  
+
+3️⃣ **Gather Phase**  
+- The results are returned to an **aggregator**, which sums up the totals from all shards.  
+
+🎯 **Optimization**: If you store **pre-aggregated totals per shard**, you can query **only the relevant ones**, reducing scatter overhead.
+
+---
+
+## 🔥 **80/20 Takeaways**
+✅ **Sharding** distributes data; **Scatter-Gather** efficiently queries it.  
+✅ Route queries **only to necessary shards** to reduce overhead.  
+✅ Use **parallel execution** to improve speed.  
+✅ **Pre-aggregate** data to avoid expensive scatter-gather operations.  
+✅ Implement **failover and replication** for reliability.  
+
+Would you like me to help design a system using these principles for your use case? 🚀
