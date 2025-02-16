@@ -271,7 +271,7 @@ In relational databases, **Primary Keys (PK)** and **Foreign Keys (FK)** play a 
 
 ---
 
-## **🔑 Primary Key (PK)**
+### **🔑 Primary Key (PK)**
 ### **Definition**  
 A **Primary Key** is a column (or a set of columns) that uniquely identifies each row in a table.  
 
@@ -656,11 +656,9 @@ This simple **quadtree implementation** divides space and inserts points dynamic
 
 ---
 
-## **Key Takeaways: GeoHashes vs. QuadTrees**  
+# **Key Takeaways: GeoHashes vs. QuadTrees**  
 
 Both **GeoHashes** and **QuadTrees** are spatial indexing techniques used for **efficient geospatial searching**, but they have different strengths and trade-offs.  
-
----
 
 ## **📌 GeoHashes**  
 ✅ **What It Is:**  
@@ -744,11 +742,7 @@ Absolutely! Scatter-Gather is a crucial pattern when working with **sharded** or
 
 ---
 
-Absolutely! Sharding is a critical technique for scaling distributed systems, and understanding the **20% of concepts that deliver 80% of the results** can save you a lot of time and complexity. Here’s how to approach it effectively.
-
----
-
-## Sharding 101: The Essentials
+# Sharding 101: The Essentials
 Sharding is the process of **splitting data** across multiple nodes (shards) to distribute load and increase scalability.
 
 ### 🔥 **The 20% That Delivers 80% of the Results**
@@ -760,7 +754,7 @@ Sharding is the process of **splitting data** across multiple nodes (shards) to 
 
 ---
 
-## 1️⃣ **Choose the Right Sharding Strategy**
+### 1️⃣ **Choose the Right Sharding Strategy**
 The way you distribute data across shards impacts performance. Here are the three most common strategies:
 
 ### ✅ **1. Range-Based Sharding**  
@@ -798,7 +792,7 @@ The way you distribute data across shards impacts performance. Here are the thre
 
 ---
 
-## 2️⃣ **Prevent Hotspots**
+### 2️⃣ **Prevent Hotspots**
 Hotspots occur when some shards get significantly more load than others.
 
 🔹 **Solution**:  
@@ -808,7 +802,7 @@ Hotspots occur when some shards get significantly more load than others.
 
 ---
 
-## 3️⃣ **Handle Rebalancing (Adding/Removing Shards)**
+### 3️⃣ **Handle Rebalancing (Adding/Removing Shards)**
 When you add a new shard, you must redistribute data efficiently.
 
 🔹 **Common Approaches**:
@@ -818,7 +812,7 @@ When you add a new shard, you must redistribute data efficiently.
 
 ---
 
-## 4️⃣ **Minimize Cross-Shard Queries**
+### 4️⃣ **Minimize Cross-Shard Queries**
 Querying multiple shards slows down performance.
 
 🔹 **How to optimize**:
@@ -830,7 +824,7 @@ Example: If searching for a user’s posts, store **users and posts in the same 
 
 ---
 
-## 5️⃣ **Ensure Fault Tolerance & Failover**
+### 5️⃣ **Ensure Fault Tolerance & Failover**
 Sharding introduces new failure points. If one shard goes down, part of your data is unavailable.
 
 🔹 **Solutions**:
@@ -840,7 +834,7 @@ Sharding introduces new failure points. If one shard goes down, part of your dat
 
 ---
 
-## 🔥 **80/20 Takeaways**
+### 🔥 **80/20 Takeaways**
 ✅ Pick a **sharding strategy** that fits your data & query patterns.  
 ✅ Prevent **hotspots** to avoid overload on a single shard.  
 ✅ Plan for **rebalancing** before you need it.  
@@ -852,7 +846,7 @@ Sharding introduces new failure points. If one shard goes down, part of your dat
 # Sharding: Scatter Gather for Scalable Distributed Systems
 Sharding distributes data, but Scatter-Gather **efficiently queries** that data across shards.
 
-## 🔥 **The 20% That Delivers 80% of the Results**
+### 🔥 **The 20% That Delivers 80% of the Results**
 1️⃣ **Sharding Strategies** (Hash, Range, Lookup Table)  
 2️⃣ **Preventing Hotspots** (Load Balancing)  
 3️⃣ **Handling Rebalancing** (Adding/Removing Shards)  
@@ -861,7 +855,7 @@ Sharding distributes data, but Scatter-Gather **efficiently queries** that data 
 
 ---
 
-## 4️⃣ **Scatter-Gather for Query Execution**
+### **Scatter-Gather for Query Execution**
 Sharding improves scalability, but querying across shards can be expensive. **Scatter-Gather** solves this problem.
 
 ### ✅ **What is Scatter-Gather?**
@@ -902,7 +896,7 @@ You need to find the **total revenue for the last 30 days**.
 
 ---
 
-## 🔥 **80/20 Takeaways**
+### 🔥 **80/20 Takeaways**
 ✅ **Sharding** distributes data; **Scatter-Gather** efficiently queries it.  
 ✅ Route queries **only to necessary shards** to reduce overhead.  
 ✅ Use **parallel execution** to improve speed.  
