@@ -19,21 +19,21 @@ This outlines the key requirements for designing a Yelp-like service. Let me kno
 
 ## Functional Requirements 
 
-✅ Search for places by text, proximity, etc
-✅ View place info, reviews, photos
-✅ Write a review 
-✅ Notifications
-✅ Make a reservation 
-✅ Order delivery 
-✅ Bookmark places 
-✅ View activity (reservations, reviews, check-ins)
-✅ Place recommendations 
+* ✅ Search for places by text, proximity, etc
+* ✅ View place info, reviews, photos
+* ✅ Write a review 
+* ✅ Notifications
+* ✅ Make a reservation 
+* ✅ Order delivery 
+* ✅ Bookmark places 
+* ✅ View activity (reservations, reviews, check-ins)
+* ✅ Place recommendations 
 
 **Design Constraints** 
 
-✅ 500M Places
-✅ 100K queries per second 
-✅ 20% growth in the number of places and QPS each year 
+* ✅ 500M Places
+* ✅ 100K queries per second 
+* ✅ 20% growth in the number of places and QPS each year 
 
 ![alt text](image.png)
 
@@ -124,7 +124,7 @@ Therefore, the total memory required to cache grid ids and place ids would be 4 
 
 This would save use from querying the places table at all, we just query the grids table and say "Our user has this search region, give me all the grids (hit the cache for the grids)
 
-**Is there a more optimal solution** 
+## **Is there a more optimal solution** 
 
 - Our solution so far is not the most optimal solution because of the sparsity of the data. You can image that within a city, the data will be heavily populated, whereas in the country, the data will be very sparse. 
 
@@ -137,9 +137,12 @@ This would save use from querying the places table at all, we just query the gri
 
 We build our same square search region, and now we need to find the quad treen nodes that overlap with our search region, so we're going to perform a **range tree search.**  
 
- ![alt text](image-6.png)
+![alt text](image-6.png)
 
-**more sophisticated search**
+---
+
+**A more sophisticated search**
+
 ![alt text](image-7.png)
 
 
