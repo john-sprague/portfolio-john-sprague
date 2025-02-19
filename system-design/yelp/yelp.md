@@ -167,7 +167,8 @@ Shard by region (region based)
 e.g zip codes, states, etc. 
 
 Pros
-- For proximity search, don't have to **scatter gather**
+- For proximity search, don't have to **scatter gather** 
+- [Sharding + Scatter-Gather for Scalable Distributed Systems](../system-design-foundation)
 
 Cons
 - Carving up the regions can be tricky because density various alot. 
@@ -190,3 +191,4 @@ Cons
 
 2. Check out the **tech blogs** for the actually companies to figure out what they did.
 
+https://gis.stackexchange.com/questions/18330/using-geohash-for-proximity-searches
