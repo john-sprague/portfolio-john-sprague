@@ -8,6 +8,7 @@
 - [Sharding + Scatter-Gather for Scalable Distributed Systems](#sharding-scatter-gather-for-scalable-distributed-systems)
 - [Sharding 101: The Essentials](#sharding-101-the-essentials)
 - [Key Features and Reasons to Use a Message Queue in System Design](#key-features-and-reasons-to-use-a-message-queue-in-system-design)
+- [Key Takeaways for Twitter’s Snowflake ID Generation Approach](#key-takeaways-for-twitters-snowflake-id-generation-approach)
 # Intro: Always do two things in system design. 
 
 1. **Connect the dots** 
@@ -977,3 +978,83 @@ A **message queue** is a key component in **distributed systems**, enabling asyn
 - **Amazon SQS** → Fully managed, easy to scale.  
 - **Google Pub/Sub** → Cloud-native, event-driven messaging.  
 
+# Key Takeaways for Twitter’s Snowflake ID Generation Approach
+Twitter’s **Snowflake** is a **distributed, time-ordered unique ID generation system** designed to create unique 64-bit IDs efficiently across multiple nodes. It solves the problem of generating **globally unique**, **sortable**, and **highly available** IDs without requiring a centralized database.
+
+#### **1. Structure of a Snowflake ID (64 bits total)**
+| Bits | Field Name       | Description |
+|------|----------------|-------------|
+| 1    | **Sign Bit**    | Always `0` (ensures positive numbers) |
+| 41   | **Timestamp**   | Milliseconds since a custom epoch (ensures time-ordering) |
+| 10   | **Machine ID**  | Unique identifier for the node generating the ID |
+| 12   | **Sequence**    | Incrementing counter for IDs generated within the same millisecond |
+
+#### **2. Core Benefits (The 80/20)**
+- **Scalability** – Distributed generation without coordination.
+- **Uniqueness** – Ensures no duplicate IDs across multiple nodes.
+- **Time-ordered** – IDs increase monotonically, useful for indexing.
+- **High Throughput** – Generates millions of IDs per second.
+- **No Database Bottleneck** – Avoids reliance on a centralized ID generator.
+
+#### **3. The 20% That Delivers 80% of the Value**
+- **Use timestamps for order** – The **41-bit timestamp** ensures time-based sorting.
+- **Decentralized ID generation** – Each machine can generate its own IDs with a **10-bit node ID**.
+- **Handle high throughput with a 12-bit counter** – Supports **4096 unique IDs per millisecond per node**.
+- **Avoid clock drift issues** – If the system clock moves backward, Snowflake must pause ID generation until time catches up.
+
+Here’s a **JavaScript implementation** of Twitter’s **Snowflake ID generator**:
+
+### **JavaScript Implementation of Snowflake ID**
+
+```javascript
+class Snowflake {
+    constructor(epoch = 1609459200000, machineId = 1) {
+        this.epoch = epoch; // Custom epoch (e.g., 2021-01-01)
+        this.machineId = machineId & 0x3FF; // 10-bit Machine ID (max 1023)
+        this.sequence = 0; // 12-bit sequence number
+        this.lastTimestamp = -1;
+    }
+
+    // Generate the next unique ID
+    nextId() {
+        let timestamp = Date.now();
+
+        // If clock moves backward, wait until it catches up
+        if (timestamp < this.lastTimestamp) {
+            throw new Error("Clock moved backwards. Waiting...");
+        }
+
+        // If same millisecond, increment sequence
+        if (timestamp === this.lastTimestamp) {
+            this.sequence = (this.sequence + 1) & 0xFFF; // 12-bit sequence (0-4095)
+            if (this.sequence === 0) {
+                // Sequence overflow, wait for next millisecond
+                while (timestamp <= this.lastTimestamp) {
+                    timestamp = Date.now();
+                }
+            }
+        } else {
+            this.sequence = 0;
+        }
+
+        this.lastTimestamp = timestamp;
+
+        // Construct the 64-bit ID
+        return (
+            ((BigInt(timestamp - this.epoch) << 22n) | // 41-bit timestamp
+             (BigInt(this.machineId) << 12n) | // 10-bit machine ID
+             BigInt(this.sequence)) // 12-bit sequence
+        ).toString();
+    }
+}
+
+// Example Usage
+const snowflake = new Snowflake();
+console.log(snowflake.nextId()); // Unique 64-bit ID
+```
+
+### **How It Works**
+1. **Epoch (41 bits)** – Uses a custom epoch (default: Jan 1, 2021) to reduce the timestamp size.
+2. **Machine ID (10 bits)** – Supports **up to 1024 unique nodes** generating IDs independently.
+3. **Sequence Number (12 bits)** – Allows **4096 unique IDs per millisecond per node**.
+4. **Ensures Time Order** – If the same millisecond, increments the sequence. If overflow, waits for the next millisecond.
