@@ -8,7 +8,10 @@
 - [Sharding + Scatter-Gather for Scalable Distributed Systems](#sharding-scatter-gather-for-scalable-distributed-systems)
 - [Sharding 101: The Essentials](#sharding-101-the-essentials)
 - [Key Features and Reasons to Use a Message Queue in System Design](#key-features-and-reasons-to-use-a-message-queue-in-system-design)
+- [Common approaches for distributed unique IDs](#common-approaches-for-distributed-uniqued-ids)
+- [Distributed unique ID generators](#distributed-unique-id-generators)
 - [Key Takeaways for Twitter’s Snowflake ID Generation Approach](#key-takeaways-for-twitters-snowflake-id-generation-approach)
+
 # Intro: Always do two things in system design. 
 
 1. **Connect the dots** 
@@ -977,6 +980,177 @@ A **message queue** is a key component in **distributed systems**, enabling asyn
 - **Apache Kafka** → High-throughput, real-time event streaming.  
 - **Amazon SQS** → Fully managed, easy to scale.  
 - **Google Pub/Sub** → Cloud-native, event-driven messaging.  
+
+# Common approaches for distributed unique IDs
+In a **distributed system**, generating **unique IDs** is critical for ensuring consistency across multiple nodes. Here are some common approaches:
+
+---
+
+## **1. UUID (Universally Unique Identifier)**
+**Example in JavaScript:**
+```javascript
+const { v4: uuidv4 } = require('uuid');
+console.log(uuidv4()); // e.g., "550e8400-e29b-41d4-a716-446655440000"
+```
+✅ **Pros**:
+- Globally unique without coordination.
+- Simple to implement.
+
+❌ **Cons**:
+- **Long (128-bit)** → Less efficient for indexing.
+- **Not time-ordered**, which can impact performance in databases.
+
+---
+
+## **2. Snowflake IDs (Time-Ordered, Scalable)**
+This is Twitter’s approach (see previous message).  
+✅ **Pros**:
+- **Compact (64-bit)** & time-ordered.
+- Supports **sharding** (machine IDs).
+- High throughput (~4096 IDs/ms per node).
+
+❌ **Cons**:
+- Requires **clock synchronization** across nodes.
+
+---
+
+## **3. Database Auto-Increment + Sharding**
+Each database instance is assigned a **range of IDs**:
+- **DB1** → IDs: `1, 4, 7...`
+- **DB2** → IDs: `2, 5, 8...`
+- **DB3** → IDs: `3, 6, 9...`
+
+✅ **Pros**:
+- Easy to implement with databases.
+
+❌ **Cons**:
+- **Requires coordination** → Risk of ID collisions.
+- **Not highly scalable** for distributed environments.
+
+---
+
+## **4. Hash-Based IDs (e.g., MD5, SHA-1, SHA-256)**
+Hash a combination of machine ID, timestamp, and random value:
+```javascript
+const crypto = require('crypto');
+const uniqueId = crypto.createHash('sha256').update(Date.now().toString()).digest('hex');
+console.log(uniqueId);
+```
+✅ **Pros**:
+- **Deterministic and unique**.
+- No need for a centralized generator.
+
+❌ **Cons**:
+- **Long (e.g., 256-bit for SHA-256)**.
+- Not naturally **time-ordered**.
+
+---
+
+## **5. Nano ID (Compact, Collision-Resistant)**
+**Example:**
+```javascript
+const { nanoid } = require('nanoid');
+console.log(nanoid()); // e.g., "V1StGXR8_Z5jdHi6B-myT"
+```
+✅ **Pros**:
+- **Short (~21 characters)**.
+- Higher **collision resistance** than UUIDs.
+
+❌ **Cons**:
+- Not time-ordered.
+
+---
+
+## **6. Zookeeper/Etlcd Sequence Nodes**
+Distributed coordination using Zookeeper or etcd, where each node requests a **sequential number**.
+✅ **Pros**:
+- **Strict ordering** across multiple nodes.
+
+❌ **Cons**:
+- **Network latency & overhead**.
+- Single point of failure if not managed properly.
+
+---
+
+### **TL;DR:**
+- **For databases → Auto-increment + sharding** (simple but needs coordination).
+- **For high-performance systems → Snowflake IDs** (compact, time-ordered).
+- **For uniqueness without coordination → UUIDs or Nano IDs**.
+- **For strict ordering → Zookeeper/etcd sequence numbers**.
+
+# Distributed unique ID generators
+A **distributed unique ID generator** is crucial in systems where multiple nodes operate independently but still need **globally unique, scalable, and ordered IDs**. Here are some key **use cases**:
+
+---
+
+### **1. Large-Scale Databases (Sharded or Distributed)**
+- **Use Case**: Assigning primary keys across **multiple database nodes** without conflicts.
+- **Example**: A **sharded MySQL or NoSQL database (e.g., MongoDB, Cassandra)** where IDs must be unique across all shards.
+
+---
+
+### **2. Distributed Logging & Monitoring**
+- **Use Case**: Generating unique request IDs for **tracing logs across microservices**.
+- **Example**: In **distributed tracing (e.g., OpenTelemetry, Jaeger, Zipkin)**, a **correlation ID** helps track a request through multiple services.
+
+---
+
+### **3. Message Queues & Event Processing**
+- **Use Case**: Assigning unique IDs to **messages/events** to prevent duplicates and ensure ordering.
+- **Example**: Kafka, RabbitMQ, and AWS Kinesis use **unique message IDs** for deduplication and ordering.
+
+---
+
+### **4. Microservices Communication**
+- **Use Case**: Generating unique IDs for API requests between microservices.
+- **Example**: A **user request flows through multiple microservices**, and each service logs the same unique ID for tracking.
+
+---
+
+### **5. E-commerce Transactions & Order IDs**
+- **Use Case**: Ensuring unique **order IDs** across multiple payment gateways and warehouses.
+- **Example**: A global e-commerce site needs unique IDs for orders across **multiple regions and warehouses**.
+
+---
+
+### **6. Social Media & Content Platforms**
+- **Use Case**: Generating unique IDs for **posts, comments, likes, and messages**.
+- **Example**: Twitter uses **Snowflake IDs** for tweets, ensuring each tweet has a **time-ordered unique ID**.
+
+---
+
+### **7. Blockchain & Cryptocurrency Transactions**
+- **Use Case**: Assigning unique IDs to **blocks and transactions** in a distributed ledger.
+- **Example**: **Bitcoin, Ethereum** use unique hashes, but systems managing transactions may use **Snowflake-like IDs**.
+
+---
+
+### **8. IoT (Internet of Things)**
+- **Use Case**: Assigning unique IDs to **millions of IoT devices and sensor data**.
+- **Example**: Smart home devices or industrial sensors generate **real-time logs**, requiring unique and time-ordered IDs.
+
+---
+
+### **9. AI/ML Data Pipelines**
+- **Use Case**: Labeling training data uniquely across **distributed ML training nodes**.
+- **Example**: A machine learning pipeline assigns **unique IDs** to each image in a dataset for processing.
+
+---
+
+### **10. Financial Services (Banking, Trading, Payments)**
+- **Use Case**: Generating unique IDs for **trades, transactions, and payments**.
+- **Example**: High-frequency trading systems require **ultra-fast unique IDs** for every trade executed.
+
+---
+
+### **TL;DR (80/20 Rule)** 🚀  
+If you need **scalable, time-ordered, unique IDs**, a **distributed unique ID generator** is critical for:
+1. **Databases & sharding** (Primary keys)
+2. **Logging & tracing** (Request correlation)
+3. **Message queues & events** (Event deduplication)
+4. **E-commerce & payments** (Order IDs)
+5. **Social media & real-time apps** (Tweet/Post IDs)
+6. **Blockchain & IoT** (Transaction & device tracking)
 
 # Key Takeaways for Twitter’s Snowflake ID Generation Approach
 Twitter’s **Snowflake** is a **distributed, time-ordered unique ID generation system** designed to create unique 64-bit IDs efficiently across multiple nodes. It solves the problem of generating **globally unique**, **sortable**, and **highly available** IDs without requiring a centralized database.
