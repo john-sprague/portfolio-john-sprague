@@ -1,7 +1,5 @@
 # Designing Stream Processing Systems
 
-**Tilo Dickopp - Google - Tilo.Dickopp@gmail.com**
-
 ## Agenda
 
 - Intro
@@ -39,7 +37,6 @@
 
 ---
 
-## Extracted Text
 
 Sometimes, a subsystem within an online service system can be an offline system.
 - The input to it is large or a large number of files.
@@ -332,6 +329,7 @@ Being able to identify what type of system is extremely important. What to check
     - Distributed transactions: I’m giving you the next message as a transaction.
       - If the transaction fails, you cannot send the ACK back to me, and the transaction is invalid.
     - Two-phase commit protocol (expensive and nasty to implement) (need expertise in transactions to get this right).
+    ![alt text](image-8.png)
 
 ---
 
@@ -362,6 +360,7 @@ Being able to identify what type of system is extremely important. What to check
       - Atomicity & durability.
       - Each change (delta) is stored in a log entry.
       - Also useful for replication, having data on multiple machines.
+![alt text](image-9.png)
   - (Optionally) apply log entry (a method to get strong consistency).
     - Send log entry to all followers (in case leader goes down).
     - Wait to hear back from (optionally: all) followers.
@@ -404,7 +403,9 @@ Being able to identify what type of system is extremely important. What to check
         - **Applied Log Position**: Current applied log.
         - **Append Position**: The next position.
         - **Replicated position for followers** (because we’ve got a success back from them).
+![alt text](image-10.png)
 
+![alt text](image-11.png)
 ---
 
 ## Replication
@@ -570,6 +571,7 @@ COMPUTE functions
 - `avg`
 - `percentile(p)`
 
+![alt text](image-12.png)
 ---
 
 ## Agents
@@ -596,6 +598,8 @@ COMPUTE functions
 ---
 
 ## Generic Template
+
+![alt text](image-13.png)
 
 Now back it up, prepare two topics for each component.
 
@@ -720,11 +724,14 @@ Here to protect the downstream service, the aggregation service.
 - **Column**:
   - A record is a complete column; you have the data for multiple keys.
   - If we read sequential data, then you have the data you are going to query next to each other in one record.
+![alt text](image-14.png)
   - Can compress keys also.
 - In our case, we will use a column DB because data points over time, continuous data, so we can do some compression.
   - This is called a time series database.
   - Optimized for timestamp being part of the key.
   - Normal DBs don’t work well for timestamp data. Will always be a hotspot on timestamp data because it’s inserted sequentially.
+
+  ![alt text](image-15.png)
 
 ### Data Model
 - `[queryId + timestamp]:[computed values]`.
