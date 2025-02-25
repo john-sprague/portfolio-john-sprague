@@ -37,7 +37,6 @@
 
 ---
 
-
 Sometimes, a subsystem within an online service system can be an offline system.
 - The input to it is large or a large number of files.
 - The output is large or a large number of files.
@@ -461,9 +460,6 @@ Being able to identify what type of system is extremely important. What to check
 
       ![alt text](image-7.png)
 
-Certainly! Below is the provided text converted into a Markdown (`.md`) file format:
-
-```markdown
 # Key Features and Reasons to Use a Message Queue in System Design
 
 A message queue is a key component in distributed systems, enabling asynchronous communication between services. It decouples producers (senders) from consumers (receivers), allowing for scalability, reliability, and resilience in system architectures.
@@ -544,7 +540,7 @@ A message queue is a key component in distributed systems, enabling asynchronous
 
 ---
 
-# Class Study: APM (Application Performance Monitoring)
+# Case Study: APM (Application Performance Monitoring)
 
 ### Problem Statement
 Imagine a data center having thousands of servers (10,000) each emitting thousands of metrics per second (2000).
