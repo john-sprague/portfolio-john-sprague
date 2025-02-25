@@ -658,7 +658,7 @@ Here to protect the downstream service, the aggregation service.
 
 ### Partitions:
 - 320 MB/sec.
-- Bake a guess about throughput for state-of-the-art server.
+- Take a guess about throughput for state-of-the-art server.
   - A single broker can handle 100 MB/sec.
   - 320 / 100 = ~4 partitions.
 - One replication (partition) group is three brokers (need an odd number of replications).
