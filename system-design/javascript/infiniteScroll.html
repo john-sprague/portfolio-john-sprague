@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter-like Infinite Scroll</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        #tweets-container {
+            width: 50%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .tweet {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tweet:last-child {
+            border-bottom: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="tweets-container">
+        <h2>Twitter Feed</h2>
+        <div id="tweets"></div>
+        <div id="loading" class="loading">Loading...</div>
+    </div>
+
+    <script>
+        const tweetsContainer = document.getElementById("tweets");
+        const loading = document.getElementById("loading");
+        let tweetCount = 0;
+
+        // Simulates fetching tweets (replace this with an API call)
+        function fetchTweets() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    let tweets = [];
+                    for (let i = 0; i < 5; i++) {
+                        tweetCount++;
+                        tweets.push({ id: tweetCount, text: `Tweet #${tweetCount}: This is a sample tweet.` });
+                    }
+                    resolve(tweets);
+                }, 1000);
+            });
+        }
+
+        // Renders tweets to the DOM
+        function renderTweets(tweets) {
+            tweets.forEach(tweet => {
+                const tweetDiv = document.createElement("div");
+                tweetDiv.className = "tweet";
+                tweetDiv.innerText = tweet.text;
+                tweetsContainer.appendChild(tweetDiv);
+            });
+        }
+
+        // Loads initial tweets
+        async function loadInitialTweets() {
+            const tweets = await fetchTweets();
+            renderTweets(tweets);
+            loading.style.display = "none"; // Hide loader initially
+        }
+
+        // Handles infinite scrolling
+        async function handleScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                loading.style.display = "block";
+                const newTweets = await fetchTweets();
+                renderTweets(newTweets);
+                loading.style.display = "none";
+            }
+        }
+
+        // Attach scroll event listener
+        window.addEventListener("scroll", handleScroll);
+
+        // Load initial tweets
+        loadInitialTweets();
+    </script>
+
+</body>
+</html>
