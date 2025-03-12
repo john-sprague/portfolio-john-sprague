@@ -212,3 +212,141 @@ mimic android / iOS applications without the need to write two different apps
 ![alt text](image-3.png)
 
 
+## State Management 
+
+### Stateless vs. Stateful Components 
+
+**Interview Question** 
+
+You have been asked to develop a component, <Dashboard /> which is the root component for the home page of an application.
+
+The Dashboard contains a few different widgets:
+- Contact Us Form
+- Inbox (which is a list of notifications) 
+
+Outline the component structure of your page and outline which components are stateful, and which are stateless.
+
+**Solution**
+
+```javascript
+<Dashboard> // stateful - fetches notifications
+  <ContactUsForm>  // stateful - holds form data
+    <TextInput /> //stateless
+    <Button /> //stateless
+  </ContactUsForm>
+  <Inbox messages={messages}> //stateless
+    {messages.map(message => (
+      <Message message={ message }/> // stateless
+    )}
+  </Inbox>  
+</Dashboard>
+```
+
+
+**What is State Management?**
+
+State management is a way to share data within your application. State management can take many forms
+  - Components (useState)
+  - Libraries (redux, apollo)
+  - Browser storage APIs (localStorage, sessionStorage) 
+
+Designing an application with good state management is critical
+  - Easy access to whatever data you need
+  - Easier to test components when state can easily be stubbed
+
+
+
+**What is a stateless component?**
+A stateless component which holds no state, it's output is completely dependent on it's input. (pure function)
+
+It does not contain any business logic. 
+
+You typically want the atomic components of your application to be stateless because it makes them more reusable
+
+Examples of stateless components:
+<Button onPress={ ... } />
+<TextInput onChange={ ... } />
+<Text>{...}</Text>
+
+
+**What is a stateful component?**
+Simply it's a component that is a container for data, the data's origin can vary though
+
+- Local State
+- Application State
+- Browser State
+
+Whenever state changes, the component and all
+it's children will re-render.
+
+### Implement Custom Control 
+
+**Interview Question** 
+
+Design a custom control component <SearchBox /> by extending existing controls. 
+
+**Solution** 
+
+![alt text](image-4.png)
+
+ **What Are Custom Controls?**
+
+
+- Custom controls are UI elements which are derived from smaller UI elements.
+- The smaller components are typically stateless and the custom control composes their functionality into something more complex
+-  Composability is a key element of custom controls custom
+  - Def: Fitting multiple components together (building blocks lego)
+
+
+**How to make a custom control** 
+
+Define the requirements of your new custom control
+  - What are it's atomic elements?
+  - Does it need to hold any state?
+  - Can I abstract any of the custom control into a smaller component? 
+
+Compose the smaller components into your new custom control
+
+The bulk of the work is in the planning. 
+
+### Design Embeddable Control for Payment and Checkout 
+
+ **Interview Question** 
+
+ Design a portable UI control that provides a secure and compliant way to capture a payment method. 
+
+---
+
+ **Solution** 
+
+**Design a portable UI control that provides secure and compliant way to capture a payment method.**  
+
+1. Provide a console in which developers can create an identifier for their application  
+2. Create and host a payment method form that is able to take credit / debit card information as input - and then have it be submitted to the embedded control’s API’s (not the developers)  
+3. Allow users to embed the payment method form in their web application  
+4. Developers can then manage their user’s payment methods within the providers console  
+
+---
+
+**Why embedded controls?**  
+
+- Principle of DRY - Don't Repeat Yourself  
+- Examples:  
+  - Payments (Stripe)  
+    - PCI / GDPR Compliance (Avoid storing sensitive user data)  
+  - Video Hosting (YouTube)  
+    - Content moderation  
+- Note that each of these problems have their own challenges - and often times as a developer it’s better to use an existing solution rather than building your own. Sometimes you can abstract your efforts into its own embeddable control if it can provide value to others.
+
+i.e. Stripe 
+
+![alt text](image-5.png)
+
+
+**Designing an Embedded control**
+
+- How will clients communicate with my system?
+  - Iframe (postMessage)
+  - SDK (identified via API Key)
+- What views do I need to provide? How will I provide them?
+- Are there any supporting API's I need to create to support my use case?
