@@ -1,5 +1,29 @@
 # UI System Design Foundations
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [UI System Design Foundations](#ui-system-design-foundations)
+  - [UI Components](#ui-components)
+    - [Imperative vs. Reactive Programming](#imperative-vs-reactive-programming)
+    - [Flux Pattern](#flux-pattern)
+    - [Managing State Using Context API](#managing-state-using-context-api)
+  - [Architecture](#architecture)
+    - [Fetching Data](#fetching-data)
+    - [Memory vs. Compute](#memory-vs-compute)
+    - [FE Memory - Heap & Stack](#fe-memory---heap--stack)
+    - [On Demand vs Precomputation](#on-demand-vs-precomputation)
+    - [Offline Web Application & Service Workers](#offline-web-application--service-workers)
+    - [When to use Offline Web Applications](#when-to-use-offline-web-applications)
+    - [PWAS / Service Workers](#pwas--service-workers)
+  - [State Management](#state-management)
+    - [Stateless vs. Stateful Components](#stateless-vs-stateful-components)
+    - [Implement Custom Control](#implement-custom-control)
+    - [Design Embeddable Control for Payment and Checkout](#design-embeddable-control-for-payment-and-checkout)
+
+<!-- /code_chunk_output -->
+
 ---
 
 ## UI Components
@@ -145,7 +169,7 @@ Clarifying Questions
 
 ---
 
-### **FE Memory - Heap & Stack**
+### FE Memory - Heap & Stack
 
 - JavaScript has to manage the variables that are in scope at any given time by allocating memory.
 
@@ -163,7 +187,7 @@ Clarifying Questions
 
 ---
 
-### **On Demand vs Precomputation**
+### On Demand vs Precomputation
 
 - In some circumstances, you can preprocess data to avoid any performance degradation during runtime. Here are some examples of precomputation:
 
@@ -314,6 +338,31 @@ The bulk of the work is in the planning.
  **Interview Question** 
 
  Design a portable UI control that provides a secure and compliant way to capture a payment method. 
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [UI System Design Foundations](#ui-system-design-foundations)
+  - [UI Components](#ui-components)
+    - [Imperative vs. Reactive Programming](#imperative-vs-reactive-programming)
+    - [Flux Pattern](#flux-pattern)
+    - [Managing State Using Context API](#managing-state-using-context-api)
+  - [Architecture](#architecture)
+    - [Fetching Data](#fetching-data)
+    - [Memory vs. Compute](#memory-vs-compute)
+    - [FE Memory - Heap & Stack](#fe-memory---heap--stack)
+    - [On Demand vs Precomputation](#on-demand-vs-precomputation)
+    - [Offline Web Application & Service Workers](#offline-web-application--service-workers)
+    - [When to use Offline Web Applications](#when-to-use-offline-web-applications)
+    - [PWAS / Service Workers](#pwas--service-workers)
+  - [State Management](#state-management)
+    - [Stateless vs. Stateful Components](#stateless-vs-stateful-components)
+    - [Implement Custom Control](#implement-custom-control)
+    - [Design Embeddable Control for Payment and Checkout](#design-embeddable-control-for-payment-and-checkout)
+
+<!-- /code_chunk_output -->
 
 ---
 
