@@ -1,14 +1,83 @@
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Databases](#databases)
+  - [Types of Databases](#types-of-databases)
+    - [Interview Question](#interview-question)
+  - [Relational vs. NoSQL Databases: Key Takeaways](#relational-vs-nosql-databases-key-takeaways)
+    - [**When to Use Each**](#when-to-use-each)
+    - [**The 80/20 Rule of Understanding**](#the-8020-rule-of-understanding)
+    - [ACID Transactions](#acid-transactions)
+  - [NoSQL Databases](#nosql-databases)
+    - [**Key Takeaways**](#key-takeaways)
+    - [**Top Reasons to Use a NoSQL Database**](#top-reasons-to-use-a-nosql-database)
+    - [**When to Choose NoSQL Over SQL**](#when-to-choose-nosql-over-sql)
+  - [SQL Overview and Relation Algebra](#sql-overview-and-relation-algebra)
+    - [**The 20% of SQL That Covers 80% of What You Need**](#the-20-of-sql-that-covers-80-of-what-you-need)
+    - [**🚀 Summary of What You Must Master**](#-summary-of-what-you-must-master)
+  - [SQL Operators: The Essential Guide](#sql-operators-the-essential-guide)
+    - [**1. Comparison Operators (Used in WHERE Clauses)**](#1-comparison-operators-used-in-where-clauses)
+    - [**2. Logical Operators (Used to Combine Conditions)**](#2-logical-operators-used-to-combine-conditions)
+    - [**3. Arithmetic Operators (Used in Calculations)**](#3-arithmetic-operators-used-in-calculations)
+    - [**4. BETWEEN, IN, and LIKE (Advanced Filtering)**](#4-between-in-and-like-advanced-filtering)
+    - [**5. IS NULL & IS NOT NULL (Handling Missing Data)**](#5-is-null--is-not-null-handling-missing-data)
+    - [**6. EXISTS (Check if Data Exists in a Subquery)**](#6-exists-check-if-data-exists-in-a-subquery)
+    - [**7. String Operators (For Text Manipulation)**](#7-string-operators-for-text-manipulation)
+    - [**🚀 SQL Operators Summary (80/20 Key Takeaways)**](#-sql-operators-summary-8020-key-takeaways)
+  - [SQL `CASE` Operator: The Must-Know Guide](#sql-case-operator-the-must-know-guide)
+    - [**1. Basic `CASE` Syntax**](#1-basic-case-syntax)
+    - [**2. Example: Categorizing Users by Age**](#2-example-categorizing-users-by-age)
+    - [**3. Example: Conditional Discounts**](#3-example-conditional-discounts)
+    - [**4. Using `CASE` in `ORDER BY` (Custom Sorting)**](#4-using-case-in-order-by-custom-sorting)
+    - [**5. Using `CASE` in `GROUP BY` (Grouping by Categories)**](#5-using-case-in-group-by-grouping-by-categories)
+    - [**6. Using `CASE` with Aggregate Functions**](#6-using-case-with-aggregate-functions)
+    - [**🚀 Key Takeaways for `CASE`**](#-key-takeaways-for-case)
+  - [Database Views](#database-views)
+    - [**Key Differences**](#key-differences)
+    - [**Key Takeaways**](#key-takeaways-1)
+    - [**When to Use Each**](#when-to-use-each-1)
+    - [**Example Code**](#example-code)
+  - [Materialized Views vs. Summary Tables](#materialized-views-vs-summary-tables)
+    - [**How They Are Similar**](#how-they-are-similar)
+    - [**Key Differences**](#key-differences-1)
+    - [**When to Use Each**](#when-to-use-each-2)
+    - [**TL;DR**](#tldr)
+  - [Case Study](#case-study)
+    - [Interview Question](#interview-question-1)
+    - [Entities and Relationships](#entities-and-relationships)
+      - [1. **Users**](#1-users)
+      - [2. **Products**](#2-products)
+      - [3. **Categories**](#3-categories)
+      - [4. **Orders**](#4-orders)
+      - [5. **Order_Items**](#5-order_items)
+      - [6. **Payments**](#6-payments)
+      - [7. **Addresses**](#7-addresses)
+      - [8. **Reviews**](#8-reviews)
+    - [Example Schema Diagram](#example-schema-diagram)
+    - [Relationships Summary](#relationships-summary)
+    - [Additional Considerations](#additional-considerations)
+  - [Alternative Solution](#alternative-solution)
+    - [Steps to answer the question](#steps-to-answer-the-question)
+
+<!-- /code_chunk_output -->
+
+
+
 # Databases 
 
 ## Types of Databases 
 
-**Interview Question** 
+### Interview Question
 
 Imagine a user auth service which validates a username/password combination with a hashed value in the database. **What kind of database would you expect to use for persistence and why?**
 
 For a **user authentication service**, a **relational (SQL) database** is typically the best choice due to the following reasons:  
 
-**Solution:** **Best Choice: Relational Database (SQL) – PostgreSQL, MySQL, or MariaDB**  
+**Solution:**
+
+**Best Choice: Relational Database (SQL) – PostgreSQL, MySQL, or MariaDB**  
 1. **Strong Data Integrity & Consistency (ACID Compliance)**  
    - Ensures user credentials and authentication records remain consistent and secure.  
    - Prevents issues like duplicate users, race conditions, or partial updates.  
@@ -24,7 +93,8 @@ For a **user authentication service**, a **relational (SQL) database** is typica
    - SQL databases offer **role-based access control (RBAC)** and built-in security features.  
    - Easier to meet security standards like **SOC 2, GDPR, and HIPAA**.  
 
-### **Alternatives & When to Use Them**  
+**Alternatives & When to Use Them**
+
 - **Key-Value Store (e.g., Redis, DynamoDB)**  
   - 🔹 **Use Case:** When speed is critical (e.g., session caching, rate limiting).  
   - 🔹 **Drawback:** Not as strong in data integrity (eventual consistency).  
@@ -33,11 +103,11 @@ For a **user authentication service**, a **relational (SQL) database** is typica
   - 🔹 **Use Case:** If authentication data includes complex, evolving user metadata.  
   - 🔹 **Drawback:** Weaker relational integrity for user-based transactions.  
 
-### **Final Recommendation**  
+**Final Recommendation**  
 ✅ **Use PostgreSQL or MySQL** for secure, structured authentication data.  
 ✅ **Use Redis (key-value) as a cache** for short-term session storage or rate-limiting.  
 
-**Relational vs. NoSQL Databases: Key Takeaways**  
+## Relational vs. NoSQL Databases: Key Takeaways
 
 | Feature               | Relational (SQL) Databases | NoSQL Databases |
 |----------------------|------------------------|----------------|
@@ -67,8 +137,6 @@ For a **user authentication service**, a **relational (SQL) database** is typica
 4. **SQL scales up, NoSQL scales out.**  
 5. **Most modern apps use a mix (polyglot persistence).**  
 
-Would you like any specific examples or deeper dives into use cases?
-
 **Relational Databases** 
 
 - Structure data, well defined. We know the values for each of the fields
@@ -84,7 +152,7 @@ Would you like any specific examples or deeper dives into use cases?
     - Easy to find
     - Easy to handle data that is structured 
 
-**ACID Transactions** 
+### ACID Transactions
 
 [SQL ACID Transactions:  A Detailed Breakdown](../foundations/system-design-foundation)
 
@@ -194,7 +262,7 @@ If you focus on these key concepts, you'll quickly become effective with SQL. He
 
 ---
 
-## **1. SELECT – Retrieving Data (The Core of SQL)**
+1. **SELECT – Retrieving Data (The Core of SQL)**
 **Why?** You can’t do anything in SQL if you don’t know how to get data.  
 
 ✅ **Basic Query**  
@@ -223,7 +291,7 @@ SELECT * FROM table_name ORDER BY launch_year DESC;
 
 ---
 
-## **2. GROUP BY & Aggregations – Summarizing Data**
+2. **GROUP BY & Aggregations – Summarizing Data**
 **Why?** Helps answer "how many?", "what’s the average?", etc.  
 
 ✅ **Basic Aggregation (COUNT, SUM, AVG, MAX, MIN)**  
@@ -256,7 +324,7 @@ HAVING AVG(fruit_pct) > 40;
 
 ---
 
-## **3. JOINs – Connecting Multiple Tables**
+3. **JOINs – Connecting Multiple Tables**
 **Why?** Most real-world databases have **multiple tables**, and you need to link them.  
 
 ✅ **INNER JOIN (Most Common)**
@@ -277,7 +345,7 @@ LEFT JOIN orders ON users.id = orders.user_id;
 
 ---
 
-## **4. INSERT, UPDATE, DELETE – Changing Data**
+4. **INSERT, UPDATE, DELETE – Changing Data**
 **Why?** Databases aren’t just for reading data; you need to modify it too.  
 
 ✅ **Inserting Data**
@@ -303,7 +371,7 @@ DELETE FROM users WHERE name = 'Alice';
 
 ---
 
-## **5. Indexing – Speed Up Queries**
+5. **Indexing – Speed Up Queries**
 **Why?** If queries are slow, indexing **makes them fast**.  
 
 ✅ **Create an Index for Faster Searches**
@@ -320,7 +388,7 @@ EXPLAIN SELECT * FROM users WHERE email = 'alice@email.com';
 
 ---
 
-## **6. Subqueries & CTEs – Writing Cleaner Queries**
+6. **Subqueries & CTEs – Writing Cleaner Queries**
 **Why?** Lets you break down complex queries into readable steps.  
 
 ✅ **Subquery Example**  
@@ -342,7 +410,7 @@ SELECT * FROM recent_launch;
 
 ---
 
-## **7. CASE – If-Else Logic in SQL**
+7. **CASE – If-Else Logic in SQL**
 **Why?** Lets you categorize data dynamically.  
 
 ✅ **CASE Example**
@@ -369,13 +437,13 @@ FROM table_name;
 6. **Subqueries & CTEs** – Break complex queries into smaller steps  
 7. **CASE** – Add conditional logic  
 
-### **SQL Operators: The Essential Guide**  
+## SQL Operators: The Essential Guide
 
 SQL **operators** allow you to filter, compare, and manipulate data effectively. Here’s a breakdown of the most important types of SQL operators that cover **80% of what you need**.
 
 ---
 
-## **1. Comparison Operators (Used in WHERE Clauses)**
+### **1. Comparison Operators (Used in WHERE Clauses)**
 These compare values and return `TRUE` or `FALSE`.
 
 | Operator | Meaning | Example |
@@ -394,7 +462,7 @@ SELECT * FROM users WHERE age > 30;
 
 ---
 
-## **2. Logical Operators (Used to Combine Conditions)**
+### **2. Logical Operators (Used to Combine Conditions)**
 These help refine your conditions.
 
 | Operator | Meaning | Example |
@@ -434,7 +502,7 @@ Operator    Description
 
 ---
 
-## **3. Arithmetic Operators (Used in Calculations)**
+### **3. Arithmetic Operators (Used in Calculations)**
 Used to perform basic math operations.
 
 | Operator | Meaning | Example |
@@ -452,7 +520,7 @@ SELECT name, price - discount AS final_price FROM products;
 
 ---
 
-## **4. BETWEEN, IN, and LIKE (Advanced Filtering)**
+### **4. BETWEEN, IN, and LIKE (Advanced Filtering)**
 **BETWEEN** → Used for ranges.  
 **IN** → Used for multiple specific values.  
 **LIKE** → Used for pattern matching.
@@ -482,7 +550,7 @@ SELECT * FROM users WHERE name LIKE 'A%';
 
 ---
 
-## **5. IS NULL & IS NOT NULL (Handling Missing Data)**
+### **5. IS NULL & IS NOT NULL (Handling Missing Data)**
 Used to check for NULL values.
 
 | Operator | Meaning | Example |
@@ -497,7 +565,7 @@ SELECT * FROM users WHERE email IS NULL;
 
 ---
 
-## **6. EXISTS (Check if Data Exists in a Subquery)**
+### **6. EXISTS (Check if Data Exists in a Subquery)**
 Returns `TRUE` if a subquery has results.
 
 ✅ **Example: Get users who have placed an order**
@@ -509,7 +577,7 @@ WHERE EXISTS (SELECT 1 FROM orders WHERE orders.user_id = users.id);
 
 ---
 
-## **7. String Operators (For Text Manipulation)**
+### **7. String Operators (For Text Manipulation)**
 Used for working with string values.
 
 | Operator | Meaning | Example |
@@ -535,13 +603,13 @@ SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users;
 5. **IS NULL & EXISTS** → Handles missing data and checks if records exist.  
 6. **String Operators (`||`, `CONCAT()`, `UPPER()`, `LOWER()`)** → Helps with text manipulation.
 
-### **SQL `CASE` Operator: The Must-Know Guide**  
+## SQL `CASE` Operator: The Must-Know Guide
 
 The `CASE` operator in SQL is like an **IF-ELSE** statement. It allows you to return different values based on conditions, making your queries **more dynamic and readable**.  
 
 ---
 
-## **1. Basic `CASE` Syntax**
+### **1. Basic `CASE` Syntax**
 ```sql
 CASE 
     WHEN condition1 THEN result1
@@ -555,7 +623,7 @@ END
 
 ---
 
-## **2. Example: Categorizing Users by Age**
+### **2. Example: Categorizing Users by Age**
 ✅ **Scenario**: You want to classify users as `Teen`, `Adult`, or `Senior` based on their age.
 ```sql
 SELECT name, age,
@@ -566,7 +634,7 @@ SELECT name, age,
     END AS age_category
 FROM users;
 ```
-### **🔹 Output**
+ **Output**
 | name   | age | age_category |
 |--------|-----|-------------|
 | Alice  | 16  | Teen        |
@@ -575,7 +643,7 @@ FROM users;
 
 ---
 
-## **3. Example: Conditional Discounts**
+### **3. Example: Conditional Discounts**
 ✅ **Scenario**: Apply discounts based on the total purchase amount.
 ```sql
 SELECT customer_name, total_spent,
@@ -589,7 +657,7 @@ FROM customers;
 
 ---
 
-## **4. Using `CASE` in `ORDER BY` (Custom Sorting)**
+### **4. Using `CASE` in `ORDER BY` (Custom Sorting)**
 ✅ **Scenario**: You want to **prioritize** VIP customers when sorting results.
 ```sql
 SELECT customer_name, total_spent
@@ -605,7 +673,7 @@ ORDER BY
 
 ---
 
-## **5. Using `CASE` in `GROUP BY` (Grouping by Categories)**
+### **5. Using `CASE` in `GROUP BY` (Grouping by Categories)**
 ✅ **Scenario**: Count how many users fall into different age categories.
 ```sql
 SELECT 
@@ -620,7 +688,7 @@ GROUP BY age_category;
 ```
 ---
 
-## **6. Using `CASE` with Aggregate Functions**
+### **6. Using `CASE` with Aggregate Functions**
 ✅ **Scenario**: Get the total revenue for **online** and **offline** sales.
 ```sql
 SELECT 
@@ -632,7 +700,7 @@ FROM sales;
 
 ---
 
-## **🚀 Key Takeaways for `CASE`**
+### **🚀 Key Takeaways for `CASE`**
 1. **Acts like an IF-ELSE statement** for SQL queries.  
 2. **Used in `SELECT`, `ORDER BY`, `GROUP BY`, and aggregate functions.**  
 3. **Returns the first matching condition’s result.**  
@@ -747,7 +815,7 @@ REFRESH MATERIALIZED VIEW monthly_sales;
 
 ---
 
-### **TL;DR**  
+## Materialized Views vs. Summary Tables
 - **Materialized Views = Stored Data + Faster Reads + Needs Refresh**  
 - **Standard Views = No Storage + Always Fresh + Slower Queries**  
 - **Pick the right one based on performance vs. freshness trade-offs**  
@@ -784,13 +852,14 @@ Yes, a **materialized view** is very similar to a **summary table** because both
 
 ## Case Study 
 
-**Interview Question** 
+### Interview Question
     Design a database for an ecommerce website. 
 
     Define the type of database you would use and why. Define entity and relationships that satisfy storage requirements. 
 
 **Solution** 
-### Database Type: **Relational Database (SQL)**
+
+Database Type: **Relational Database (SQL)**
 
 **Why?**
 - **Structured Data**: E-commerce websites typically deal with structured data like products, orders, customers, and payments, which fit well into the relational model.
@@ -986,14 +1055,10 @@ review_date
 - **Security**: Implement security measures like hashing passwords, using prepared statements to prevent SQL injection, and encrypting sensitive data.
 
 This design provides a robust foundation for an e-commerce website, ensuring data integrity, scalability, and efficient querying.
-
-**Alternative Solution**
-
-Here is the extracted text from the image:
-
+## Alternative Solution
 ---
 
-### **Step 1 - Nature of Data (Dynamicity)**  
+**Step 1 - Nature of Data (Dynamicity)**  
 
 - Given that we have dynamic pricing structure and product descriptions we can approach storage in multiple ways:  
   - If dynamic fields are few in number and not directly queried, we can store them in MySQL BLOB types. Then we can de-serialize blobs at application level and create data models.  
@@ -1007,8 +1072,7 @@ Here is the extracted text from the image:
 Here is the extracted text from the image:
 
 ---
-
-### **Step 2 - Type of Database(s)**  
+**Step 2 - Type of Database(s)**  
 
 - As discussed in the last slide we can use hosted RDBMS such as Amazon RDS or MySQL.  
 - In the future if there is a need to support more and more dynamic types, then we can migrate certain (or most) tables to a NoSQL database.  
@@ -1024,13 +1088,9 @@ Here is the extracted text from the image:
 - Propose a design progression that provides a two way door for evolving requirements 
 - Be explicit on what is out of scope (OLAP, ETL, etc, long term storage)
 
-**Requirements Analysis**
-
-Here is the extracted text from the image:
-
 ---
 
-### **Requirement Analysis**  
+**Requirement Analysis**  
 
 - **What is the nature and scale of this eCommerce site? Is it a mature company or a startup?**  
   - Great question! - You can assume this is your own startup. Scale is < 10K users for now.  
