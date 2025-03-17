@@ -1081,7 +1081,6 @@ Here is the extracted text from the image:
 
 ---
 
-
 ### Steps to answer the question 
 
 - The questions will be vague and open ended. It's a good idea to start with requirements analysis and to ask clarifying questions
