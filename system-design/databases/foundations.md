@@ -7,54 +7,54 @@
   - [Types of Databases](#types-of-databases)
     - [Interview Question](#interview-question)
   - [Relational vs. NoSQL Databases: Key Takeaways](#relational-vs-nosql-databases-key-takeaways)
-    - [**When to Use Each**](#when-to-use-each)
-    - [**The 80/20 Rule of Understanding**](#the-8020-rule-of-understanding)
+    - [When to Use Each](#when-to-use-each)
+    - [The 80/20 Rule of Understanding](#the-8020-rule-of-understanding)
     - [ACID Transactions](#acid-transactions)
   - [NoSQL Databases](#nosql-databases)
-    - [**Key Takeaways**](#key-takeaways)
-    - [**Top Reasons to Use a NoSQL Database**](#top-reasons-to-use-a-nosql-database)
-    - [**When to Choose NoSQL Over SQL**](#when-to-choose-nosql-over-sql)
+    - [Key Takeaways](#key-takeaways)
+    - [Top Reasons to Use a NoSQL Database](#top-reasons-to-use-a-nosql-database)
+    - [When to Choose NoSQL Over SQL](#when-to-choose-nosql-over-sql)
   - [SQL Overview and Relation Algebra](#sql-overview-and-relation-algebra)
-    - [**The 20% of SQL That Covers 80% of What You Need**](#the-20-of-sql-that-covers-80-of-what-you-need)
-    - [**🚀 Summary of What You Must Master**](#-summary-of-what-you-must-master)
+    - [The 20% of SQL That Covers 80% of What You Need](#the-20-of-sql-that-covers-80-of-what-you-need)
+    - [Summary of What You Must Master](#summary-of-what-you-must-master)
   - [SQL Operators: The Essential Guide](#sql-operators-the-essential-guide)
-    - [**1. Comparison Operators (Used in WHERE Clauses)**](#1-comparison-operators-used-in-where-clauses)
-    - [**2. Logical Operators (Used to Combine Conditions)**](#2-logical-operators-used-to-combine-conditions)
-    - [**3. Arithmetic Operators (Used in Calculations)**](#3-arithmetic-operators-used-in-calculations)
-    - [**4. BETWEEN, IN, and LIKE (Advanced Filtering)**](#4-between-in-and-like-advanced-filtering)
-    - [**5. IS NULL & IS NOT NULL (Handling Missing Data)**](#5-is-null--is-not-null-handling-missing-data)
-    - [**6. EXISTS (Check if Data Exists in a Subquery)**](#6-exists-check-if-data-exists-in-a-subquery)
-    - [**7. String Operators (For Text Manipulation)**](#7-string-operators-for-text-manipulation)
-    - [**🚀 SQL Operators Summary (80/20 Key Takeaways)**](#-sql-operators-summary-8020-key-takeaways)
+    - [1. Comparison Operators (Used in WHERE Clauses)](#1-comparison-operators-used-in-where-clauses)
+    - [2. Logical Operators (Used to Combine Conditions)](#2-logical-operators-used-to-combine-conditions)
+    - [3. Arithmetic Operators (Used in Calculations)](#3-arithmetic-operators-used-in-calculations)
+    - [4. BETWEEN, IN, and LIKE (Advanced Filtering)](#4-between-in-and-like-advanced-filtering)
+    - [5. IS NULL & IS NOT NULL (Handling Missing Data)](#5-is-null--is-not-null-handling-missing-data)
+    - [6. EXISTS (Check if Data Exists in a Subquery)](#6-exists-check-if-data-exists-in-a-subquery)
+    - [7. String Operators (For Text Manipulation)](#7-string-operators-for-text-manipulation)
+    - [SQL Operators Summary (80/20 Key Takeaways)](#sql-operators-summary-8020-key-takeaways)
   - [SQL `CASE` Operator: The Must-Know Guide](#sql-case-operator-the-must-know-guide)
-    - [**1. Basic `CASE` Syntax**](#1-basic-case-syntax)
-    - [**2. Example: Categorizing Users by Age**](#2-example-categorizing-users-by-age)
-    - [**3. Example: Conditional Discounts**](#3-example-conditional-discounts)
-    - [**4. Using `CASE` in `ORDER BY` (Custom Sorting)**](#4-using-case-in-order-by-custom-sorting)
-    - [**5. Using `CASE` in `GROUP BY` (Grouping by Categories)**](#5-using-case-in-group-by-grouping-by-categories)
-    - [**6. Using `CASE` with Aggregate Functions**](#6-using-case-with-aggregate-functions)
-    - [**🚀 Key Takeaways for `CASE`**](#-key-takeaways-for-case)
+    - [1. Basic `CASE` Syntax](#1-basic-case-syntax)
+    - [2. Example: Categorizing Users by Age](#2-example-categorizing-users-by-age)
+    - [3. Example: Conditional Discounts](#3-example-conditional-discounts)
+    - [4. Using `CASE` in `ORDER BY` (Custom Sorting)](#4-using-case-in-order-by-custom-sorting)
+    - [5. Using `CASE` in `GROUP BY` (Grouping by Categories)](#5-using-case-in-group-by-grouping-by-categories)
+    - [6. Using `CASE` with Aggregate Functions](#6-using-case-with-aggregate-functions)
+    - [🚀 Key Takeaways for `CASE`](#-key-takeaways-for-case)
   - [Database Views](#database-views)
-    - [**Key Differences**](#key-differences)
-    - [**Key Takeaways**](#key-takeaways-1)
-    - [**When to Use Each**](#when-to-use-each-1)
-    - [**Example Code**](#example-code)
+    - [Key Differences](#key-differences)
+    - [Key Takeaways](#key-takeaways-1)
+    - [When to Use Each](#when-to-use-each-1)
+    - [Example Code](#example-code)
   - [Materialized Views vs. Summary Tables](#materialized-views-vs-summary-tables)
-    - [**How They Are Similar**](#how-they-are-similar)
-    - [**Key Differences**](#key-differences-1)
-    - [**When to Use Each**](#when-to-use-each-2)
-    - [**TL;DR**](#tldr)
+    - [How They Are Similar](#how-they-are-similar)
+    - [Key Differences](#key-differences-1)
+    - [When to Use Each](#when-to-use-each-2)
+    - [TL;DR](#tldr)
   - [Case Study](#case-study)
     - [Interview Question](#interview-question-1)
     - [Entities and Relationships](#entities-and-relationships)
-      - [1. **Users**](#1-users)
-      - [2. **Products**](#2-products)
-      - [3. **Categories**](#3-categories)
-      - [4. **Orders**](#4-orders)
-      - [5. **Order_Items**](#5-order_items)
-      - [6. **Payments**](#6-payments)
-      - [7. **Addresses**](#7-addresses)
-      - [8. **Reviews**](#8-reviews)
+      - [1. Users](#1-users)
+      - [2. Products](#2-products)
+      - [3. Categories](#3-categories)
+      - [4. Orders](#4-orders)
+      - [5. Order_Items](#5-order_items)
+      - [6. Payments](#6-payments)
+      - [7. Addresses](#7-addresses)
+      - [8. Reviews](#8-reviews)
     - [Example Schema Diagram](#example-schema-diagram)
     - [Relationships Summary](#relationships-summary)
     - [Additional Considerations](#additional-considerations)
@@ -118,7 +118,7 @@ For a **user authentication service**, a **relational (SQL) database** is typica
 | **Best For**       | Structured, relational data | Unstructured, semi-structured, high-scale data |
 | **Examples**       | MySQL, PostgreSQL, SQL Server | MongoDB, Cassandra, Redis, DynamoDB |
 
-### **When to Use Each**  
+### When to Use Each  
 
 - **Relational Databases (SQL)**
   - When data integrity and consistency matter (e.g., banking, e-commerce transactions).
@@ -130,7 +130,7 @@ For a **user authentication service**, a **relational (SQL) database** is typica
   - When data structure evolves frequently (e.g., content management, IoT).
   - When high availability and fast read/write speeds are more important than strict consistency.
 
-### **The 80/20 Rule of Understanding**  
+### The 80/20 Rule of Understanding 
 1. **SQL = Structured, NoSQL = Flexible.**  
 2. **SQL = Strong consistency, NoSQL = Scalability & speed.**  
 3. **Use SQL for transactions, NoSQL for big data and fast reads/writes.**  
@@ -183,13 +183,13 @@ For a **user authentication service**, a **relational (SQL) database** is typica
 | **Column-Family (Wide-Column)** | Stores data in columns rather than rows | Big data, analytics, time-series data | Apache Cassandra, HBase, ScyllaDB |
 | **Graph** | Stores nodes & relationships between them | Social networks, fraud detection, recommendation engines | Neo4j, ArangoDB, Amazon Neptune |
 
-### **Key Takeaways**
+### Key Takeaways
 1. **Document:** Best for semi-structured data that changes often.  
 2. **Key-Value:** Ultra-fast lookups, great for caching & real-time data. Mostly run in memory
 3. **Column-Family:** Handles huge datasets with fast reads/writes (great for analytics).  
 4. **Graph:** Best when relationships between data are important (e.g., social networks).  
 
-### **Top Reasons to Use a NoSQL Database**  
+### Top Reasons to Use a NoSQL Database
 
 1. **Scalability (Horizontal Scaling)**  
    - Easily distribute data across multiple servers (scales out) rather than relying on bigger hardware (scaling up).  
@@ -217,7 +217,7 @@ For a **user authentication service**, a **relational (SQL) database** is typica
    - **Column-Family:** Large-scale analytics, time-series data.  
    - **Graph:** Social networks, fraud detection, recommendation engines.  
 
-### **When to Choose NoSQL Over SQL**  
+### When to Choose NoSQL Over SQL
 ✅ **When you need massive scalability** (e.g., global applications, social networks).  
 ✅ **When your data structure is constantly evolving** (e.g., dynamic user-generated content).  
 ✅ **When you need high-speed performance with large datasets** (e.g., caching, analytics).  
@@ -256,7 +256,7 @@ This query:
 
 - SQL is a declarative language - it expresses **what** to do (or what to query) **not how** to do it. 
 
-### **The 20% of SQL That Covers 80% of What You Need**  
+### The 20% of SQL That Covers 80% of What You Need
 
 If you focus on these key concepts, you'll quickly become effective with SQL. Here’s the **Pareto Principle (80/20 rule) version of SQL**—the essentials you must master.  
 
@@ -291,7 +291,7 @@ SELECT * FROM table_name ORDER BY launch_year DESC;
 
 ---
 
-2. **GROUP BY & Aggregations – Summarizing Data**
+2. GROUP BY & Aggregations – Summarizing Data
 **Why?** Helps answer "how many?", "what’s the average?", etc.  
 
 ✅ **Basic Aggregation (COUNT, SUM, AVG, MAX, MIN)**  
@@ -428,7 +428,7 @@ FROM table_name;
 
 ---
 
-### **🚀 Summary of What You Must Master**
+### Summary of What You Must Master
 1. **SELECT** – Pull data, use `WHERE`, `ORDER BY`  
 2. **GROUP BY + Aggregations** – Count, sum, average data  
 3. **JOINs** – Connect tables efficiently  
@@ -443,7 +443,7 @@ SQL **operators** allow you to filter, compare, and manipulate data effectively.
 
 ---
 
-### **1. Comparison Operators (Used in WHERE Clauses)**
+### 1. Comparison Operators (Used in WHERE Clauses)
 These compare values and return `TRUE` or `FALSE`.
 
 | Operator | Meaning | Example |
@@ -462,7 +462,7 @@ SELECT * FROM users WHERE age > 30;
 
 ---
 
-### **2. Logical Operators (Used to Combine Conditions)**
+### 2. Logical Operators (Used to Combine Conditions)
 These help refine your conditions.
 
 | Operator | Meaning | Example |
@@ -502,7 +502,7 @@ Operator    Description
 
 ---
 
-### **3. Arithmetic Operators (Used in Calculations)**
+### 3. Arithmetic Operators (Used in Calculations)
 Used to perform basic math operations.
 
 | Operator | Meaning | Example |
@@ -520,7 +520,7 @@ SELECT name, price - discount AS final_price FROM products;
 
 ---
 
-### **4. BETWEEN, IN, and LIKE (Advanced Filtering)**
+### 4. BETWEEN, IN, and LIKE (Advanced Filtering)
 **BETWEEN** → Used for ranges.  
 **IN** → Used for multiple specific values.  
 **LIKE** → Used for pattern matching.
@@ -550,7 +550,7 @@ SELECT * FROM users WHERE name LIKE 'A%';
 
 ---
 
-### **5. IS NULL & IS NOT NULL (Handling Missing Data)**
+### 5. IS NULL & IS NOT NULL (Handling Missing Data)
 Used to check for NULL values.
 
 | Operator | Meaning | Example |
@@ -565,7 +565,7 @@ SELECT * FROM users WHERE email IS NULL;
 
 ---
 
-### **6. EXISTS (Check if Data Exists in a Subquery)**
+### 6. EXISTS (Check if Data Exists in a Subquery)
 Returns `TRUE` if a subquery has results.
 
 ✅ **Example: Get users who have placed an order**
@@ -577,7 +577,7 @@ WHERE EXISTS (SELECT 1 FROM orders WHERE orders.user_id = users.id);
 
 ---
 
-### **7. String Operators (For Text Manipulation)**
+### 7. String Operators (For Text Manipulation)
 Used for working with string values.
 
 | Operator | Meaning | Example |
@@ -594,7 +594,7 @@ SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users;
 
 ---
 
-### **🚀 SQL Operators Summary (80/20 Key Takeaways)**
+### SQL Operators Summary (80/20 Key Takeaways)
 
 1. **Comparison (`=`, `!=`, `>`, `<`, `>=`, `<=`)** → Filters rows based on conditions.  
 2. **Logical (`AND`, `OR`, `NOT`)** → Combines conditions for better filtering.  
@@ -609,7 +609,7 @@ The `CASE` operator in SQL is like an **IF-ELSE** statement. It allows you to re
 
 ---
 
-### **1. Basic `CASE` Syntax**
+### 1. Basic `CASE` Syntax
 ```sql
 CASE 
     WHEN condition1 THEN result1
@@ -623,7 +623,7 @@ END
 
 ---
 
-### **2. Example: Categorizing Users by Age**
+### 2. Example: Categorizing Users by Age
 ✅ **Scenario**: You want to classify users as `Teen`, `Adult`, or `Senior` based on their age.
 ```sql
 SELECT name, age,
@@ -643,7 +643,7 @@ FROM users;
 
 ---
 
-### **3. Example: Conditional Discounts**
+### 3. Example: Conditional Discounts
 ✅ **Scenario**: Apply discounts based on the total purchase amount.
 ```sql
 SELECT customer_name, total_spent,
@@ -657,7 +657,7 @@ FROM customers;
 
 ---
 
-### **4. Using `CASE` in `ORDER BY` (Custom Sorting)**
+### 4. Using `CASE` in `ORDER BY` (Custom Sorting)
 ✅ **Scenario**: You want to **prioritize** VIP customers when sorting results.
 ```sql
 SELECT customer_name, total_spent
@@ -673,7 +673,7 @@ ORDER BY
 
 ---
 
-### **5. Using `CASE` in `GROUP BY` (Grouping by Categories)**
+### 5. Using `CASE` in `GROUP BY` (Grouping by Categories)
 ✅ **Scenario**: Count how many users fall into different age categories.
 ```sql
 SELECT 
@@ -688,7 +688,7 @@ GROUP BY age_category;
 ```
 ---
 
-### **6. Using `CASE` with Aggregate Functions**
+### 6. Using `CASE` with Aggregate Functions
 ✅ **Scenario**: Get the total revenue for **online** and **offline** sales.
 ```sql
 SELECT 
@@ -700,7 +700,7 @@ FROM sales;
 
 ---
 
-### **🚀 Key Takeaways for `CASE`**
+### 🚀 Key Takeaways for `CASE`
 1. **Acts like an IF-ELSE statement** for SQL queries.  
 2. **Used in `SELECT`, `ORDER BY`, `GROUP BY`, and aggregate functions.**  
 3. **Returns the first matching condition’s result.**  
@@ -752,7 +752,7 @@ Here’s the **80/20 breakdown** of **Materialized Views vs. Non-Materialized Vi
 
 ---
 
-### **Key Differences**  
+### Key Differences
 
 | Feature              | **Materialized View** | **Non-Materialized View (Standard View)** |
 |----------------------|---------------------|----------------------------------|
@@ -764,7 +764,7 @@ Here’s the **80/20 breakdown** of **Materialized Views vs. Non-Materialized Vi
 
 ---
 
-### **Key Takeaways**  
+### Key Takeaways
 
 1. **Materialized Views are Precomputed**  
    - They store actual data, making queries **much faster**, especially for expensive aggregations.  
@@ -778,7 +778,7 @@ Here’s the **80/20 breakdown** of **Materialized Views vs. Non-Materialized Vi
 
 ---
 
-### **When to Use Each**  
+### When to Use Each
 
 ✅ **Use a Materialized View when:**  
 - Querying large datasets with heavy aggregations (e.g., `SUM()`, `COUNT()`, `AVG()`).  
@@ -792,7 +792,7 @@ Here’s the **80/20 breakdown** of **Materialized Views vs. Non-Materialized Vi
 
 ---
 
-### **Example Code**  
+### Example Code
 
 **Standard View (Real-time, No Storage)**  
 ```sql
@@ -822,12 +822,12 @@ REFRESH MATERIALIZED VIEW monthly_sales;
 
 Yes, a **materialized view** is very similar to a **summary table** because both store **precomputed data** for faster querying. However, they have some key differences:  
 
-### **How They Are Similar**  
+### How They Are Similar
 - Both **store data physically** (unlike standard views, which don’t).  
 - Both improve performance by avoiding repeated expensive queries.  
 - Both are used for **preaggregated or summarized** data, like sales totals or customer counts.  
 
-### **Key Differences**  
+### Key Differences
 | Feature | **Materialized View** | **Summary Table** |
 |---------|---------------------|-----------------|
 | **Definition** | A virtual table that stores query results and can be refreshed | A manually created table that stores precomputed data |
@@ -835,7 +835,7 @@ Yes, a **materialized view** is very similar to a **summary table** because both
 | **Flexibility** | Can be **automatically refreshed** in some databases | Requires manual maintenance or scheduled jobs |
 | **Use Case** | Automates caching of results for performance | Stores long-term summary data for reporting |
 
-### **When to Use Each**  
+### When to Use Each
 ✅ **Use a Materialized View** when:  
 - You need **automated refreshes** without managing table updates manually.  
 - You're working with databases that support them (PostgreSQL, Oracle, etc.).  
@@ -846,7 +846,7 @@ Yes, a **materialized view** is very similar to a **summary table** because both
 - Your database **does not support materialized views**.  
 - You want to store **historical summaries** that don't need frequent updates.  
 
-### **TL;DR**  
+### TL;DR
 ✔ **Materialized Views are like automated summary tables** that refresh with a command.  
 ✔ **Summary Tables require manual updates but offer full control over stored data.**  
 
@@ -869,7 +869,7 @@ Database Type: **Relational Database (SQL)**
 
 ### Entities and Relationships
 
-#### 1. **Users**
+#### 1. Users
    - **Attributes**:
      - `user_id` (Primary Key)
      - `username`
@@ -884,7 +884,7 @@ Database Type: **Relational Database (SQL)**
      - One-to-Many with `Addresses`
      - One-to-Many with `Payments`
 
-#### 2. **Products**
+#### 2. Products
    - **Attributes**:
      - `product_id` (Primary Key)
      - `name`
@@ -898,7 +898,7 @@ Database Type: **Relational Database (SQL)**
      - Many-to-One with `Categories`
      - Many-to-Many with `Orders` (through `Order_Items`)
 
-#### 3. **Categories**
+#### 3. Categories
    - **Attributes**:
      - `category_id` (Primary Key)
      - `name`
@@ -908,7 +908,7 @@ Database Type: **Relational Database (SQL)**
      - One-to-Many with `Products`
      - Self-Referencing for hierarchical categories
 
-#### 4. **Orders**
+#### 4. Orders
    - **Attributes**:
      - `order_id` (Primary Key)
      - `user_id` (Foreign Key to `Users`)
@@ -920,7 +920,7 @@ Database Type: **Relational Database (SQL)**
      - One-to-Many with `Order_Items`
      - One-to-One with `Payments`
 
-#### 5. **Order_Items**
+#### 5. Order_Items
    - **Attributes**:
      - `order_item_id` (Primary Key)
      - `order_id` (Foreign Key to `Orders`)
@@ -931,7 +931,7 @@ Database Type: **Relational Database (SQL)**
      - Many-to-One with `Orders`
      - Many-to-One with `Products`
 
-#### 6. **Payments**
+#### 6. Payments
    - **Attributes**:
      - `payment_id` (Primary Key)
      - `order_id` (Foreign Key to `Orders`)
@@ -942,7 +942,7 @@ Database Type: **Relational Database (SQL)**
    - **Relationships**:
      - Many-to-One with `Orders`
 
-#### 7. **Addresses**
+#### 7. Addresses
    - **Attributes**:
      - `address_id` (Primary Key)
      - `user_id` (Foreign Key to `Users`)
@@ -954,7 +954,7 @@ Database Type: **Relational Database (SQL)**
    - **Relationships**:
      - Many-to-One with `Users`
 
-#### 8. **Reviews**
+#### 8. Reviews
    - **Attributes**:
      - `review_id` (Primary Key)
      - `user_id` (Foreign Key to `Users`)
