@@ -60,6 +60,57 @@
     - [Additional Considerations](#additional-considerations)
   - [Alternative Solution](#alternative-solution)
     - [Steps to answer the question](#steps-to-answer-the-question)
+  - [Database Internals](#database-internals)
+    - [Indexing](#indexing)
+    - [Algos](#algos)
+    - [Stages of Query Processing](#stages-of-query-processing)
+  - [1. Database Permissions](#1-database-permissions)
+    - [Common Types of Permissions](#common-types-of-permissions)
+  - [2. User Roles vs. Database Roles](#2-user-roles-vs-database-roles)
+    - [A. User Roles](#a-user-roles)
+    - [B. Database Roles](#b-database-roles)
+      - [Common Database Roles (SQL Server Example)](#common-database-roles-sql-server-example)
+  - [3. Best Practices for Managing Database Permissions](#3-best-practices-for-managing-database-permissions)
+  - [4. When to Use Each?](#4-when-to-use-each)
+    - [Summary (80/20 Rule)](#summary-8020-rule)
+    - [Database Permissions, User Roles, and Database Roles](#database-permissions-user-roles-and-database-roles)
+  - [1. Database Permissions](#1-database-permissions-1)
+    - [Common Types of Permissions](#common-types-of-permissions-1)
+  - [2. User Roles vs. Database Roles](#2-user-roles-vs-database-roles-1)
+    - [A. User Roles](#a-user-roles-1)
+    - [B. Database Roles](#b-database-roles-1)
+      - [Common Database Roles (SQL Server Example)](#common-database-roles-sql-server-example-1)
+  - [3. Best Practices for Managing Database Permissions](#3-best-practices-for-managing-database-permissions-1)
+  - [4. When to Use Each?](#4-when-to-use-each-1)
+    - [Summary (80/20 Rule)](#summary-8020-rule-1)
+  - [MongoDB](#mongodb)
+    - [What is MongoDB?](#what-is-mongodb)
+    - [Key Features of BSON:](#key-features-of-bson)
+    - [BSON vs JSON:](#bson-vs-json)
+    - [CRUD Operations](#crud-operations)
+    - [1. Create (`insertOne` / `insertMany`)](#1-create-insertone--insertmany)
+    - [2. Read (`find` / `findOne`)](#2-read-find--findone)
+    - [3. Update (`updateOne` / `updateMany`)](#3-update-updateone--updatemany)
+    - [4. Delete (`deleteOne` / `deleteMany`)](#4-delete-deleteone--deletemany)
+    - [Full JavaScript Example (Using MongoDB Node.js Driver)](#full-javascript-example-using-mongodb-nodejs-driver)
+    - [Key Notes](#key-notes)
+    - [Key Takeaways](#key-takeaways-2)
+    - [Pareto Principle (80/20 Rule) in MongoDB](#pareto-principle-8020-rule-in-mongodb)
+      - [20% of Features → 80% of Results](#20-of-features--80-of-results)
+      - [20% of Mistakes → 80% of Issues](#20-of-mistakes--80-of-issues)
+    - [Example: Pareto in Action](#example-pareto-in-action)
+    - [Conclusion](#conclusion)
+  - [MongoDB Aggregation Pipeline Stages](#mongodb-aggregation-pipeline-stages)
+    - [Aggregation Examples](#aggregation-examples)
+      - [1. Simple Aggregation: Count Active Users](#1-simple-aggregation-count-active-users)
+      - [2. Group by Field: Total Sales by Product](#2-group-by-field-total-sales-by-product)
+      - [3. Unwind Arrays: Analyze Tags](#3-unwind-arrays-analyze-tags)
+      - [4. Join Collections: Orders with User Details](#4-join-collections-orders-with-user-details)
+      - [5. Pagination: Top 10 Active Users](#5-pagination-top-10-active-users)
+      - [6. Complex Aggregation: Average Order Value by User](#6-complex-aggregation-average-order-value-by-user)
+    - [Full JavaScript Example (Using MongoDB Node.js Driver)](#full-javascript-example-using-mongodb-nodejs-driver-1)
+    - [Key Takeaways](#key-takeaways-3)
+  - [MongoDB Interview Questions](#mongodb-interview-questions)
 
 <!-- /code_chunk_output -->
 
@@ -1244,10 +1295,239 @@ When designing a database for an e-commerce website or any complex system, askin
 
 ---
 
+## Database Internals 
+
+### Indexing 
+
+  Clustered Indexes vs. non-clustered indexes 
+  - Index data structures 
+    - Hash-based 
+    - Tree-based 
+
+---
+
+### Algos 
+
+1. **Selection**: Which rows do you want
+2. **Projection**: Which columns do you want 
+3. **Joins**
+
+---
+
+### Stages of Query Processing 
+
+1. **Parser and algebrizer**: Checks syntax, identify data types,  & permissions
+
+2. **Query Optimizer & Execution Plan**: Determins the most efficient way to execute the query 
+
+3. **Query Execution Engine and Results Retrieval**: Runs the plan and returns data efficiently. 
+
+---
+
+## 1. Database Permissions
+Permissions define what a user or role **can and cannot do** in a database. They can be **fine-grained** (e.g., per column) or **broad** (e.g., full database access).  
+
+### Common Types of Permissions  
+| Permission | Description |
+|------------|-------------|
+| **SELECT** | Read data from a table/view. |
+| **INSERT** | Add new rows to a table. |
+| **UPDATE** | Modify existing data in a table. |
+| **DELETE** | Remove rows from a table. |
+| **CREATE** | Create new tables, indexes, or databases. |
+| **ALTER** | Modify table schema or other objects. |
+| **DROP** | Delete a database object (table, view, index, etc.). |
+| **GRANT** | Give permissions to other users/roles. |
+| **REVOKE** | Remove previously granted permissions. |
+
+💡 **Example (Granting Permissions in PostgreSQL):**  
+```sql
+GRANT SELECT, INSERT ON orders TO sales_user;
+```
+
+💡 **Example (Revoking Permissions in MySQL):**  
+```sql
+REVOKE DELETE ON customers FROM junior_staff;
+```
+
+---
+
+## 2. User Roles vs. Database Roles
+**User roles** and **database roles** simplify permission management by grouping users with similar privileges.
+
+### A. User Roles
+- **A role is like a template for users** (e.g., "Admin", "Developer", "Analyst").  
+- Users inherit permissions from roles.  
+- Modifying the role updates all users with that role.  
+
+💡 **Example (Creating a Role in PostgreSQL):**  
+```sql
+CREATE ROLE analyst;
+GRANT SELECT ON sales TO analyst;
+GRANT analyst TO john_doe;
+```
+Now `john_doe` has **SELECT access** to `sales`.
+
+---
+
+### B. Database Roles
+- Some databases (like SQL Server) have **predefined roles**.  
+- **Fixed server roles** → Apply to the entire database server.  
+- **Fixed database roles** → Apply within a specific database.  
+
+#### Common Database Roles (SQL Server Example)
+| Role | Description |
+|------------|-------------|
+| **db_owner** | Full control over the database. |
+| **db_datareader** | Can read all data but not modify it. |
+| **db_datawriter** | Can insert, update, and delete data. |
+| **db_ddladmin** | Can modify schema (CREATE, ALTER, DROP). |
+| **db_securityadmin** | Manages security settings (permissions). |
+| **db_backupoperator** | Can back up the database. |
+
+💡 **Example (Assigning a Database Role in SQL Server):**  
+```sql
+ALTER ROLE db_datareader ADD MEMBER employee_user;
+```
+Now `employee_user` can **read** all data in the database.
+
+---
+
+## 3. Best Practices for Managing Database Permissions
+✅ **Use Roles Instead of Assigning Individual Permissions** – Makes management easier.  
+✅ **Follow the Principle of Least Privilege** – Give only the necessary access.  
+✅ **Use GRANT and REVOKE Carefully** – Avoid over-permissioning.  
+✅ **Regularly Audit User Permissions** – Remove unused accounts and privileges.  
+✅ **Restrict Superuser/Admin Access** – Minimize `db_owner` and `superuser` roles.  
+
+---
+
+## 4. When to Use Each?
+| Scenario | Solution |
+|----------|-----------|
+| A developer needs to modify tables but not delete data. | **Grant `ALTER` and `INSERT/UPDATE`, but not `DELETE`**. |
+| An analyst should only view reports, not edit them. | **Use `SELECT` and `db_datareader` role**. |
+| A junior employee needs to access only customer data. | **Create a role with `SELECT` on `customers` table only**. |
+| A database administrator should have full control. | **Assign `db_owner` or `superuser` role**. |
+
+---
+
+### Summary (80/20 Rule)
+- **Permissions** control what users can do (**SELECT, INSERT, UPDATE, DELETE, etc.**).  
+- **User roles** help manage privileges efficiently by grouping users.  
+- **Database roles** provide predefined security structures (e.g., `db_owner`, `db_datareader`).  
+- **Best practice:** Use roles instead of assigning direct permissions to users.  
+
+---
+
+### Database Permissions, User Roles, and Database Roles
+
+Database permissions and roles are essential for managing security, restricting access, and ensuring users have the appropriate privileges to perform actions.  
+
+---
+
+## 1. Database Permissions
+Permissions define what a user or role **can and cannot do** in a database. They can be **fine-grained** (e.g., per column) or **broad** (e.g., full database access).  
+
+### Common Types of Permissions  
+| Permission | Description |
+|------------|-------------|
+| **SELECT** | Read data from a table/view. |
+| **INSERT** | Add new rows to a table. |
+| **UPDATE** | Modify existing data in a table. |
+| **DELETE** | Remove rows from a table. |
+| **CREATE** | Create new tables, indexes, or databases. |
+| **ALTER** | Modify table schema or other objects. |
+| **DROP** | Delete a database object (table, view, index, etc.). |
+| **GRANT** | Give permissions to other users/roles. |
+| **REVOKE** | Remove previously granted permissions. |
+
+💡 **Example (Granting Permissions in PostgreSQL):**  
+```sql
+GRANT SELECT, INSERT ON orders TO sales_user;
+```
+
+💡 **Example (Revoking Permissions in MySQL):**  
+```sql
+REVOKE DELETE ON customers FROM junior_staff;
+```
+
+---
+
+## 2. User Roles vs. Database Roles
+**User roles** and **database roles** simplify permission management by grouping users with similar privileges.
+
+### A. User Roles
+- **A role is like a template for users** (e.g., "Admin", "Developer", "Analyst").  
+- Users inherit permissions from roles.  
+- Modifying the role updates all users with that role.  
+
+💡 **Example (Creating a Role in PostgreSQL):**  
+```sql
+CREATE ROLE analyst;
+GRANT SELECT ON sales TO analyst;
+GRANT analyst TO john_doe;
+```
+Now `john_doe` has **SELECT access** to `sales`.
+
+---
+
+### B. Database Roles
+- Some databases (like SQL Server) have **predefined roles**.  
+- **Fixed server roles** → Apply to the entire database server.  
+- **Fixed database roles** → Apply within a specific database.  
+
+#### Common Database Roles (SQL Server Example)
+| Role | Description |
+|------------|-------------|
+| **db_owner** | Full control over the database. |
+| **db_datareader** | Can read all data but not modify it. |
+| **db_datawriter** | Can insert, update, and delete data. |
+| **db_ddladmin** | Can modify schema (CREATE, ALTER, DROP). |
+| **db_securityadmin** | Manages security settings (permissions). |
+| **db_backupoperator** | Can back up the database. |
+
+💡 **Example (Assigning a Database Role in SQL Server):**  
+```sql
+ALTER ROLE db_datareader ADD MEMBER employee_user;
+```
+Now `employee_user` can **read** all data in the database.
+
+---
+
+## 3. Best Practices for Managing Database Permissions
+✅ **Use Roles Instead of Assigning Individual Permissions** – Makes management easier.  
+✅ **Follow the Principle of Least Privilege** – Give only the necessary access.  
+✅ **Use GRANT and REVOKE Carefully** – Avoid over-permissioning.  
+✅ **Regularly Audit User Permissions** – Remove unused accounts and privileges.  
+✅ **Restrict Superuser/Admin Access** – Minimize `db_owner` and `superuser` roles.  
+
+---
+
+## 4. When to Use Each?
+| Scenario | Solution |
+|----------|-----------|
+| A developer needs to modify tables but not delete data. | **Grant `ALTER` and `INSERT/UPDATE`, but not `DELETE`**. |
+| An analyst should only view reports, not edit them. | **Use `SELECT` and `db_datareader` role**. |
+| A junior employee needs to access only customer data. | **Create a role with `SELECT` on `customers` table only**. |
+| A database administrator should have full control. | **Assign `db_owner` or `superuser` role**. |
+
+---
+
+### Summary (80/20 Rule)
+- **Permissions** control what users can do (**SELECT, INSERT, UPDATE, DELETE, etc.**).  
+- **User roles** help manage privileges efficiently by grouping users.  
+- **Database roles** provide predefined security structures (e.g., `db_owner`, `db_datareader`).  
+- **Best practice:** Use roles instead of assigning direct permissions to users.  
+
+---
+
 ## MongoDB 
 
 ### What is MongoDB?  
-MongoDB is a **NoSQL, document-oriented database** designed for scalability, flexibility, and high-performance data storage and retrieval. Instead of tables and rows (like SQL), it stores data in **JSON-like documents** (BSON format) with dynamic schemas, making it ideal for unstructured or semi-structured data.  
+MongoDB is a **NoSQL, document-oriented database** designed for scalability, flexibility, and high-performance data storage and retrieval. Instead of tables and rows (like SQL), it stores data in **JSON-like documents** (BSON format) with dynamic schemas, making it ideal for unstructured or semi-structured data. 
+
+---
 
 ### Key Features of BSON:
 1. **Binary Encoding**:
@@ -1343,7 +1623,7 @@ db.users.updateOne(
 
 ---
 
-### **4. Delete (`deleteOne` / `deleteMany`)**  
+### 4. Delete (`deleteOne` / `deleteMany`)
 Remove documents from a collection.  
 **Example:** Delete a user by email.  
 ```javascript
@@ -1514,9 +1794,9 @@ Absolutely! Aggregation in MongoDB is a powerful feature that allows you to proc
 
 ---
 
-### **Aggregation Examples**
+### Aggregation Examples
 
-#### **1. Simple Aggregation: Count Active Users**
+#### 1. Simple Aggregation: Count Active Users
 Count the number of active users.
 ```javascript
 db.users.aggregate([
@@ -1527,7 +1807,7 @@ db.users.aggregate([
 
 ---
 
-#### **2. Group by Field: Total Sales by Product**
+#### 2. Group by Field: Total Sales by Product
 Calculate total sales for each product.
 ```javascript
 db.orders.aggregate([
@@ -1538,7 +1818,7 @@ db.orders.aggregate([
 
 ---
 
-#### **3. Unwind Arrays: Analyze Tags**
+#### 3. Unwind Arrays: Analyze Tags
 Unwind an array field (e.g., tags) and count occurrences.
 ```javascript
 db.posts.aggregate([
@@ -1549,7 +1829,7 @@ db.posts.aggregate([
 
 ---
 
-#### **4. Join Collections: Orders with User Details**
+#### 4. Join Collections: Orders with User Details
 Join `orders` with `users` to include user details.
 ```javascript
 db.orders.aggregate([
@@ -1568,7 +1848,7 @@ db.orders.aggregate([
 
 ---
 
-#### **5. Pagination: Top 10 Active Users**
+#### 5. Pagination: Top 10 Active Users
 Find the top 10 active users by activity count.
 ```javascript
 db.users.aggregate([
@@ -1580,7 +1860,7 @@ db.users.aggregate([
 
 ---
 
-#### **6. Complex Aggregation: Average Order Value by User**
+#### 6. Complex Aggregation: Average Order Value by User
 Calculate the average order value for each user.
 ```javascript
 db.orders.aggregate([
@@ -1591,7 +1871,7 @@ db.orders.aggregate([
 
 ---
 
-### **Full JavaScript Example (Using MongoDB Node.js Driver)**  
+### Full JavaScript Example (Using MongoDB Node.js Driver)  
 ```javascript
 const { MongoClient } = require("mongodb");
 
@@ -1622,10 +1902,18 @@ main().catch(console.error);
 
 ---
 
-### **Key Takeaways**
+### Key Takeaways
 1. **Pipeline Stages**: Combine stages like `$match`, `$group`, `$sort`, and `$project` to build complex queries.
 2. **Performance**: Use indexes to optimize aggregation pipelines, especially for large datasets.
 3. **Flexibility**: Aggregation is ideal for analytics, reporting, and data transformation.
 4. **Joins**: Use `$lookup` to combine data from multiple collections.
 
 By mastering aggregation, you can unlock MongoDB’s full potential for data analysis and transformation! 🚀
+
+## MongoDB Interview Questions 
+
+1. **Atomocity**: MongoDB writes are **atomic** for a given document - even if there are multiple writes within that document. However, writes are **not atomic** across **multiple documents**. 
+
+ 2. **Transactions**: There are libraries that can handle multi-document transactions. This happens through the transactions API. 
+
+3. **Query performance/tuning**: MongoDB provides methods for getting stats on query performance. **Explain** is one of those methods to use on an existing query. 
