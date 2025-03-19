@@ -196,6 +196,8 @@ Here’s a simple breakdown of each **normal form (NF):**
 #### **First Normal Form (1NF) – Atomicity**  
 ✅ Each column contains only atomic (indivisible) values.  
 ✅ No repeating groups or arrays in a single row.  
+✅ Each row must be unique 
+✅ The order of columns and the order of the rows are not significant 
 
 **Example (Before 1NF - Bad Table Design)**  
 | OrderID | Customer | Products Purchased  |  
