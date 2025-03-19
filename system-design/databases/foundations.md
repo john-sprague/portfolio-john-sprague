@@ -1246,7 +1246,7 @@ When designing a database for an e-commerce website or any complex system, askin
 
 ## MongoDB 
 
-### **What is MongoDB?**  
+### What is MongoDB?  
 MongoDB is a **NoSQL, document-oriented database** designed for scalability, flexibility, and high-performance data storage and retrieval. Instead of tables and rows (like SQL), it stores data in **JSON-like documents** (BSON format) with dynamic schemas, making it ideal for unstructured or semi-structured data.  
 
 ### Key Features of BSON:
@@ -1292,7 +1292,7 @@ Here are the **CRUD operations** (Create, Read, Update, Delete) in MongoDB with 
 
 ---
 
-### **1. Create (`insertOne` / `insertMany`)**  
+### 1. Create (`insertOne` / `insertMany`) 
 Add new documents to a collection.  
 **Example:** Insert a single document into the `users` collection.  
 ```javascript
@@ -1307,7 +1307,7 @@ db.users.insertOne({
 
 ---
 
-### **2. Read (`find` / `findOne`)**  
+### 2. Read (`find` / `findOne`) 
 Query documents from a collection.  
 **Example:** Find all users with `status: "active"`.  
 ```javascript
@@ -1320,9 +1320,11 @@ const user = db.users.findOne({ email: "alice@example.com" });
 console.log(user);
 ```
 
+![alt text](image.png)
+
 ---
 
-### **3. Update (`updateOne` / `updateMany`)**  
+### 3. Update (`updateOne` / `updateMany`)
 Modify existing documents.  
 **Example:** Update Alice's age to `31`.  
 ```javascript
@@ -1354,7 +1356,7 @@ db.users.deleteMany({ status: "inactive" });
 
 ---
 
-### **Full JavaScript Example (Using MongoDB Node.js Driver)**  
+### Full JavaScript Example (Using MongoDB Node.js Driver)
 ```javascript
 const { MongoClient } = require("mongodb");
 
@@ -1399,7 +1401,7 @@ main().catch(console.error);
 
 ---
 
-### **Key Notes**  
+### Key Notes 
 - **`insertOne` vs. `insertMany`**: Use `insertMany` to add multiple documents in one operation.  
 - **`find` vs. `findOne`**: `find` returns a cursor (multiple documents), while `findOne` returns a single document.  
 - **Update Operators**: Use `$set`, `$inc`, `$push`, etc., to modify fields.  
@@ -1407,7 +1409,7 @@ main().catch(console.error);
 
 ---
 
-### **Key Takeaways**  
+### Key Takeaways 
 1. **Document Model**:  
    - Data is stored as **collections of documents** (similar to JSON objects).  
    - Example:  
@@ -1443,10 +1445,10 @@ main().catch(console.error);
 
 ---
 
-### **Pareto Principle (80/20 Rule) in MongoDB**  
+### Pareto Principle (80/20 Rule) in MongoDB 
 The Pareto Principle states that **80% of results come from 20% of efforts**. Applied to MongoDB:  
 
-#### **20% of Features → 80% of Results**  
+#### 20% of Features → 80% of Results 
 1. **Indexing**:  
    - Proper indexing (even on a few critical fields) eliminates 80% of slow queries.  
    - Example: Indexing `user_id` and `timestamp` for fast lookups.  
@@ -1465,7 +1467,7 @@ The Pareto Principle states that **80% of results come from 20% of efforts**. Ap
 
 ---
 
-#### **20% of Mistakes → 80% of Issues**  
+#### 20% of Mistakes → 80% of Issues  
 1. **Poor Indexing**:  
    - Missing or redundant indexes cause 80% of performance problems.  
 
@@ -1483,7 +1485,7 @@ The Pareto Principle states that **80% of results come from 20% of efforts**. Ap
 
 ---
 
-### **Example: Pareto in Action**  
+### Example: Pareto in Action
 - **Effort**: Indexing the top 3 queried fields.  
 - **Result**: Eliminates 80% of slow queries.  
 - **Effort**: Denormalizing 20% of frequently joined data.  
@@ -1491,5 +1493,139 @@ The Pareto Principle states that **80% of results come from 20% of efforts**. Ap
 
 ---
 
-### **Conclusion**  
+### Conclusion  
 Focus on **indexing, schema design, and sharding** to maximize MongoDB’s performance with minimal effort. Avoid common pitfalls like over-normalization and poor monitoring. By prioritizing these 20% of critical areas, you’ll achieve 80% of your database’s potential.
+
+(Due to technical issues, the search service is temporarily unavailable.)
+
+Absolutely! Aggregation in MongoDB is a powerful feature that allows you to process and analyze data in a pipeline of stages. Each stage transforms the documents as they pass through the pipeline. Below are some common aggregation commands and examples in JavaScript.
+
+---
+
+## MongoDB Aggregation Pipeline Stages
+1. **`$match`**: Filters documents to pass only those that match the specified condition.
+2. **`$group`**: Groups documents by a specified key and applies aggregate functions (e.g., `$sum`, `$avg`).
+3. **`$sort`**: Sorts documents by specified fields.
+4. **`$project`**: Selects specific fields to include or exclude in the output.
+5. **`$unwind`**: Deconstructs an array field, creating a document for each element.
+6. **`$lookup`**: Performs a left outer join with another collection.
+7. **`$limit`**: Limits the number of documents passed to the next stage.
+8. **`$skip`**: Skips a specified number of documents.
+
+---
+
+### **Aggregation Examples**
+
+#### **1. Simple Aggregation: Count Active Users**
+Count the number of active users.
+```javascript
+db.users.aggregate([
+  { $match: { status: "active" } }, // Filter active users
+  { $group: { _id: null, count: { $sum: 1 } } } // Count documents
+]);
+```
+
+---
+
+#### **2. Group by Field: Total Sales by Product**
+Calculate total sales for each product.
+```javascript
+db.orders.aggregate([
+  { $group: { _id: "$product", totalSales: { $sum: "$price" } } }, // Group by product
+  { $sort: { totalSales: -1 } } // Sort by total sales (descending)
+]);
+```
+
+---
+
+#### **3. Unwind Arrays: Analyze Tags**
+Unwind an array field (e.g., tags) and count occurrences.
+```javascript
+db.posts.aggregate([
+  { $unwind: "$tags" }, // Deconstruct tags array
+  { $group: { _id: "$tags", count: { $sum: 1 } } } // Count occurrences
+]);
+```
+
+---
+
+#### **4. Join Collections: Orders with User Details**
+Join `orders` with `users` to include user details.
+```javascript
+db.orders.aggregate([
+  {
+    $lookup: { // Join with users collection
+      from: "users",
+      localField: "userId",
+      foreignField: "_id",
+      as: "userDetails"
+    }
+  },
+  { $unwind: "$userDetails" }, // Flatten the joined array
+  { $project: { orderId: "$_id", product: 1, user: "$userDetails.name" } } // Select fields
+]);
+```
+
+---
+
+#### **5. Pagination: Top 10 Active Users**
+Find the top 10 active users by activity count.
+```javascript
+db.users.aggregate([
+  { $match: { status: "active" } }, // Filter active users
+  { $sort: { activityCount: -1 } }, // Sort by activity count (descending)
+  { $limit: 10 } // Limit to top 10
+]);
+```
+
+---
+
+#### **6. Complex Aggregation: Average Order Value by User**
+Calculate the average order value for each user.
+```javascript
+db.orders.aggregate([
+  { $group: { _id: "$userId", totalSpent: { $sum: "$price" }, orderCount: { $sum: 1 } } }, // Group by user
+  { $project: { userId: "$_id", avgOrderValue: { $divide: ["$totalSpent", "$orderCount"] } } } // Calculate average
+]);
+```
+
+---
+
+### **Full JavaScript Example (Using MongoDB Node.js Driver)**  
+```javascript
+const { MongoClient } = require("mongodb");
+
+async function main() {
+  const uri = "mongodb://localhost:27017";
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const db = client.db("mydatabase");
+
+    // Aggregation: Total sales by product
+    const pipeline = [
+      { $group: { _id: "$product", totalSales: { $sum: "$price" } } },
+      { $sort: { totalSales: -1 } }
+    ];
+
+    const result = await db.collection("orders").aggregate(pipeline).toArray();
+    console.log("Total sales by product:", result);
+
+  } finally {
+    await client.close();
+  }
+}
+
+main().catch(console.error);
+```
+
+---
+
+### **Key Takeaways**
+1. **Pipeline Stages**: Combine stages like `$match`, `$group`, `$sort`, and `$project` to build complex queries.
+2. **Performance**: Use indexes to optimize aggregation pipelines, especially for large datasets.
+3. **Flexibility**: Aggregation is ideal for analytics, reporting, and data transformation.
+4. **Joins**: Use `$lookup` to combine data from multiple collections.
+
+By mastering aggregation, you can unlock MongoDB’s full potential for data analysis and transformation! 🚀
