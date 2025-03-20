@@ -148,6 +148,15 @@
       - [6. Complex Aggregation: Average Order Value by User](#6-complex-aggregation-average-order-value-by-user)
     - [Full JavaScript Example (Using MongoDB Node.js Driver)](#full-javascript-example-using-mongodb-nodejs-driver-1)
     - [Key Takeaways](#key-takeaways-3)
+  - [Can You Partition a MongoDB?](#can-you-partition-a-mongodb)
+  - [What is Sharding in MongoDB?](#what-is-sharding-in-mongodb)
+    - [xample of a Sharded Cluster in MongoDB](#xample-of-a-sharded-cluster-in-mongodb)
+    - [How Does MongoDB Partition Data?](#how-does-mongodb-partition-data)
+      - [Range-Based Sharding](#range-based-sharding)
+      - [Hash-Based Sharding](#hash-based-sharding)
+      - [Zone-Based Sharding](#zone-based-sharding)
+    - [When to Use Sharding in MongoDB?](#when-to-use-sharding-in-mongodb)
+    - [Key Takeaways (80/20 Rule)](#key-takeaways-8020-rule-1)
   - [MongoDB Interview Questions](#mongodb-interview-questions)
 
 <!-- /code_chunk_output -->
@@ -253,7 +262,7 @@ For a **user authentication service**, a **relational (SQL) database** is typica
 
     Transaction wil never endanger the structural integrity of the database. The database must move from one valid state to another without violating constraints.
 
-**Isolated - "No Interference Between Transactions"** 
+**Isolated - "No Interference Between Transactions & Persistence of committed transactions"** 
 
     Transactions cannot compromise the integrity of other transactions by interacting with them while they are still in progress. Multiple transactions must not interfere with each other to prevent data conflicts.
 
@@ -2309,7 +2318,86 @@ main().catch(console.error);
 3. **Flexibility**: Aggregation is ideal for analytics, reporting, and data transformation.
 4. **Joins**: Use `$lookup` to combine data from multiple collections.
 
-By mastering aggregation, you can unlock MongoDB’s full potential for data analysis and transformation! 🚀
+
+## Can You Partition a MongoDB?
+
+  **Yes, you can partition data in MongoDB using **Sharding**. However, MongoDB does not support traditional table partitioning like SQL databases. Instead, it distributes data across multiple servers using a sharding mechanism.  
+
+---
+
+## What is Sharding in MongoDB?
+Sharding is MongoDB's method of **horizontal partitioning**, where data is spread across multiple servers (**shards**) to improve **scalability and performance**.  
+
+- **Each shard stores a subset of the data**, and together, they make up the complete dataset.
+- MongoDB automatically routes queries to the correct shard based on a **shard key**.
+
+### xample of a Sharded Cluster in MongoDB
+- **Config Servers** → Store metadata about shards.  
+- **Query Routers (mongos)** → Direct queries to appropriate shards.  
+- **Shards** → Store actual partitioned data.  
+
+---
+
+### How Does MongoDB Partition Data?
+
+#### Range-Based Sharding
+📌 **Divides data based on ranges of values in the shard key.**  
+✅ Best for **sequentially increasing** data like timestamps.  
+❌ Can lead to **hotspots** where one shard handles most of the workload.  
+
+🔹 **Example:** Partitioning based on user ID ranges  
+```js
+Shard 1: { user_id: 1 - 10000 }
+Shard 2: { user_id: 10001 - 20000 }
+Shard 3: { user_id: 20001 - 30000 }
+```
+
+---
+
+#### Hash-Based Sharding
+📌 **Applies a hash function to the shard key to evenly distribute data.**  
+✅ Best for **avoiding hotspots** and ensuring even distribution.  
+❌ Less efficient for range queries.  
+
+🔹 **Example:**  
+```js
+Shard Key: user_id
+Hash(user_id) → Determines shard placement
+```
+
+---
+
+#### Zone-Based Sharding
+📌 **Allows placing specific data ranges in designated shards (geographical partitioning).**  
+✅ Best for **region-based** data partitioning.  
+❌ Requires careful planning.  
+
+🔹 **Example:** Storing U.S. customers in one shard, European customers in another.  
+```js
+Zone 1 → { country: "USA" }
+Zone 2 → { country: "Germany" }
+Zone 3 → { country: "India" }
+```
+
+---
+
+### When to Use Sharding in MongoDB?
+✅ **High write workloads** → Distributes writes across multiple shards.  
+✅ **Growing dataset beyond a single server’s capacity**.  
+✅ **Geographically distributed applications** → Store users close to their location.  
+✅ **Evenly distributing query loads** to prevent bottlenecks.  
+
+❌ **Avoid sharding if:**  
+- Your dataset is **small** and fits on a single server.  
+- Your query workload does **not require horizontal scaling**.  
+
+---
+
+### Key Takeaways (80/20 Rule)
+✅ **MongoDB does not support traditional SQL partitioning, but you can partition data using sharding.**  
+✅ **Sharding distributes data across multiple servers** for scalability.  
+✅ **Choose the right shard key carefully**—it affects performance and balance.  
+✅ **Range-based sharding is good for sequential data, hash-based prevents hotspots, and zone-based allows for geo-distribution.**  
 
 ## MongoDB Interview Questions 
 
