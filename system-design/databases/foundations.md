@@ -75,17 +75,17 @@
     - [Bitmap Index – Best for Low-Cardinality Columns](#bitmap-index--best-for-low-cardinality-columns)
     - [Key Takeaways (Pareto Principle: 80/20 Focus)](#key-takeaways-pareto-principle-8020-focus)
     - [Deep Dive into SQL Indexing Strategies](#deep-dive-into-sql-indexing-strategies)
-  - [1. Types of SQL Indexes & When to Use Them](#1-types-of-sql-indexes--when-to-use-them)
+  - [Types of SQL Indexes & When to Use Them](#types-of-sql-indexes--when-to-use-them)
     - [Clustered Index (Primary Index)](#clustered-index-primary-index)
     - [Non-Clustered Index](#non-clustered-index-1)
     - [Unique Index](#unique-index)
     - [Composite (Multi-Column) Index](#composite-multi-column-index)
     - [Covering Index](#covering-index)
-    - [6Full-Text Index](#6full-text-index)
+    - [Full-Text Index](#full-text-index)
   - [2. How to Choose the Right Indexing Strategy?](#2-how-to-choose-the-right-indexing-strategy)
   - [3. Best Practices for Indexing](#3-best-practices-for-indexing)
     - [4. Should You Always Index?](#4-should-you-always-index)
-    - [Algos](#algos)
+  - [Algos](#algos)
   - [DB Sharding vs. Partitioning](#db-sharding-vs-partitioning)
     - [1. Partitioning](#1-partitioning)
       - [Key Characteristics:](#key-characteristics)
@@ -1475,7 +1475,7 @@ Indexes are critical for optimizing query performance in SQL databases. Let’s 
 
 ---
 
-## 1. Types of SQL Indexes & When to Use Them
+## Types of SQL Indexes & When to Use Them
 
 ### Clustered Index (Primary Index)
 ✅ **Best for:**  
@@ -1499,7 +1499,7 @@ Indexes are critical for optimizing query performance in SQL databases. Let’s 
 
 ---
 
-###  Unique Index
+### Unique Index
 ✅ **Best for:**  
 - **Enforcing uniqueness constraints** (e.g., `email` in a `users` table).  
 - **Optimizing searches on unique columns** (`WHERE email = 'user@example.com'`).  
@@ -1543,7 +1543,7 @@ CREATE INDEX idx_covering ON orders(customer_id, order_date, total_price);
 
 ---
 
-### 6Full-Text Index
+### Full-Text Index
 ✅ **Best for:**  
 - **Text search and keyword-based queries** (e.g., searching in blogs, articles, or product descriptions).  
 
@@ -1584,8 +1584,7 @@ Use the **80/20 rule (Pareto Principle)**:
 ### 4. Should You Always Index?
 ❌ **No!** Over-indexing **slows down inserts and updates** since each index must be maintained.  
 
-
-### Algos 
+## Algos 
 
 1. **Selection**: Which rows do you want
 2. **Projection**: Which columns do you want 
@@ -2316,6 +2315,6 @@ By mastering aggregation, you can unlock MongoDB’s full potential for data ana
 
 1. **Atomocity**: MongoDB writes are **atomic** for a given document - even if there are multiple writes within that document. However, writes are **not atomic** across **multiple documents**. 
 
- 2. **Transactions**: There are libraries that can handle multi-document transactions. This happens through the transactions API. 
+2. **Transactions**: There are libraries that can handle multi-document transactions. This happens through the transactions API. 
 
 3. **Query performance/tuning**: MongoDB provides methods for getting stats on query performance. **Explain** is one of those methods to use on an existing query. 
