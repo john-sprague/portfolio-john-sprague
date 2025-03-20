@@ -59,37 +59,37 @@
   - [Foundation Subjective Question 7](#foundation-subjective-question-7)
     - [Question: What limitations of SQL databases are you aware of?](#question-what-limitations-of-sql-databases-are-you-aware-of)
     - [Solution:](#solution-4)
-    - [1. **Scalability Challenges**](#1-scalability-challenges)
-    - [2. **Rigid Schema**](#2-rigid-schema)
-    - [3. **Performance Issues with Large Datasets**](#3-performance-issues-with-large-datasets)
-    - [4. **Complexity of Joins**](#4-complexity-of-joins)
-    - [5. **Limited Support for Unstructured Data**](#5-limited-support-for-unstructured-data)
-    - [6. **Cost**](#6-cost)
-    - [7. **Concurrency and Locking**](#7-concurrency-and-locking)
-    - [8. **Limited Flexibility for Hierarchical or Graph Data**](#8-limited-flexibility-for-hierarchical-or-graph-data)
-    - [9. **Vendor Lock-In**](#9-vendor-lock-in)
-    - [10. **Real-Time Analytics**](#10-real-time-analytics)
-    - [11. **Global Distribution**](#11-global-distribution)
-    - [12. **Limited Support for Polyglot Persistence**](#12-limited-support-for-polyglot-persistence)
+    - [1. Scalability Challenges](#1-scalability-challenges)
+    - [2. Rigid Schema](#2-rigid-schema)
+    - [3. Performance Issues with Large Datasets](#3-performance-issues-with-large-datasets)
+    - [4. Complexity of Joins](#4-complexity-of-joins)
+    - [5. Limited Support for Unstructured Data](#5-limited-support-for-unstructured-data)
+    - [6. Cost](#6-cost)
+    - [7. Concurrency and Locking](#7-concurrency-and-locking)
+    - [8. Limited Flexibility for Hierarchical or Graph Data](#8-limited-flexibility-for-hierarchical-or-graph-data)
+    - [9. Vendor Lock-In](#9-vendor-lock-in)
+    - [10. Real-Time Analytics](#10-real-time-analytics)
+    - [11. Global Distribution](#11-global-distribution)
+    - [12. Limited Support for Polyglot Persistence](#12-limited-support-for-polyglot-persistence)
     - [When to Consider Alternatives](#when-to-consider-alternatives)
     - [Conclusion](#conclusion)
   - [Foundational Subjective Question 8](#foundational-subjective-question-8)
     - [Question: What are the benefits of NoSQL databases?](#question-what-are-the-benefits-of-nosql-databases)
     - [Solution:](#solution-5)
-    - [1. **Flexible Data Models**](#1-flexible-data-models)
-    - [2. **Schema-less Design**](#2-schema-less-design)
-    - [3. **Horizontal Scalability**](#3-horizontal-scalability)
-    - [4. **High Performance**](#4-high-performance)
-    - [5. **Global Distribution**](#5-global-distribution)
-    - [6. **Handling Unstructured and Semi-Structured Data**](#6-handling-unstructured-and-semi-structured-data)
-    - [7. **High Availability and Fault Tolerance**](#7-high-availability-and-fault-tolerance)
-    - [8. **Polyglot Persistence Support**](#8-polyglot-persistence-support)
+    - [1. Flexible Data Models](#1-flexible-data-models)
+    - [2. Schema-less Design](#2-schema-less-design)
+    - [3. Horizontal Scalability](#3-horizontal-scalability)
+    - [4. High Performance](#4-high-performance)
+    - [5. Global Distribution](#5-global-distribution)
+    - [6. Handling Unstructured and Semi-Structured Data](#6-handling-unstructured-and-semi-structured-data)
+    - [7. High Availability and Fault Tolerance](#7-high-availability-and-fault-tolerance)
+    - [8. Polyglot Persistence Support](#8-polyglot-persistence-support)
     - [9. **Cost-Effective Scaling**](#9-cost-effective-scaling)
-    - [10. **Real-Time Capabilities**](#10-real-time-capabilities)
-    - [11. **Ease of Development**](#11-ease-of-development)
-    - [12. **Support for Big Data**](#12-support-for-big-data)
-    - [13. **Eventual Consistency**](#13-eventual-consistency)
-    - [14. **Use Case-Specific Optimization**](#14-use-case-specific-optimization)
+    - [10. Real-Time Capabilities](#10-real-time-capabilities)
+    - [11. Ease of Development](#11-ease-of-development)
+    - [12. Support for Big Data](#12-support-for-big-data)
+    - [13. Eventual Consistency](#13-eventual-consistency)
+    - [14. Use Case-Specific Optimization](#14-use-case-specific-optimization)
     - [When to Use NoSQL](#when-to-use-nosql)
     - [Conclusion](#conclusion-1)
   - [Foundational Subjective Question 9](#foundational-subjective-question-9)
@@ -705,73 +705,73 @@ SQL databases, while powerful and widely used, have certain limitations that can
 
 ---
 
-### 1. **Scalability Challenges**
+### 1. Scalability Challenges
    - **Vertical Scaling**: SQL databases typically scale vertically (adding more resources to a single server), which can become expensive and hit hardware limits.
    - **Horizontal Scaling**: Scaling horizontally (adding more servers) is more complex in SQL databases compared to NoSQL databases, which are designed for distributed architectures.
 
 ---
 
-### 2. **Rigid Schema**
+### 2. Rigid Schema
    - SQL databases require a predefined schema, which can make it difficult to adapt to changes in data structure.
    - Altering the schema (e.g., adding or removing columns) can be time-consuming and may require downtime or complex migrations.
 
 ---
 
-### 3. **Performance Issues with Large Datasets**
+### 3. Performance Issues with Large Datasets
    - SQL databases can struggle with very large datasets or high write/read throughput, especially when complex joins or transactions are involved.
    - Indexing helps, but it can also slow down write operations and increase storage requirements.
 
 ---
 
-### 4. **Complexity of Joins**
+### 4. Complexity of Joins
    - While joins are powerful, they can become computationally expensive, especially when dealing with large tables or multiple joins in a single query.
    - Overuse of joins can lead to performance bottlenecks.
 
 ---
 
-### 5. **Limited Support for Unstructured Data**
+### 5. Limited Support for Unstructured Data
    - SQL databases are optimized for structured data (tables with rows and columns).
    - Handling unstructured or semi-structured data (e.g., JSON, XML) is possible but often less efficient compared to NoSQL databases like MongoDB.
 
 ---
 
-### 6. **Cost**
+### 6. Cost
    - Many enterprise-grade SQL databases (e.g., Oracle, SQL Server) are expensive due to licensing fees.
    - Open-source alternatives like MySQL and PostgreSQL are free but may require additional investment in expertise and infrastructure.
 
 ---
 
-### 7. **Concurrency and Locking**
+### 7. Concurrency and Locking
    - SQL databases use locking mechanisms to ensure ACID (Atomicity, Consistency, Isolation, Durability) compliance, which can lead to contention and reduced performance in high-concurrency environments.
    - Deadlocks can occur when multiple transactions compete for the same resources.
 
 ---
 
-### 8. **Limited Flexibility for Hierarchical or Graph Data**
+### 8. Limited Flexibility for Hierarchical or Graph Data
    - SQL databases are not well-suited for hierarchical data (e.g., organizational charts) or graph data (e.g., social networks).
    - Specialized databases like graph databases (e.g., Neo4j) or document databases (e.g., MongoDB) are better suited for these use cases.
 
 ---
 
-### 9. **Vendor Lock-In**
+### 9. Vendor Lock-In
    - SQL databases often use proprietary extensions or features, making it difficult to migrate to another database system without significant effort.
    - Differences in SQL dialects (e.g., MySQL vs. PostgreSQL) can also create compatibility issues.
 
 ---
 
-### 10. **Real-Time Analytics**
+### 10. Real-Time Analytics
    - SQL databases are not optimized for real-time analytics or streaming data.
    - Specialized systems like time-series databases (e.g., InfluxDB) or data warehouses (e.g., Snowflake) are better suited for these tasks.
 
 ---
 
-### 11. **Global Distribution**
+### 11. Global Distribution
    - SQL databases are not inherently designed for globally distributed architectures, which can lead to latency issues for users in different regions.
    - NoSQL databases often provide better support for distributed systems and eventual consistency.
 
 ---
 
-### 12. **Limited Support for Polyglot Persistence**
+### 12. Limited Support for Polyglot Persistence
    - Modern applications often require multiple data models (e.g., relational, document, key-value). SQL databases are not well-suited for polyglot persistence, where different types of databases are used for different parts of an application.
 
 ---
@@ -802,7 +802,7 @@ NoSQL databases offer several benefits that make them well-suited for modern app
 
 ---
 
-### 1. **Flexible Data Models**
+### 1. Flexible Data Models
    - NoSQL databases support a variety of data models, including:
      - **Document** (e.g., MongoDB, Couchbase): Stores data in JSON-like documents.
      - **Key-Value** (e.g., Redis, DynamoDB): Stores data as key-value pairs.
@@ -812,43 +812,43 @@ NoSQL databases offer several benefits that make them well-suited for modern app
 
 ---
 
-### 2. **Schema-less Design**
+### 2. Schema-less Design
    - NoSQL databases do not require a fixed schema, making it easier to adapt to changing data structures.
    - This is particularly useful for applications with evolving requirements or unstructured/semi-structured data.
 
 ---
 
-### 3. **Horizontal Scalability**
+### 3. Horizontal Scalability
    - NoSQL databases are designed to scale horizontally by distributing data across multiple servers or nodes.
    - This makes them ideal for handling large volumes of data and high traffic loads.
 
 ---
 
-### 4. **High Performance**
+### 4. High Performance
    - NoSQL databases are optimized for specific use cases, such as high-speed read/write operations or low-latency access.
    - They often outperform SQL databases for workloads involving large datasets, real-time analytics, or high concurrency.
 
 ---
 
-### 5. **Global Distribution**
+### 5. Global Distribution
    - Many NoSQL databases (e.g., MongoDB, Cassandra) are designed for globally distributed architectures.
    - They support multi-region replication and provide low-latency access for users worldwide.
 
 ---
 
-### 6. **Handling Unstructured and Semi-Structured Data**
+### 6. Handling Unstructured and Semi-Structured Data
    - NoSQL databases excel at storing and querying unstructured (e.g., JSON, XML) and semi-structured data.
    - This makes them a better choice for applications like content management, social media, and IoT.
 
 ---
 
-### 7. **High Availability and Fault Tolerance**
+### 7. High Availability and Fault Tolerance
    - NoSQL databases often use distributed architectures with built-in replication and failover mechanisms.
    - This ensures high availability and fault tolerance, even in the event of hardware failures.
 
 ---
 
-### 8. **Polyglot Persistence Support**
+### 8. Polyglot Persistence Support
    - NoSQL databases enable polyglot persistence, where different types of databases are used for different parts of an application.
    - For example, a key-value store might be used for caching, while a document store handles the main data.
 
@@ -860,31 +860,31 @@ NoSQL databases offer several benefits that make them well-suited for modern app
 
 ---
 
-### 10. **Real-Time Capabilities**
+### 10. Real-Time Capabilities
    - Many NoSQL databases are optimized for real-time data processing and analytics.
    - They are well-suited for use cases like real-time recommendations, fraud detection, and IoT data streams.
 
 ---
 
-### 11. **Ease of Development**
+### 11. Ease of Development
    - NoSQL databases often provide simpler APIs and query languages compared to SQL databases.
    - This reduces development time and complexity, especially for applications with dynamic or evolving data models.
 
 ---
 
-### 12. **Support for Big Data**
+### 12. Support for Big Data
    - NoSQL databases are designed to handle big data workloads, including large-scale data storage, processing, and analytics.
    - They integrate well with big data tools like Hadoop and Spark.
 
 ---
 
-### 13. **Eventual Consistency**
+### 13. Eventual Consistency
    - Many NoSQL databases use eventual consistency, which allows for faster write operations and better performance in distributed systems.
    - While this may not be suitable for all use cases, it is ideal for applications where immediate consistency is not critical.
 
 ---
 
-### 14. **Use Case-Specific Optimization**
+### 14. Use Case-Specific Optimization
    - NoSQL databases are often optimized for specific use cases:
      - **MongoDB**: Document storage and retrieval.
      - **Cassandra**: High write throughput and fault tolerance.

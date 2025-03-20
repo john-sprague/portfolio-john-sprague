@@ -121,6 +121,10 @@
   - [3. Best Practices for Managing Database Permissions](#3-best-practices-for-managing-database-permissions-1)
   - [4. When to Use Each?](#4-when-to-use-each-1)
     - [Summary (80/20 Rule)](#summary-8020-rule-1)
+  - [**SQL Transaction Locks Explained**](#sql-transaction-locks-explained)
+    - [Types of Locks in SQL](#types-of-locks-in-sql)
+    - [Which Lock Ensures Exclusive Access?](#which-lock-ensures-exclusive-access)
+    - [When to Use Exclusive Locks?](#when-to-use-exclusive-locks)
 - [MongoDB](#mongodb)
   - [What is MongoDB?](#what-is-mongodb)
   - [Key Features of BSON:](#key-features-of-bson)
@@ -1931,6 +1935,81 @@ Now `employee_user` can **read** all data in the database.
 - **Best practice:** Use roles instead of assigning direct permissions to users.  
 
 ---
+
+## **SQL Transaction Locks Explained**
+SQL transaction locks control how multiple transactions access the same data to **ensure consistency, isolation, and integrity**. Locks prevent issues like **dirty reads, lost updates, and phantom reads** in a multi-user database environment.
+
+---
+
+### Types of Locks in SQL
+SQL databases use different **types** of locks at various **granularities** (table, page, row, etc.):
+
+1️⃣ **Shared Lock (S)**
+   - Allows **read** access.
+   - Multiple transactions can hold shared locks at the same time.
+   - Prevents **other transactions from writing (modifying/deleting)** the locked data.
+   - Released immediately after reading unless explicitly held.
+
+2️⃣ **Exclusive Lock (X)**
+   - Ensures that **only one transaction** can access the locked resource.
+   - Prevents **both reads and writes** from other transactions.
+   - Used when a transaction **modifies data** (e.g., `INSERT`, `UPDATE`, `DELETE`).
+
+3️⃣ **Update Lock (U)**
+   - Prevents a **deadlock** when upgrading a **Shared Lock (S) to an Exclusive Lock (X)**.
+   - Only one transaction can hold an **Update Lock** at a time.
+   - If the transaction decides to update the data, the **Update Lock converts to an Exclusive Lock**.
+
+4️⃣ **Intent Locks (IS, IX, SIX)**
+   - Used by the **SQL Server Lock Manager** to indicate **intention to lock** at a lower level.
+   - **Intent Shared (IS):** Signals intent to place a shared lock at a finer granularity (row or page).
+   - **Intent Exclusive (IX):** Signals intent to place an exclusive lock at a finer granularity.
+   - **Shared with Intent Exclusive (SIX):** Allows shared reads at a higher level while indicating an intention to place exclusive locks at a finer level.
+
+5️⃣ **Schema Locks**
+   - Used when schema modifications are taking place (`ALTER TABLE`, `CREATE INDEX`, etc.).
+   - Prevents conflicting operations on database structures.
+
+6️⃣ **Bulk Update (BU)**
+   - Used for `BULK INSERT` operations.
+   - Improves performance by reducing lock contention.
+
+---
+
+### Which Lock Ensures Exclusive Access?
+✅ **Exclusive Lock (X)**  
+An **Exclusive Lock** is the strictest lock, ensuring that **only one transaction** can access the page or row for the entire duration of the lock.  
+
+- **Prevents other transactions from reading or writing** to the locked resource.  
+- **Held until the transaction commits or rolls back**.  
+- **Ensures data consistency** by avoiding conflicts between concurrent transactions.
+
+**Example: Acquiring an Exclusive Lock**
+```sql
+BEGIN TRANSACTION;
+
+UPDATE accounts 
+SET balance = balance - 100 
+WHERE account_id = 123;
+
+-- The row with account_id = 123 is now exclusively locked
+-- No other transaction can read or modify it until the transaction commits
+
+COMMIT;
+```
+Until the `COMMIT`, any other transaction trying to access `account_id = 123` will be **blocked**.
+
+---
+
+### When to Use Exclusive Locks?
+✅ **Ensuring consistency in critical updates** (e.g., banking transactions).  
+✅ **When data integrity is more important than concurrency**.  
+✅ **Preventing race conditions** in high-stakes operations.  
+
+❌ **Downsides of Exclusive Locks**
+- Reduces concurrency and **may cause blocking**.  
+- Can lead to **deadlocks** if multiple transactions wait for each other’s locks.  
+
 
 # MongoDB 
 
