@@ -121,11 +121,11 @@
   - [3. Best Practices for Managing Database Permissions](#3-best-practices-for-managing-database-permissions-1)
   - [4. When to Use Each?](#4-when-to-use-each-1)
     - [Summary (80/20 Rule)](#summary-8020-rule-1)
-  - [MongoDB](#mongodb)
-    - [What is MongoDB?](#what-is-mongodb)
-    - [Key Features of BSON:](#key-features-of-bson)
+- [MongoDB](#mongodb)
+  - [What is MongoDB?](#what-is-mongodb)
+  - [Key Features of BSON:](#key-features-of-bson)
     - [BSON vs JSON:](#bson-vs-json)
-    - [CRUD Operations](#crud-operations)
+  - [Mongo CRUD Operations](#mongo-crud-operations)
     - [1. Create (`insertOne` / `insertMany`)](#1-create-insertone--insertmany)
     - [2. Read (`find` / `findOne`)](#2-read-find--findone)
     - [3. Update (`updateOne` / `updateMany`)](#3-update-updateone--updatemany)
@@ -1728,7 +1728,7 @@ Choose partitioning for simpler, single-server optimization, and sharding for ho
 
 1. **Parser and algebrizer**: Checks syntax, identify data types,  & permissions
 
-2. **Query Optimizer & Execution Plan**: Determins the most efficient way to execute the query 
+2. **Query Optimizer & Execution Plan**: Determine the most efficient way to execute the query. Only works on local query optimization.
 
 3. **Query Execution Engine and Results Retrieval**: Runs the plan and returns data efficiently. 
 
@@ -1932,14 +1932,14 @@ Now `employee_user` can **read** all data in the database.
 
 ---
 
-## MongoDB 
+# MongoDB 
 
-### What is MongoDB?  
+## What is MongoDB?  
 MongoDB is a **NoSQL, document-oriented database** designed for scalability, flexibility, and high-performance data storage and retrieval. Instead of tables and rows (like SQL), it stores data in **JSON-like documents** (BSON format) with dynamic schemas, making it ideal for unstructured or semi-structured data. 
 
 ---
 
-### Key Features of BSON:
+## Key Features of BSON:
 1. **Binary Encoding**:
    - BSON is a binary representation of JSON-like documents, which makes it more compact and faster to parse compared to plain text JSON.
 
@@ -1976,7 +1976,7 @@ MongoDB is a **NoSQL, document-oriented database** designed for scalability, fle
 
 ---
 
-### CRUD Operations 
+## Mongo CRUD Operations 
 
 Here are the **CRUD operations** (Create, Read, Update, Delete) in MongoDB with JavaScript examples using the MongoDB Node.js driver or MongoDB shell:
 
@@ -2088,7 +2088,6 @@ async function main() {
 
 main().catch(console.error);
 ```
-
 ---
 
 ### Key Notes 
