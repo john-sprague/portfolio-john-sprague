@@ -401,7 +401,7 @@ Design a storage solution for a web-crawler that scrapes the product and pricing
 
 ### Solution
 
-![Web Crawler Solution](media/image8.png)
+![alt text](image-1.png)
 
 #### Web Crawler BFS vs DFS
 
@@ -510,11 +510,9 @@ bfs_web_crawler("https://example.com", max_pages=100)
 - **DFS is less suitable** for web crawling due to its tendency to explore deep paths and delay the discovery of important pages.
 - Practical web crawlers often combine BFS with additional features like politeness, duplicate detection, and prioritization to improve efficiency and scalability.
 
-![Web Crawler Solution](media/image1.png)
-
-![Web Crawler Solution](media/image9.png)
-
-![Web Crawler Solution](media/image4.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
 
 - Different dbs to support different aspects
   - Timeseries, NoSQL
@@ -567,7 +565,7 @@ Two different types of users
 
 ### ER Diagram
 
-![ER Diagram](media/image15.png)
+![alt text](image-5.png)
 
 ### DB Integrity
 
@@ -802,11 +800,11 @@ What are the challenges?
 
 **How can replication help?**
 
-![Replication Techniques](media/image14.png)
+![alt text](image-6.png)
 
 #### Primary-Secondary/Single Leader Replication
 
-![Primary-Secondary Replication](media/image13.png)
+![alt text](image-7.png)
 
 **Pros**
 
@@ -820,7 +818,7 @@ What are the challenges?
 
 #### Multiple Leader Replication
 
-![Multiple Leader Replication](media/image7.png)
+![Multiple Leader Replication](image-8.png)
 
 - Improves write throughput
   - Scales better
@@ -836,7 +834,7 @@ What are the challenges?
 
 #### Leaderless
 
-![Leaderless Replication](media/image10.png)
+![Leaderless Replication](image-9.png)
 
 **Pros**
 
@@ -881,8 +879,7 @@ Partition/Shard the database
 **Cons**
 
 ### Scaling and Performance of Sharded Databases
-
-![Scaling and Performance of Sharded Databases](media/image5.png)
+![Scaling and Performance of Sharded Databases](image-10.png)
 
 - Sharding helps to scale databases via horizontal scaling - add more machines to spread load and be fast.
 - Sharding is a process of dividing database into smaller units either by:
@@ -907,7 +904,7 @@ Partition/Shard the database
 
 ### Key Based Sharding
 
-![Key Based Sharding](media/image11.png)
+![Key Based Sharding](image-11.png)
 
 **Pros**
 
@@ -917,7 +914,7 @@ Partition/Shard the database
 
 ### Range Based Sharding
 
-![Range Based Sharding](media/image3.png)
+![Range Based Sharding](image-12.png)
 
 **Pros**
 
@@ -927,7 +924,7 @@ Partition/Shard the database
 
 ### Directory Based Sharding
 
-![Directory Based Sharding](media/image12.png)
+![Directory Based Sharding](image-13.png)
 
 **Pros**
 
@@ -1081,7 +1078,7 @@ If the RDBMS model does not scale further, we can assess other types of database
 
 ### Cloud vs. On-Premises Databases
 
-![Cloud vs. On-Premises Databases](media/image2.png)
+![Cloud vs. On-Premises Databases](image-14.png)
 
 ### Running Databases in the cloud
 
@@ -1098,7 +1095,7 @@ As well as tools to stream data to these sources:
 - Amazon Kinesis Data Firehose
 - Amazon DynamoDB Streams
 
-![Running Databases in the Cloud](media/image6.png)
+![Running Databases in the Cloud](image-15.png)
 
 If we were to do this ourselves, it would be a big undertaking requiring lots of manpower to do so.
 
