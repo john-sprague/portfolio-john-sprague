@@ -121,7 +121,7 @@
   - [3. Best Practices for Managing Database Permissions](#3-best-practices-for-managing-database-permissions-1)
   - [4. When to Use Each?](#4-when-to-use-each-1)
     - [Summary (80/20 Rule)](#summary-8020-rule-1)
-  - [**SQL Transaction Locks Explained**](#sql-transaction-locks-explained)
+  - [SQL Transaction Locks Explained](#sql-transaction-locks-explained)
     - [Types of Locks in SQL](#types-of-locks-in-sql)
     - [Which Lock Ensures Exclusive Access?](#which-lock-ensures-exclusive-access)
     - [When to Use Exclusive Locks?](#when-to-use-exclusive-locks)
@@ -1937,7 +1937,7 @@ Now `employee_user` can **read** all data in the database.
 
 ---
 
-## **SQL Transaction Locks Explained**
+## SQL Transaction Locks Explained
 SQL transaction locks control how multiple transactions access the same data to **ensure consistency, isolation, and integrity**. Locks prevent issues like **dirty reads, lost updates, and phantom reads** in a multi-user database environment.
 
 ---
