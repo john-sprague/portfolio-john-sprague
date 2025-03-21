@@ -125,6 +125,7 @@
     - [Types of Locks in SQL](#types-of-locks-in-sql)
     - [Which Lock Ensures Exclusive Access?](#which-lock-ensures-exclusive-access)
     - [When to Use Exclusive Locks?](#when-to-use-exclusive-locks)
+  - [Database Migration Best Practices](#database-migration-best-practices)
 - [MongoDB](#mongodb)
   - [What is MongoDB?](#what-is-mongodb)
   - [Key Features of BSON:](#key-features-of-bson)
@@ -154,7 +155,7 @@
     - [Key Takeaways](#key-takeaways-3)
   - [Can You Partition a MongoDB?](#can-you-partition-a-mongodb)
   - [What is Sharding in MongoDB?](#what-is-sharding-in-mongodb)
-    - [xample of a Sharded Cluster in MongoDB](#xample-of-a-sharded-cluster-in-mongodb)
+    - [Example of a Sharded Cluster in MongoDB](#example-of-a-sharded-cluster-in-mongodb)
     - [How Does MongoDB Partition Data?](#how-does-mongodb-partition-data)
       - [Range-Based Sharding](#range-based-sharding)
       - [Hash-Based Sharding](#hash-based-sharding)
@@ -2010,6 +2011,53 @@ Until the `COMMIT`, any other transaction trying to access `account_id = 123` wi
 - Reduces concurrency and **may cause blocking**.  
 - Can lead to **deadlocks** if multiple transactions wait for each other’s locks.  
 
+---
+
+## Database Migration Best Practices 
+
+Ensuring data integrity during a database migration is crucial to prevent data loss and maintain system reliability. Here's a structured approach to handle potential data loss during migration:
+
+**1. Comprehensive Planning and Assessment**
+
+- **Define the Migration Scope**: Clearly outline which data sets, schemas, and applications will be affected. This helps in anticipating challenges and allocating resources effectively.
+
+- **Data Profiling**: Analyze the current data to identify inconsistencies, duplicates, or missing values. Addressing these issues beforehand ensures cleaner migration.
+
+**2. Data Cleansing and Quality Assurance**
+
+- **Data Cleansing**: Rectify errors, remove duplicates, and standardize data formats to ensure consistency.
+
+- **Data Validation**: Implement validation processes to ensure data integrity and consistency after migration.
+
+**3. Backup and Recovery Strategy**
+
+- **Regular Backups**: Establish a comprehensive backup strategy for the source database to prevent data loss during migration.
+
+- **Recovery Plan**: Define a rollback plan and establish procedures for recovering from potential issues that may arise during migration.
+
+**4. Testing and Validation**
+
+- **Test Environments**: Set up test environments that mirror the production environment to perform thorough testing of the migration process.
+
+- **Data Validation**: Implement validation processes to ensure data integrity and consistency after migration.
+
+**5. Incremental Migration and Parallel Systems**
+
+- **Trickle Migration**: Break down the migration into small sub-migrations, each having its own scope, deadlines, and goals. This approach reduces risk and allows for better control over the migration process.
+
+- **Parallel Systems**: Run both old and new systems concurrently for a period to verify that the new system operates correctly before fully decommissioning the old one.
+
+**6. Monitoring and Issue Resolution**
+
+- **Real-time Monitoring**: Continuously monitor the migration process to identify and address issues promptly.
+
+- **Issue Resolution Protocols**: Establish clear protocols for addressing data loss incidents, including root cause analysis and corrective actions.
+
+**7. Post-Migration Review**
+
+- **Data Integrity Checks**: Conduct thorough checks to ensure all data has been accurately migrated.
+
+- **Stakeholder Feedback**: Gather feedback from end-users to identify any discrepancies or issues that may have been overlooked.
 
 # MongoDB 
 
@@ -2409,7 +2457,7 @@ Sharding is MongoDB's method of **horizontal partitioning**, where data is sprea
 - **Each shard stores a subset of the data**, and together, they make up the complete dataset.
 - MongoDB automatically routes queries to the correct shard based on a **shard key**.
 
-### xample of a Sharded Cluster in MongoDB
+### Example of a Sharded Cluster in MongoDB
 - **Config Servers** → Store metadata about shards.  
 - **Query Routers (mongos)** → Direct queries to appropriate shards.  
 - **Shards** → Store actual partitioned data.  
@@ -2484,3 +2532,4 @@ Zone 3 → { country: "India" }
 2. **Transactions**: There are libraries that can handle multi-document transactions. This happens through the transactions API. 
 
 3. **Query performance/tuning**: MongoDB provides methods for getting stats on query performance. **Explain** is one of those methods to use on an existing query. 
+
