@@ -75,7 +75,7 @@
     - [Multi-Leader Database Replication](#multi-leader-database-replication)
     - [Key Takeaways](#key-takeaways)
     - [Tradeoffs](#tradeoffs)
-    - [**When to Use Multi-Leader Replication?**](#when-to-use-multi-leader-replication)
+    - [When to Use Multi-Leader Replication?](#when-to-use-multi-leader-replication)
     - [**Examples**](#examples)
       - [Summary](#summary-1)
       - [Leaderless](#leaderless)
@@ -86,6 +86,11 @@
       - [Pros](#pros)
       - [Cons](#cons)
     - [Range Based Sharding](#range-based-sharding)
+    - [**Range-Based Sharding: Pros and Cons**](#range-based-sharding-pros-and-cons)
+    - [Pros](#pros-1)
+    - [Cons](#cons-1)
+    - [When to Use Range-Based Sharding](#when-to-use-range-based-sharding)
+    - [Examples](#examples-1)
     - [Directory Based Sharding](#directory-based-sharding)
   - [CAP Theorem in DB System](#cap-theorem-in-db-system)
   - [Security](#security)
@@ -987,7 +992,7 @@ Multi-leader (or multi-master) replication is a strategy where multiple nodes (l
 
 ---
 
-### **When to Use Multi-Leader Replication?**  
+### When to Use Multi-Leader Replication?
 - **Choose Multi-Leader**:  
   - For globally distributed systems prioritizing write availability over strong consistency.  
   - When conflicts are rare or resolvable via application logic.  
@@ -1193,12 +1198,76 @@ Key-based sharding is effective for achieving even data distribution and scalabl
 
 ![Range Based Sharding](./images/image-12.png)
 
-#
+### **Range-Based Sharding: Pros and Cons**  
+Range-based sharding partitions data into "shards" based on a specified range of values (e.g., dates, user IDs, or alphabetical order). Below are its key advantages and tradeoffs:  
+
+---
+
+### Pros
+
+Easy to implement
+
+1. **Efficient Range Queries**:  
+   - Data within a specific range (e.g., dates or IDs) is stored together, making queries like `WHERE date BETWEEN '2023-01-01' AND '2023-03-31'` fast, as they target a single shard.  
+
+2. **Natural Data Organization**:  
+   - Aligns with real-world patterns (e.g., time-series data, geographic regions), simplifying data management and archiving (e.g., moving old data to cold storage).  
+
+3. **Predictable Scaling**:  
+   - Easier to forecast shard growth if data distribution follows a known pattern (e.g., monthly sales).  
+
+4. **Simplified Backups**:  
+   - Shards can be backed up or restored independently based on logical ranges.  
+
+5. **Supports Ordered Data**:  
+   - Maintains sorting within shards, useful for pagination or chronological analysis.  
+
+---
+
+### Cons
+1. **Hot spots and Skewed Loads**:  
+   - Uneven data distribution can overload specific shards (e.g., a "2023-BlackFriday" shard handling 90% of traffic).  
+
+2. **Rebalancing Complexity**:  
+   - Adjusting ranges (e.g., splitting a shard) requires downtime or complex migrations, risking performance degradation.  
+
+3. **Inefficient for Random Access**:  
+   - Queries that don’t align with the shard key (e.g., searching by user email) may scan multiple shards, increasing latency.  
+
+4. **Underutilized Resources**:  
+   - Static ranges can lead to underused shards (e.g., sparse data in "2020-Q1" shard) and wasted storage/compute.  
+
+5. **Limited Flexibility**:  
+   - Predefined ranges struggle with dynamic or unpredictable data growth (e.g., sudden spikes in user registrations).  
+
+---
+
+### When to Use Range-Based Sharding
+- **Ideal For**:  
+  - Time-series data (e.g., logs, IoT sensors).  
+  - Applications with predictable, ordered access patterns (e.g., financial records by date).  
+  - Scenarios requiring easy data lifecycle management (e.g., archiving old shards).  
+
+- **Avoid For**:  
+  - Systems with highly variable or unpredictable workloads.  
+  - Real-time applications needing uniform performance across shards.  
+
+---
+
+### Examples  
+- **MongoDB**: Uses range-based sharding for time-series or ordered datasets.  
+- **CockroachDB**: Supports range-based partitioning for geo-distributed data.  
+- **ClickHouse**: Optimizes time-range queries via sharding by date.  
+
+--- 
+
+**Final Note**: Range-based sharding excels in structured, ordered environments but requires careful key selection to avoid hotspots. Pair it with monitoring tools to detect imbalances early.
 
 ### Directory Based Sharding
 
 ![Directory Based Sharding](./images/image-13.png)
 
+Very eash to implement
 **Pros**
 
 - 
