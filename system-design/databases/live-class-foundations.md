@@ -66,12 +66,25 @@
     - [Case Study](#case-study-2)
   - [Scaling: Replication & Sharding](#scaling-replication--sharding)
     - [Case Study](#case-study-3)
+      - [Synchronous vs. Asynchronous Replication: Key Takeaways](#synchronous-vs-asynchronous-replication-key-takeaways)
+        - [Synchronous Replication](#synchronous-replication)
+        - [Asynchronous Replication](#asynchronous-replication)
+      - [Pareto Principle (80/20 Rule) in Replication](#pareto-principle-8020-rule-in-replication)
       - [Primary-Secondary/Single Leader Replication](#primary-secondarysingle-leader-replication)
       - [Multiple Leader Replication](#multiple-leader-replication)
+    - [Multi-Leader Database Replication](#multi-leader-database-replication)
+    - [Key Takeaways](#key-takeaways)
+    - [Tradeoffs](#tradeoffs)
+    - [**When to Use Multi-Leader Replication?**](#when-to-use-multi-leader-replication)
+    - [**Examples**](#examples)
+      - [Summary](#summary-1)
       - [Leaderless](#leaderless)
   - [Case Study](#case-study-4)
     - [Scaling and Performance of Sharded Databases](#scaling-and-performance-of-sharded-databases)
     - [Key Based Sharding](#key-based-sharding)
+  - [Key-Based Sharding: Pros and Cons](#key-based-sharding-pros-and-cons)
+      - [Pros](#pros)
+      - [Cons](#cons)
     - [Range Based Sharding](#range-based-sharding)
     - [Directory Based Sharding](#directory-based-sharding)
   - [CAP Theorem in DB System](#cap-theorem-in-db-system)
@@ -806,19 +819,99 @@ Can happen synchronous or asynchronous
 
 ![alt text](./images/image-6.png)
 
+#### Synchronous vs. Asynchronous Replication: Key Takeaways
+
+##### Synchronous Replication
+- **Strong Consistency:**  
+  - Data is written simultaneously to primary and secondary nodes.
+  - Guarantees that both copies are identical at all times.
+- **Latency Impact:**  
+  - Write operations must wait for acknowledgment from all nodes, potentially slowing down performance.
+- **Use Cases:**  
+  - Critical transactional systems (e.g., banking, financial services) where data integrity is paramount.
+- **Trade-offs:**  
+  - Improved data safety and consistency at the expense of write performance and higher latency.
+
+##### Asynchronous Replication
+- **Eventual Consistency:**  
+  - Writes are first committed on the primary node and then propagated to replicas later.
+  - Secondary copies may lag behind, leading to temporary data inconsistency.
+- **Performance Benefits:**  
+  - Lower latency for write operations since they aren’t delayed by replica acknowledgments.
+- **Use Cases:**  
+  - Applications that can tolerate eventual consistency, such as analytics, content delivery, or read-heavy environments.
+- **Trade-offs:**  
+  - Better performance and scalability, with the risk of data loss during failover if not caught up.
+
+---
+
+#### Pareto Principle (80/20 Rule) in Replication
+- **20% of the Factors That Make 80% of the Impact:**
+  - **Data Consistency vs. Performance:**  
+    - Synchronous replication ensures data consistency but can be slow due to waiting for all nodes.
+    - Asynchronous replication boosts performance by reducing write latency but risks temporary inconsistencies.
+  - **Use Case Alignment:**  
+    - Choosing synchronous replication is critical when data integrity is non-negotiable (20% of your decision factors, affecting 80% of system reliability).
+    - Asynchronous replication is ideal when speed and scalability matter most, even if consistency is eventually achieved.
+
+---
+
+**Summary**
+- **Synchronous Replication** is best for systems that require strict consistency and can tolerate slower writes.
+- **Asynchronous Replication** is best when high performance and scalability are prioritized, and eventual consistency is acceptable.
+
 #### Primary-Secondary/Single Leader Replication
 
 ![alt text](./images/image-7.png)
 
-**Pros**
+**Key Takeaways**
 
-- **Highly performance**
-- **...**
-- **..**
+- **Single Write Node:**  
+  - All write operations are handled by the primary (leader) node, ensuring a single source of truth for data updates.
 
-**Cons**
+- **Read Scalability:**  
+  - Read requests can be distributed across secondary (replica) nodes, improving overall read throughput and reducing load on the primary.
 
-- sadfa
+- **Consistency Models:**  
+  - Depending on the configuration, replicas can be updated synchronously (strong consistency) or asynchronously (eventual consistency), affecting data freshness on replicas.
+
+- **Failover & High Availability:**  
+  - In the event of a primary failure, one of the replicas can be promoted to primary, ensuring system continuity.
+  - Automated failover mechanisms can minimize downtime.
+
+- **Performance Trade-offs:**  
+  - Centralizing writes on one node simplifies consistency management but may become a bottleneck under heavy write loads.
+  - Asynchronous replication can reduce write latency but may risk temporary data inconsistencies on replicas.
+
+- **Simplicity & Predictability:**  
+  - The single leader architecture is conceptually simple, making it easier to manage and understand.
+  - This model is well-suited for systems where consistent writes and straightforward replication strategies are critical.
+
+Would you like more details or examples on how to implement this replication strategy?
+
+**Trade-offs**
+
+- **SPOF**
+
+- **Write Bottleneck:**  
+  - Since all write operations must go through the single leader, it can become a performance bottleneck during high write loads.
+
+- **Single Point of Failure:**  
+  - The leader is a critical component; if it fails or becomes unreachable, the system might experience downtime until a replica is promoted.
+
+- **Replication Lag:**  
+  - In asynchronous replication setups, replicas may lag behind the leader, leading to temporary inconsistencies between the primary and its replicas.
+
+- **Failover Complexity:**  
+  - Handling leader failure requires complex failover procedures. Promoting a replica to primary can be challenging and may introduce brief periods of unavailability or data inconsistencies.
+
+- **Scalability Limitations for Writes:**  
+  - While read operations can scale out across multiple replicas, the write capacity is limited by the single leader, restricting overall write scalability.
+
+- **Increased Latency (in Synchronous Modes):**  
+  - If synchronous replication is used to ensure consistency, the write operations can incur higher latency as the leader waits for acknowledgments from the replicas.
+
+Each of these cons needs to be weighed against the benefits of simplicity and strong consistency that a single leader model can provide.
 
 #### Multiple Leader Replication
 
@@ -826,31 +919,166 @@ Can happen synchronous or asynchronous
 
 - Improves write throughput
   - Scales better
-- ...
 - Better fault tolerance
 - Load balancing
 
-**Cons**
+### Multi-Leader Database Replication
 
-- **Can have conflicts**
-- **How to promote a secondary to primary when the primary goes down**
-  - **Raft consensus algorithm**
+Multi-leader (or multi-master) replication is a strategy where multiple nodes (leaders) can accept write operations concurrently. Changes made at one leader are replicated to all other leaders, enabling higher write throughput and improved availability, especially in geo-distributed setups.
+
+---
+
+**Key Takeaways**
+- Increased throughput
+- Better fault-tolerance 
+- Load balancing to further increase throughput 
+
+---
+
+### Key Takeaways
+1. **Multiple Write Points**:  
+   - Writes can occur on any leader, improving write throughput and reducing latency for geographically dispersed users.  
+   - Enables offline-first applications (e.g., mobile apps) to write locally and sync later.  
+
+2. **High Availability & Fault Tolerance**:  
+   - No single point of failure. If one leader goes down, others continue accepting writes.  
+
+3. **Conflict Resolution is Critical**:  
+   - Conflicting writes (e.g., simultaneous updates to the same record on different leaders) require resolution strategies:  
+     - **Last-Write-Wins (LWW)**: Uses timestamps, but risks data loss.  
+     - **Application-Mediated**: Custom logic resolves conflicts (e.g., merging data).  
+     - **Version Vectors**: Track causality to detect and resolve conflicts.  
+
+4. **Use Cases**:  
+   - Global applications needing low-latency writes in multiple regions.  
+   - Systems requiring continuous operation during network partitions.  
+   - Collaborative editing tools (e.g., Google Docs).  
+
+5. **Eventual Consistency**:  
+   - Data converges to a consistent state over time, but temporary inconsistencies may occur.  
+
+---
+
+### Tradeoffs
+| **Pros**                          | **Cons**                                   |
+|-----------------------------------|--------------------------------------------|
+| ✅ Improved write scalability      | ❌ Conflict resolution complexity           |
+| ✅ Reduced latency for distributed users | ❌ Risk of data divergence during partitions |
+| ✅ Higher availability (no single point of failure) | ❌ Operational complexity (e.g., monitoring, tuning) |
+| ✅ Supports offline workflows      | ❌ Replication lag can cause stale reads    |
+
+
+- **Complex Conflict Resolution:**  
+  - Concurrent writes can lead to data conflicts. Systems need sophisticated algorithms (e.g., last-write-wins, vector clocks, or custom resolution logic) to resolve these issues.
+
+- **Complicated Consensus algorithms needed when a leader goes down**
+
+- **Eventual Consistency:**  
+  - While multi-leader systems aim for high availability, they often settle for eventual consistency. Temporary data divergence between nodes may occur.
+
+- **Operational Complexity:**  
+  - Maintaining and monitoring multiple writable nodes increases the complexity of deployment, configuration, and ongoing maintenance.
+
+- **Increased Network Overhead:**  
+  - Replicating changes between multiple leaders results in higher network traffic, which can impact performance, especially across wide geographical distances.
+
+- **Latency Considerations:**  
+  - In geo-distributed setups, the replication latency between nodes in different regions can affect the timeliness of data consistency across the system.
+
+---
+
+### **When to Use Multi-Leader Replication?**  
+- **Choose Multi-Leader**:  
+  - For globally distributed systems prioritizing write availability over strong consistency.  
+  - When conflicts are rare or resolvable via application logic.  
+
+- **Avoid Multi-Leader**:  
+  - If strict consistency (ACID) is required (e.g., financial transactions).  
+  - When conflict resolution is too complex or costly.  
+
+---
+
+### **Examples**  
+- **PostgreSQL BDR**: Supports multi-leader replication with conflict detection.  
+- **Apache Cassandra**: Uses tunable consistency levels for multi-region writes.  
+- **CouchDB**: Peer-to-peer sync for offline applications.  
+
+--- 
+
+**Final Note**: Multi-leader replication is powerful but demands careful design to handle conflicts and ensure data integrity. Always evaluate tradeoffs against your system’s consistency and availability requirements.
+
+---
+
+#### Summary
+
+Multi-leader replication provides higher write availability and scalability by allowing writes on multiple nodes concurrently. However, these benefits come with increased complexity in conflict resolution, potential temporary inconsistencies, and higher operational overhead. When the leader goes down, will need to use a consensus algorithm such as Raft to elect the new leader. Deciding on this strategy involves balancing the need for high availability and low-latency writes against the challenges of maintaining strong data consistency and managing complex system operations.
+
 
 #### Leaderless
 
 ![Leaderless Replication](./images/image-9.png)
 
-**Pros**
+Leaderless Database Replication
+Leaderless replication is a decentralized approach where **all nodes** in a distributed database can independently handle read and write requests. There is no single "leader" node, and data is replicated across multiple nodes to ensure redundancy and fault tolerance. Systems like **Apache Cassandra** and **Amazon DynamoDB** use this model.  
 
-- No single point of failure
-- ...
-- ..
+---
 
-**Cons**
+How It Works
+1. **Writes**: Clients send write requests to multiple nodes. A **quorum** (e.g., majority of nodes) must acknowledge the write for it to succeed.  
+2. **Reads**: Clients fetch data from multiple nodes and resolve discrepancies using timestamps or version numbers.  
+3. **Conflict Resolution**:  
+   - **Last-Write-Wins (LWW)**: Uses timestamps to pick the latest value.  
+   - **Read Repair**: Updates stale data during read operations.  
+   - **Hinted Handoff**: Temporarily stores writes for offline nodes, delivering them once nodes recover.  
+4. **Bidirectional Sync Between Nodes**  
 
-- Only have eventual consistency
-- Need to have conflict resolution if same data is changed by multiple requests
-- ...
+---
+
+Key Takeaways
+| **Pros**                                  | **Cons**                                  |
+|-------------------------------------------|-------------------------------------------|
+| ✅ **High Availability**: No single point of failure; nodes operate independently. | ❌ **Eventual Consistency**: Temporary inconsistencies may occur. |
+| ✅ **Fault Tolerance**: Survives node/network failures. | ❌ **Conflict Resolution Complexity**: Requires mechanisms to handle concurrent writes. |
+| ✅ **Scalability**: Horizontal scaling by adding nodes. | ❌ **Higher Latency**: Quorum-based reads/writes can slow operations. |
+| ✅ **Geographic Flexibility**: Ideal for globally distributed systems. | ❌ **No Strong Consistency**: Not suitable for ACID transactions. |
+
+---
+
+Tradeoffs
+1. **Consistency vs. Availability**:  
+   - Prioritizes **availability** (AP in CAP theorem) over strong consistency.  
+   - Data converges to consistency *eventually*, not immediately.  
+
+2. **Conflict Management**:  
+   - Requires application-level logic (e.g., version vectors) to resolve conflicts.  
+   - Example: Two users updating the same item on different nodes may create divergent versions.  
+
+3. **Operational Complexity**:  
+   - Requires tuning quorum settings (e.g., `W + R > N` for consistency).  
+   - Monitoring node health and replication lag is critical.  
+
+---
+
+When to Use Leaderless Replication?
+- **Choose Leaderless**:  
+  - For systems requiring **high availability** and partition tolerance (e.g., social media feeds, IoT data).  
+  - When writes/reads are geographically distributed and low latency is critical.  
+  - Use cases where eventual consistency is acceptable (e.g., product catalogs, user activity logs).  
+
+- **Avoid Leaderless**:  
+  - For transactional systems needing ACID compliance (e.g., banking, inventory management).  
+  - When strong consistency is non-negotiable.  
+
+---
+
+Examples
+1. **Apache Cassandra**: Uses tunable consistency levels and gossip protocols for node communication.  
+2. **Amazon DynamoDB**: Employs leaderless replication with auto-scaling and built-in conflict resolution.  
+3. **Riak**: Offers eventual consistency with optional strong consistency modes.  
+
+--- 
+
+**Final Note**: Leaderless replication excels in distributed, high-traffic environments but demands careful design to manage tradeoffs between consistency, latency, and complexity.
 
 ## Case Study
 
@@ -869,9 +1097,9 @@ Imagine you're working at a rapidly growing social media platform like Facebook 
 
 **Solution**
 
-Partition/Shard the database
+- Partition/Shard the database (see below)
 
-- Break data into smaller pieces
+- **Recommended replication strategy:** In summary, while leaderless replication offers high availability and fault tolerance, its complexity in conflict resolution, the overhead of ensuring data consistency, and potential latency issues make it less suitable for scenarios where near-real-time consistency and predictable user experiences are critical—such as on a global social media platform. Multi-leader replication, with its ability to handle local writes and more controlled conflict resolution, typically offers a better balance for these use cases.
 
 **Pros**
 
@@ -886,45 +1114,86 @@ Partition/Shard the database
 ![Scaling and Performance of Sharded Databases](./images/image-10.png)
 
 - Sharding helps to scale databases via horizontal scaling - add more machines to spread load and be fast.
+
 - Sharding is a process of dividing database into smaller units either by:
   - Completely using different databases depending on a key factor (e.g. user's location or hash).
-  - Horizontal partitioning of tables - same schema, different rows holding independent data.
-  - Vertical partitioning of tables - split columns in multiple tables relatable via common key.
-- The above techniques can be combined as well to improve performance and scale database. e.g.:
+  - **Horizontal partitioning** of tables - same schema, different rows holding independent data.
+  - **Vertical partitioning** of tables - split columns in multiple tables relatable via common key.
+
+- The above techniques can be combined as well to improve performance and scale database. e.g.
   - Use different databases depending on a user's hash or location.
   - Vertically split table along columns that serve distinct API use cases reducing the overall data payload.
+
+**Things to thing about when sharding**
+
 - Shards must be autonomous and should not share compute resources.
+
 - In some cases shards may replicate certain tables used as reference (e.g. conversion rates for weights).
+
 - Sharding is usually implemented at the application level that determines shard to transmit reads and writes to.
+
 - However, some database management systems have sharding capabilities built in, allowing you to implement sharding directly at the database level.
 
 **Drawbacks of Sharding**
 
 - Properly implementing a sharded database architecture is complex and non-trivial.
+
 - Incorrect implementation can lead to data loss and corrupted tables.
+
 - Complexity due to possible reads/writes from/to multiple shards while maintaining data integrity and consistency.
+
 - Shards may become unbalanced and it may be quite hard to rebalance data across nodes.
+
 - Sharding isn't natively supported by every database engine and hence involve custom sharding logic.
 
 ### Key Based Sharding
 
 ![Key Based Sharding](./images/image-11.png)
 
-**Pros**
+## Key-Based Sharding: Pros and Cons
 
-- 
+#### Pros
+- **Uniform Data Distribution:**  
+  - When using a well-chosen shard key (e.g., user ID), data is evenly distributed across shards, minimizing hot spots.
 
-**Cons**
+- **Scalability:**  
+  - Enables horizontal scaling by partitioning data across multiple nodes, which can be expanded easily as the load increases.
+
+- **Simplicity:**  
+  - Straightforward to implement since the shard for any piece of data is determined by applying a hash function to the key.
+
+- **Minimal Rebalancing Overhead:**  
+  - With techniques like consistent hashing, adding or removing nodes causes minimal data movement, ensuring smoother scaling.
+
+- **Improved Write Performance:**  
+  - Write operations are distributed across shards, reducing contention and potential bottlenecks.
+
+#### Cons
+- **Hot spot Risk:**  
+  - If the shard key is not chosen carefully or if the data is not uniformly distributed, some shards may become overloaded while others remain underutilized.
+
+- **Cross-Shard Queries:**  
+  - Queries that need to access data across multiple shards can be complex and less efficient, often requiring aggregation at the application level.
+
+- **Operational Complexity in Rebalancing:**  
+  - Although consistent hashing minimizes movement, significant changes in the key distribution may still require careful rebalancing to maintain performance.
+
+- **Limited Query Flexibility:**  
+  - The chosen shard key becomes a critical factor in query design; queries not involving the shard key might need to scan multiple shards, affecting performance.
+
+- **Maintenance Overhead:**  
+  - Managing multiple shards increases operational complexity, including monitoring, backup, and failover procedures across distributed nodes.
+
+---
+
+**Summary:**  
+Key-based sharding is effective for achieving even data distribution and scalable performance if the shard key is selected properly. However, it requires careful planning to avoid hotspots and manage cross-shard queries, as well as additional operational efforts for maintaining a distributed system.
 
 ### Range Based Sharding
 
 ![Range Based Sharding](./images/image-12.png)
 
-**Pros**
-
-- 
-
-**Cons**
+#
 
 ### Directory Based Sharding
 
