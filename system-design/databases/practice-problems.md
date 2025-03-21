@@ -102,6 +102,21 @@
   - [Foundational Subjective Question 10](#foundational-subjective-question-10)
     - [Question: Name the SQL Joins and describe what they do](#question-name-the-sql-joins-and-describe-what-they-do)
     - [Solution](#solution-6)
+- [Practice Problems](#practice-problems-1)
+  - [Practice Problem 1](#practice-problem-1)
+    - [Question: Write the following queries in SQL](#question-write-the-following-queries-in-sql)
+    - [Solution](#solution-7)
+  - [Practice Problem 2](#practice-problem-2)
+    - [Question: What's the best storage solution](#question-whats-the-best-storage-solution)
+    - [Solution:](#solution-8)
+    - [Alternative Solution](#alternative-solution)
+      - [Primary Database Choice: Relational Database (e.g., PostgreSQL, MySQL)](#primary-database-choice-relational-database-eg-postgresql-mysql)
+      - [Second Choice: NoSQL Document Database (e.g., MongoDB, Couchbase)](#second-choice-nosql-document-database-eg-mongodb-couchbase)
+      - [Tradeoffs and Workarounds](#tradeoffs-and-workarounds)
+      - [Workarounds for Sub-Optimal Choices*](#workarounds-for-sub-optimal-choices)
+        - [If Using NoSQL Instead of SQL:](#if-using-nosql-instead-of-sql)
+        - [If Using SQL Instead of NoSQL:](#if-using-sql-instead-of-nosql)
+      - [Final Recommendation](#final-recommendation)
 
 <!-- /code_chunk_output -->
 
@@ -1000,3 +1015,172 @@ For a bank’s fraud detection system, **MongoDB** (document) or **Cassandra** (
 
 - **SELF JOIN:**  
   Joins a table to itself. This is useful when you want to compare rows within the same table, often using table aliases to distinguish the instances.
+
+# Practice Problems 
+
+## Practice Problem 1
+
+### Question: Write the following queries in SQL
+
+   Companies(company_id: integer, company_name: string)
+   JobTitles(jobtitle_id: integer, jobtitle_name: string)
+   SalaryInfo(company_id: integer, jobtitle_id: integer, average_salary: real)
+
+   The SalaryInfo relation lists the average salaries of JobTitles by Companies. Write the
+   following queries in SQL:
+
+   1. Find the company_names of companies that have every job title.
+   2. For each job title, find the company_name that provides the highest aveage_salary.
+   3. Find the jobtitle_name of job titles existing at “Interview Kickstart”, and nowhere else.
+
+### Solution 
+
+```sql 
+SELECT c.company_name
+FROM Companies c, SalaryInfo s
+WHERE c.company_id = s.company_id
+GROUP BY c.company_id
+HAVING COUNT(DISTINCT(s.jobtitle_id)) = (SELECT count(*) from JobTitles);
+
+SELECT c.company_name, jt.jobtitle_name
+FROM Companies c, JobTitles jt
+INNER JOIN
+(SELECT DISTINCT(jobtitle_id), MAX(average_salary), company_id FROM salaryInfo GROUP BY jobtitle_id) AS s
+ON c.company_id = s.company_id AND jt.jobtitle_id = s.jobtitle_id;
+
+
+SELECT jt.jobtitle_name
+FROM JobTitles jt, SalaryInfo s
+WHERE jt.jobtitle_id = s.jobtitle_id
+AND s.company_id =
+(SELECT company_id FROM Companies
+WHERE company_name = "Interview Kickstart"
+AND s.jobtitle_id NOT IN (SELECT s2.jobtitle_id FROM SalaryInfo s2 WHERE s2.company_id <> s.company_id AND s2.jobtitle_id = s.jobtitle_id);
+```
+## Practice Problem 2
+
+### Question: What's the best storage solution 
+
+   Imagine a service that allows users to query movies based on a number of filters such as release year, credited talent, and rating. What type of database would you likely use to implement the data storage component?
+
+   If your preferred database type were not available for some reason, what would be your second choice?
+
+   Discuss the tradeoffs between the two and explain the workarounds you could use to minimize the impact of using a sub-optimal database type.
+
+### Solution: 
+
+
+   Clarifying Questions:
+
+   Release Year: 1950-2025 
+   Credited Talent: ["actor 1", "actor 2"]
+   Rating: 1-5
+
+   I'd recommend a NoSQL database because there's no need for a strict schema, joins, or relationships, or normalization. Document based dbs excel at querying nested data. Now the trade off here is that we will have redundancy and some duplicate data in addition to limited ability to join across multiple documents. 
+
+   In addition, SQL databases are great for transactions and for ACID compliance. There is no need for that in this use case 
+
+   My second choice would be a SQL database where we store have normalized tables where we can utilized join operations to filter the data accordingly. The data will be mostly structured and this will provide us the ability to set up indexes to speed up filtering. 
+
+### Alternative Solution 
+
+#### Primary Database Choice: Relational Database (e.g., PostgreSQL, MySQL)
+**Why?**  
+- **Structured Data**: Movie metadata (release year, rating) and talent relationships (actors, directors) fit naturally into tabular schemas.  
+- **Complex Queries**: Filters like "movies with *both* Actor X and Director Y released after 2010 with a rating > 8" are efficiently handled with SQL joins and indexing.  
+- **ACID Compliance**: Ensures transactional integrity for updates (e.g., adding/removing credits).  
+- **Full-Text Search**: Tools like PostgreSQL’s `tsvector` or integrated extensions (e.g., `pg_trgm`) can handle fuzzy title searches.  
+- **JSON Support**: Modern SQL databases (e.g., PostgreSQL) support semi-structured data for flexible fields like genre tags or dynamic metadata.  
+
+**Example Schema:**  
+```sql  
+CREATE TABLE movies (
+  id SERIAL PRIMARY KEY,
+  title TEXT,
+  release_year INT,
+  rating FLOAT,
+  genres JSONB  -- e.g., ["Action", "Drama"]
+);
+
+CREATE TABLE talent (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  role TEXT  -- e.g., "Actor", "Director"
+);
+
+CREATE TABLE credits (
+  movie_id INT REFERENCES movies(id),
+  talent_id INT REFERENCES talent(id),
+  PRIMARY KEY (movie_id, talent_id)
+);
+```  
+**Query Example:**  
+```sql  
+SELECT m.title 
+FROM movies m
+JOIN credits c ON m.id = c.movie_id
+JOIN talent t ON c.talent_id = t.id
+WHERE m.release_year > 2010
+  AND m.rating >= 8.0
+  AND t.name = 'Christopher Nolan'
+  AND t.role = 'Director';
+```  
+
+---
+
+#### Second Choice: NoSQL Document Database (e.g., MongoDB, Couchbase)
+**Why?**  
+- **Flexible Schema**: Accommodate evolving metadata (e.g., adding new filters like "streaming platform" without schema migrations).  
+- **Denormalization**: Embed credits directly in movie documents for faster reads:  
+  ```json
+  {
+    "title": "Inception",
+    "release_year": 2010,
+    "rating": 8.8,
+    "credits": [
+      { "name": "Christopher Nolan", "role": "Director" },
+      { "name": "Leonardo DiCaprio", "role": "Actor" }
+    ]
+  }
+  ```  
+- **Scalability**: Horizontal scaling for large datasets (e.g., 100M+ movies).  
+
+**Query Example (MongoDB):**  
+```javascript  
+db.movies.find({
+  release_year: { $gt: 2010 },
+  rating: { $gte: 8.0 },
+  "credits.name": "Christopher Nolan",
+  "credits.role": "Director"
+});
+```  
+
+---
+
+#### Tradeoffs and Workarounds
+| **Aspect**               | **Relational (SQL)**                          | **NoSQL (Document)**                        |  
+|--------------------------|-----------------------------------------------|---------------------------------------------|  
+| **Complex Joins**         | ✅ Native support via `JOIN` clauses.          | ❌ Requires denormalization or application-layer joins (e.g., fetch movies, then query talent separately). |  
+| **Scalability**           | ❌ Vertical scaling (harder to distribute).    | ✅ Horizontal scaling (easy sharding).       |  
+| **Data Consistency**      | ✅ ACID guarantees.                            | ❌ Eventual consistency (risk of stale data in distributed setups). |  
+| **Query Flexibility**     | ✅ Optimized for multi-filter queries.         | ❌ Limited to indexed fields; complex filters may require aggregation pipelines (slower). |  
+| **Schema Changes**        | ❌ Requires migrations.                        | ✅ Add/remove fields on the fly.             |  
+
+---
+
+#### Workarounds for Sub-Optimal Choices*
+##### If Using NoSQL Instead of SQL:
+1. **Denormalize Data**: Embed credits and metadata in a single document to avoid joins.  
+2. **Use Composite Indexes**: Create indexes on common filter combinations (e.g., `release_year + rating`).  
+3. **Materialized Views**: Precompute results for frequent queries (e.g., "Top-rated movies by year").  
+4. **Supplement with Search Engines**: Offload complex queries to Elasticsearch for better full-text and filter performance.  
+
+##### If Using SQL Instead of NoSQL:
+1. **JSONB Columns**: Use PostgreSQL’s `JSONB` for semi-structured data (e.g., dynamic genre tags).  
+2. **Partitioning**: Split large tables by `release_year` to improve scalability.  
+3. **Caching**: Cache frequent query results (e.g., "Movies from 2020–2023 with rating > 8") using Redis.  
+
+---
+
+#### Final Recommendation
+A **relational database** (e.g., PostgreSQL) is ideal for its robust querying capabilities and integrity. If scalability becomes critical (e.g., 1B+ entries), a **document database** (e.g., MongoDB) can work with denormalization and careful indexing. For hybrid scenarios, consider a **multi-model database** (e.g., PostgreSQL + Elasticsearch) to leverage the strengths of both worlds.
