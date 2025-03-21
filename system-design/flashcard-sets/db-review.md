@@ -15,7 +15,7 @@ Here’s a set of **flashcards** to reinforce learning.
 
 ### **🃏 Flashcard 4**  
 **Q:** What is the rule of **3NF (Third Normal Form)?**  
-**A:** No transitive dependencies—non-key columns should depend only on the primary key.  
+**A:** No transitive dependencies - No non-key column should depend on another non-key column 
 
 ### **🃏 Flashcard 5**  
 **Q:** Why is too much normalization sometimes a problem?  
