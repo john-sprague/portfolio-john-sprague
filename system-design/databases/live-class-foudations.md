@@ -64,26 +64,26 @@
     - [Query Optimizer](#query-optimizer)
     - [Database Query Performance](#database-query-performance)
     - [Case Study](#case-study-2)
-    - [Scaling](#scaling)
-    - [Case Study (Review)](#case-study-review)
+  - [Scaling: Replication & Sharding](#scaling-replication--sharding)
+    - [Case Study](#case-study-3)
       - [Primary-Secondary/Single Leader Replication](#primary-secondarysingle-leader-replication)
       - [Multiple Leader Replication](#multiple-leader-replication)
       - [Leaderless](#leaderless)
-  - [Case Study](#case-study-3)
+  - [Case Study](#case-study-4)
     - [Scaling and Performance of Sharded Databases](#scaling-and-performance-of-sharded-databases)
     - [Key Based Sharding](#key-based-sharding)
     - [Range Based Sharding](#range-based-sharding)
     - [Directory Based Sharding](#directory-based-sharding)
   - [CAP Theorem in DB System](#cap-theorem-in-db-system)
   - [Security](#security)
-    - [Case Study](#case-study-4)
+    - [Case Study](#case-study-5)
       - [Encryption](#encryption)
       - [Authentication: Verifying the identity of users or systems](#authentication-verifying-the-identity-of-users-or-systems)
       - [Authorization: Granting access based on roles or attributes](#authorization-granting-access-based-on-roles-or-attributes)
   - [Monitoring and Alerts](#monitoring-and-alerts)
-    - [Case Study](#case-study-5)
-      - [Monitoring and Alerts](#monitoring-and-alerts-1)
     - [Case Study](#case-study-6)
+      - [Monitoring and Alerts](#monitoring-and-alerts-1)
+    - [Case Study](#case-study-7)
       - [Select a database type(s) for a social media website that includes search, user connections, user feeds, ads as well as payments. Design for scalability given peek events and hours. Design the ER diagram for a subsection of the entities indicating entities, relationships and constraints.](#select-a-database-types-for-a-social-media-website-that-includes-search-user-connections-user-feeds-ads-as-well-as-payments-design-for-scalability-given-peek-events-and-hours-design-the-er-diagram-for-a-subsection-of-the-entities-indicating-entities-relationships-and-constraints)
       - [Use Cases](#use-cases-2)
       - [Define scale and then database types](#define-scale-and-then-database-types)
@@ -401,7 +401,7 @@ Design a storage solution for a web-crawler that scrapes the product and pricing
 
 ### Solution
 
-![alt text](image-1.png)
+![alt text](./images/image-1.png)
 
 #### Web Crawler BFS vs DFS
 
@@ -510,9 +510,9 @@ bfs_web_crawler("https://example.com", max_pages=100)
 - **DFS is less suitable** for web crawling due to its tendency to explore deep paths and delay the discovery of important pages.
 - Practical web crawlers often combine BFS with additional features like politeness, duplicate detection, and prioritization to improve efficiency and scalability.
 
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
+![alt text](./images/image-2.png)
+![alt text](./images/image-3.png)
+![alt text](./images/image-4.png)
 
 - Different dbs to support different aspects
   - Timeseries, NoSQL
@@ -565,7 +565,7 @@ Two different types of users
 
 ### ER Diagram
 
-![alt text](image-5.png)
+![alt text](./images/image-5.png)
 
 ### DB Integrity
 
@@ -782,29 +782,33 @@ Imagine you're working on a social media platform like Twitter, Instagram, or Ti
 - **Trending Cache:** Store trending hashtags, posts, or topics in in-memory caches like Redis.
 - **Hierarchical Caching:** Use multi-level caching (e.g., user feed in L1 cache, trending topics in L2 cache).
 
-### Scaling
+## Scaling: Replication & Sharding 
 
 - At the database system level following steps can reduce the latency of data 10:
   - Separate read replica / cache - for non-transactional data and reads.
   - Partition tables - reduce working and backup set, move old data to cold storage. Shard database/users - e.g. along geographical lines.
 
-### Case Study (Review)
+### Case Study
 
 Imagine you're working at a large-scale e-commerce platform like Amazon or eBay. The platform handles millions of users and transactions daily. As the holiday season or a major sale event (e.g., Black Friday or Cyber Monday) approaches, traffic spikes to unprecedented levels.
 
 What are the challenges?
 
-- ...
-- Zero downtime
-- ...
+- Millions of users - Scalability 
+- Zero downtime - Availability 
+- Traffic response times 
 
 **How can replication help?**
 
-![alt text](image-6.png)
+Def: You have multiple copies of the data in different servers, and sometimes different regions as well.
+
+Can happen synchronous or asynchronous
+
+![alt text](./images/image-6.png)
 
 #### Primary-Secondary/Single Leader Replication
 
-![alt text](image-7.png)
+![alt text](./images/image-7.png)
 
 **Pros**
 
@@ -818,7 +822,7 @@ What are the challenges?
 
 #### Multiple Leader Replication
 
-![Multiple Leader Replication](image-8.png)
+![Multiple Leader Replication](./images/image-8.png)
 
 - Improves write throughput
   - Scales better
@@ -834,7 +838,7 @@ What are the challenges?
 
 #### Leaderless
 
-![Leaderless Replication](image-9.png)
+![Leaderless Replication](./images/image-9.png)
 
 **Pros**
 
@@ -879,7 +883,7 @@ Partition/Shard the database
 **Cons**
 
 ### Scaling and Performance of Sharded Databases
-![Scaling and Performance of Sharded Databases](image-10.png)
+![Scaling and Performance of Sharded Databases](./images/image-10.png)
 
 - Sharding helps to scale databases via horizontal scaling - add more machines to spread load and be fast.
 - Sharding is a process of dividing database into smaller units either by:
@@ -904,7 +908,7 @@ Partition/Shard the database
 
 ### Key Based Sharding
 
-![Key Based Sharding](image-11.png)
+![Key Based Sharding](./images/image-11.png)
 
 **Pros**
 
@@ -914,7 +918,7 @@ Partition/Shard the database
 
 ### Range Based Sharding
 
-![Range Based Sharding](image-12.png)
+![Range Based Sharding](./images/image-12.png)
 
 **Pros**
 
@@ -924,7 +928,7 @@ Partition/Shard the database
 
 ### Directory Based Sharding
 
-![Directory Based Sharding](image-13.png)
+![Directory Based Sharding](./images/image-13.png)
 
 **Pros**
 
@@ -1078,7 +1082,7 @@ If the RDBMS model does not scale further, we can assess other types of database
 
 ### Cloud vs. On-Premises Databases
 
-![Cloud vs. On-Premises Databases](image-14.png)
+![Cloud vs. On-Premises Databases](./images/image-14.png)
 
 ### Running Databases in the cloud
 
@@ -1095,7 +1099,7 @@ As well as tools to stream data to these sources:
 - Amazon Kinesis Data Firehose
 - Amazon DynamoDB Streams
 
-![Running Databases in the Cloud](image-15.png)
+![Running Databases in the Cloud](./images/image-15.png)
 
 If we were to do this ourselves, it would be a big undertaking requiring lots of manpower to do so.
 
