@@ -137,6 +137,23 @@
     - [2. POST /images](#2-post-images)
     - [3. PUT /images/](#3-put-images)
     - [Other Considerations](#other-considerations)
+- [REST vs. GraphQL](#rest-vs-graphql)
+  - [REST](#rest)
+    - [Overview](#overview)
+    - [Key Takeaways](#key-takeaways-9)
+    - [Best Practices & Use Cases](#best-practices--use-cases)
+  - [GraphQL](#graphql)
+    - [Overview](#overview-1)
+    - [Key Takeaways](#key-takeaways-10)
+    - [Best Practices & Use Cases](#best-practices--use-cases-1)
+  - [When to Use Each](#when-to-use-each)
+    - [How to Achieve Idempotency in GraphQL Mutations](#how-to-achieve-idempotency-in-graphql-mutations)
+    - [Key Takeaways](#key-takeaways-11)
+  - [What make an API RESTful?](#what-make-an-api-restful)
+  - [Phone Screen Interview Question 1 - What is GraphQL? What are a couple differences from REST?](#phone-screen-interview-question-1---what-is-graphql-what-are-a-couple-differences-from-rest)
+  - [Take Home Interview Question 1: Build a "hello world" GraphQL API](#take-home-interview-question-1-build-a-hello-world-graphql-api)
+  - [On Site Interview Question 1: Explain the benefits and drawbacks of using GraphQL vs REST APIs](#on-site-interview-question-1-explain-the-benefits-and-drawbacks-of-using-graphql-vs-rest-apis)
+  - [On Site Interview Question 2: What issues typically arise when using REST APIs?](#on-site-interview-question-2-what-issues-typically-arise-when-using-rest-apis)
 
 <!-- /code_chunk_output -->
 
@@ -1817,3 +1834,175 @@ Content-Type: application/json
   - Use `Cache-Control` and `ETag` for GET requests to optimize performance.
 
 ---
+
+# REST vs. GraphQL
+
+Both REST and GraphQL are popular approaches for designing APIs, but they differ significantly in design, flexibility, and use cases. Below is an overview, key takeaways, best practices for each, and guidance on when to use them.
+
+---
+
+## REST
+
+### Overview
+- **Architecture:**  
+  REST (Representational State Transfer) is an architectural style that uses standard HTTP methods (GET, POST, PUT, DELETE) to perform operations on resources identified by URLs.
+- **Statelessness:**  
+  Each request contains all the information the server needs to process it, making REST APIs stateless.
+- **Resource-Based:**  
+  Resources are accessed using a uniform interface and standard HTTP status codes.
+
+### Key Takeaways
+- **Predictability:**  
+  Using standardized methods and status codes makes REST APIs predictable and widely understood.
+- **Caching:**  
+  Built-in HTTP caching mechanisms (via headers like `Cache-Control` and `ETag`) improve performance.
+- **Scalability:**  
+  The stateless nature facilitates scaling horizontally.
+- **Multiple Representations:**  
+  Resources can be returned in various formats (JSON, XML, etc.) based on client needs.
+
+### Best Practices & Use Cases
+- **Use Cases:**  
+  - Applications with simple CRUD operations.
+  - Services where caching and HTTP-level optimizations are important.
+  - Systems that benefit from a standardized and widely-adopted approach.
+- **Best Practices:**  
+  - Use proper HTTP status codes and verbs.
+  - Structure your URLs to reflect resources (e.g., `/users`, `/orders/123`).
+  - Implement versioning to maintain backward compatibility.
+  - Use HATEOAS (Hypermedia as the Engine of Application State) for discoverability, if needed.
+  - Keep responses consistent and document the API thoroughly.
+
+---
+
+## GraphQL
+
+### Overview
+- **Query Language:**  
+  GraphQL is a query language for APIs that enables clients to request exactly the data they need, no more and no less.
+- **Single Endpoint:**  
+  Unlike REST, GraphQL typically exposes a single endpoint through which all interactions occur.
+- **Client-Driven:**  
+  Clients define the structure of the response, which can help reduce over-fetching and under-fetching of data.
+
+### Key Takeaways
+- **Flexibility:**  
+  Clients have granular control over data retrieval, making it ideal for complex or dynamic data requirements.
+- **Efficiency:**  
+  Reduces the number of API calls by bundling multiple resource requests into a single query.
+- **Data Joins On The Server:**
+    Instead of calling, /user, then calling /pictures for that user. We'd just say, give me all the users and all the pictures for each user. 
+- **Strong Typing:**  
+  A defined schema allows for robust tooling, introspection, and better error handling.
+- **Evolving APIs:**  
+  GraphQL makes it easier to evolve APIs without breaking existing queries.
+
+### Best Practices & Use Cases
+- **Use Cases:**  
+  - Applications with complex data relationships or where data requirements vary widely between clients (e.g., mobile vs. web).
+  - When performance and bandwidth optimization is critical.
+  - Scenarios requiring real-time data updates (using GraphQL subscriptions).
+- **Best Practices:**  
+  - Define a clear and comprehensive schema that mirrors your data model.
+  - Implement proper error handling and validation.
+  - Use query complexity analysis and rate limiting to protect your server from expensive queries.
+  - Utilize caching at the client or intermediary levels (e.g., Apollo Client caching).
+  - Maintain clear documentation and version your schema when necessary.
+
+---
+
+## When to Use Each
+
+- **Choose REST if:**  
+  - Your application has straightforward CRUD operations and doesn't require complex queries.
+  - You need to leverage HTTP caching, and your clients can work with standard HTTP semantics.
+  - You want a widely adopted, simple, and predictable API design.
+
+- **Choose GraphQL if:**  
+  - Your API needs to support complex queries and relationships.
+  - Clients require different subsets of data, and you want to avoid multiple round trips.
+  - You aim to reduce payload sizes and optimize performance, especially in mobile or bandwidth-sensitive environments.
+  - You want to offer a more flexible and self-documenting API that evolves over time.
+
+---
+
+Both REST and GraphQL have their strengths and are suited to different scenarios. The best choice depends on your specific application needs, data complexity, client requirements, and overall system design goals.
+
+GraphQL queries are inherently idempotent since they only read data, but mutations—which change data—are not guaranteed to be idempotent by default. However, you **can design your GraphQL mutations to be idempotent** by carefully crafting their logic.
+
+### How to Achieve Idempotency in GraphQL Mutations
+
+- **Use Idempotency Keys:**  
+  Require clients to send a unique idempotency key with each mutation request. The server can check if a request with the same key has already been processed and return the existing result instead of performing the operation again.
+
+- **Design Deterministic Mutations:**  
+  Ensure that the mutation’s effect doesn’t change when applied multiple times. For example, if your mutation creates a resource, check if the resource already exists (based on unique fields) and return it instead of creating a duplicate.
+
+- **Conditional Operations:**  
+  Use conditions in your resolvers to only update state when it’s appropriate. For instance, updating a user’s status to “active” should only apply the change if the current status isn’t already “active.”
+
+### Key Takeaways
+
+- **GraphQL Mutations Are Not Idempotent by Default:**  
+  Unlike GET queries, mutations modify state and can lead to different outcomes if called repeatedly.
+  
+- **Idempotency Requires Explicit Design:**  
+  Implementing idempotency in GraphQL is a matter of how you write your resolver logic rather than a feature of the GraphQL spec.
+
+- **Best Practices:**  
+  - Always check for existing records before creating new ones.
+  - Use unique identifiers or idempotency keys to prevent duplicate operations.
+  - Document your mutation behavior clearly so that clients understand how to safely retry operations.
+
+By applying these strategies, you can design GraphQL mutations that are idempotent, ensuring that repeated calls with the same input lead to the same outcome without unintended side effects.
+
+## What make an API RESTful? 
+
+`**RE**presentational **S**tate **T**ransfer 
+
+A RESTful API is one that adheres to the architectural principles of REST (Representational State Transfer). Here are the key elements that make an API RESTful:
+
+- **Statelessness:**  
+  Each request from a client must contain all the information needed to process the request. The server doesn’t store any client context between requests. The server is not effected by the client state (Use headers for things such as cookies, auth, etc for client state)
+
+- **Client-Server Architecture:**  
+  The separation of concerns between the client (which handles the user interface) and the server (which manages data and business logic) is essential. This decoupling allows each part to evolve independently.
+
+- **Uniform Interface:**  
+  A consistent way to interact with resources is crucial. This typically involves: We transfer the state of that resource when the client fetches it. 
+  - **Resource Identification:** Resources are identified via URLs (e.g., `/users/123`).
+  - **Standard HTTP Methods:** Use of methods like GET, POST, PUT, DELETE to perform operations.
+  - **Representation:** Resources are represented in a format like JSON or XML.
+  - **HATEOAS (Hypermedia as the Engine of Application State):** Optionally, the API can include links within responses to guide client interactions.
+
+- **Cacheability:**  
+  Responses should explicitly state whether they are cacheable. Caching can improve performance and scalability by reducing the number of client-server interactions.
+
+- **Layered System:**  
+  The architecture can be composed of hierarchical layers (e.g., load balancers, proxies, and backend services). Each layer only interacts with its adjacent layers, enhancing security and scalability.
+
+- **Code on Demand (Optional):**  
+  Although rarely used, servers can optionally extend client functionality by transferring executable code (like JavaScript).
+
+- **Client-Server:**
+    Can scale each independently of each other, as long as the interface is unaltered.  
+
+**Key Takeaways:**
+
+- **Consistency and Predictability:**  
+  A uniform interface and standard HTTP methods make the API easier to understand and consume.
+- **Scalability:**  
+  Statelessness and cacheability allow the system to scale more effectively.
+- **Decoupled Architecture:**  
+  The client-server separation supports independent evolution and maintenance of client and server components.
+
+By following these principles, an API becomes RESTful, promoting simplicity, performance, and scalability.
+
+## Phone Screen Interview Question 1 - What is GraphQL? What are a couple differences from REST? 
+
+## Take Home Interview Question 1: Build a "hello world" GraphQL API
+
+## On Site Interview Question 1: Explain the benefits and drawbacks of using GraphQL vs REST APIs
+
+## On Site Interview Question 2: What issues typically arise when using REST APIs? 
+
