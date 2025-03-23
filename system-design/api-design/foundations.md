@@ -54,6 +54,10 @@
     - [Real-World Examples](#real-world-examples-1)
     - [Summary](#summary-1)
   - [Idempotency](#idempotency)
+    - [Using PUT for Idempotency](#using-put-for-idempotency)
+    - [Scenarios Where PUT is Used for Idempotency](#scenarios-where-put-is-used-for-idempotency)
+    - [When NOT to Use PUT for Idempotency](#when-not-to-use-put-for-idempotency)
+    - [Key Takeaways](#key-takeaways-1)
   - [Interview Questions](#interview-questions-1)
     - [1. What Types of HTTP Methods Are Idempotent? When Would Idempotent Methods Be Used?](#1-what-types-of-http-methods-are-idempotent-when-would-idempotent-methods-be-used)
     - [2. What Are the Different Types of HTTP Methods?](#2-what-are-the-different-types-of-http-methods)
@@ -69,7 +73,7 @@
       - [Common Response Headers](#common-response-headers)
       - [Example Response](#example-response)
     - [Key Use Cases](#key-use-cases)
-    - [Key Takeaways](#key-takeaways-1)
+    - [Key Takeaways](#key-takeaways-2)
     - [Summary Table](#summary-table)
   - [Browser Cookies](#browser-cookies)
     - [Key Features of Browser Cookies](#key-features-of-browser-cookies)
@@ -77,14 +81,14 @@
     - [Security & Privacy](#security--privacy)
     - [Limitations](#limitations)
     - [Alternatives to Cookies](#alternatives-to-cookies)
-    - [Key Takeaways](#key-takeaways-2)
+    - [Key Takeaways](#key-takeaways-3)
   - [API Limits](#api-limits)
     - [Types of API Limits](#types-of-api-limits)
     - [Why API Limits Matter](#why-api-limits-matter)
     - [Implementation and Enforcement](#implementation-and-enforcement)
     - [Handling Limits as a Developer](#handling-limits-as-a-developer)
     - [Example: Rate Limit in Action](#example-rate-limit-in-action)
-    - [Key Takeaways](#key-takeaways-3)
+    - [Key Takeaways](#key-takeaways-4)
     - [1. URL Length Limit](#1-url-length-limit)
       - [What to Limit](#what-to-limit)
       - [Why Limit URL Length?](#why-limit-url-length)
@@ -97,11 +101,11 @@
     - [Key Considerations](#key-considerations)
     - [Security Best Practices](#security-best-practices)
     - [Example Flow](#example-flow)
-    - [Key Takeaways](#key-takeaways-4)
+    - [Key Takeaways](#key-takeaways-5)
   - [HTTP Caching](#http-caching)
     - [How HTTP Caching Works](#how-http-caching-works)
     - [Benefits of HTTP Caching](#benefits-of-http-caching)
-    - [Key Takeaways](#key-takeaways-5)
+    - [Key Takeaways](#key-takeaways-6)
   - [Private Cache vs. Public Cache](#private-cache-vs-public-cache)
     - [Private Cache](#private-cache)
     - [Shared Cache](#shared-cache)
@@ -113,7 +117,7 @@
     - [3xx Redirection](#3xx-redirection)
     - [4xx Client Errors](#4xx-client-errors)
     - [5xx Server Errors](#5xx-server-errors)
-    - [Key Takeaways](#key-takeaways-6)
+    - [Key Takeaways](#key-takeaways-7)
   - [Interview Questions](#interview-questions-2)
     - [1. Uses for a cookie:](#1-uses-for-a-cookie)
     - [2. Limits on your API:](#2-limits-on-your-api)
@@ -127,7 +131,7 @@
       - [Access-Based TTL](#access-based-ttl)
       - [Security & Privacy](#security--privacy-1)
     - [Example Flow](#example-flow-1)
-    - [Key Takeaways](#key-takeaways-7)
+    - [Key Takeaways](#key-takeaways-8)
     - [On-site 2: Designing an API for an Image Sharing Application](#on-site-2-designing-an-api-for-an-image-sharing-application)
   - [1. GET /images/](#1-get-images)
     - [2. POST /images](#2-post-images)
@@ -801,6 +805,85 @@ https://www.example.com:8080/path/to/resource?query=value#section
 HTTP methods define the actions clients can perform on server resources. Understanding their purposes, idempotency, and safety is crucial for designing RESTful APIs and building scalable, predictable web applications.
 
 ## Idempotency 
+
+### Using PUT for Idempotency
+
+The **PUT** method is **inherently idempotent**, meaning that making the same request multiple times will always result in the same state of the resource. Unlike `PATCH`, which updates only specific fields, `PUT` typically replaces the entire resource.  
+
+---
+
+### Scenarios Where PUT is Used for Idempotency
+
+1. **Replacing an Entire Resource**  
+   - If you send a `PUT` request multiple times with the same body, the resource's state remains unchanged after the first request.  
+   - **Example: Updating a User Profile**  
+     ```http
+     PUT /users/123
+     Content-Type: application/json
+     ```
+     ```json
+     {
+       "name": "Alice",
+       "email": "alice@example.com",
+       "age": 30
+     }
+     ```
+     - Whether you send this request once or ten times, the user’s profile will always have the same values.
+
+2. **Setting a Fixed Value Instead of Modifying It**  
+   - If the request explicitly sets a field rather than incrementing or appending, it is idempotent.  
+   - **Example: Updating Order Status**  
+     ```http
+     PUT /orders/567
+     ```
+     ```json
+     { "status": "shipped" }
+     ```
+     - No matter how many times you send this request, the order status remains `"shipped"`.
+
+3. **Creating or Updating a Resource with a Known Identifier**  
+   - If the resource does not exist, `PUT` can create it. If it exists, `PUT` updates it with the provided data.  
+   - **Example: Creating/Updating a Product in Inventory**  
+     ```http
+     PUT /products/789
+     ```
+     ```json
+     {
+       "name": "Wireless Mouse",
+       "price": 25.99,
+       "stock": 100
+     }
+     ```
+     - If the product exists, it updates the details. If it doesn’t, it creates a new product entry.
+
+4. **Reverting a Resource to a Specific State**  
+   - If an application needs to reset a resource to a known state, `PUT` ensures it will always reach that state.  
+   - **Example: Resetting a User's Preferences**  
+     ```http
+     PUT /users/123/preferences
+     ```
+     ```json
+     {
+       "theme": "light",
+       "notifications": true
+     }
+     ```
+     - If preferences were modified earlier, sending this request restores them to the predefined values.
+
+---
+
+### When NOT to Use PUT for Idempotency
+- **Incremental Updates (Use PATCH Instead)**  
+  - If you need to modify only part of a resource (e.g., changing just the email), `PATCH` is better suited.  
+- **Appending Data**  
+  - If you are adding new entries to a list (e.g., appending comments to a post), `PUT` is **not suitable** since it replaces the entire resource.
+
+---
+
+### Key Takeaways
+✅ **Use `PUT` when you want to completely replace a resource or set its fields deterministically.**  
+✅ **Ensure the request body contains all necessary fields to prevent unintended data loss.**  
+✅ **Avoid `PUT` for operations that modify state incrementally (like counters or logs).**  
 
 ## Interview Questions 
 
