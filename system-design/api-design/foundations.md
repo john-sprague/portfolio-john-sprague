@@ -60,6 +60,79 @@
     - [3. Verifying a Resource's Existence](#3-verifying-a-resources-existence)
     - [4. Difference Between `api.site.com` and `site.com/api`](#4-difference-between-apisitecom-and-sitecomapi)
     - [Can you make a POST request Idempotent?](#can-you-make-a-post-request-idempotent)
+  - [Request/Response Headers](#requestresponse-headers)
+    - [Request and Response Headers](#request-and-response-headers)
+    - [Request Headers](#request-headers)
+      - [Common Request Headers](#common-request-headers)
+      - [Example Request](#example-request)
+    - [Response Headers](#response-headers)
+      - [Common Response Headers](#common-response-headers)
+      - [Example Response](#example-response)
+    - [Key Use Cases](#key-use-cases)
+    - [Key Takeaways](#key-takeaways-1)
+    - [Summary Table](#summary-table)
+  - [Browser Cookies](#browser-cookies)
+    - [Key Features of Browser Cookies](#key-features-of-browser-cookies)
+    - [Example Use Cases](#example-use-cases)
+    - [Security & Privacy](#security--privacy)
+    - [Limitations](#limitations)
+    - [Alternatives to Cookies](#alternatives-to-cookies)
+    - [Key Takeaways](#key-takeaways-2)
+  - [API Limits](#api-limits)
+    - [Types of API Limits](#types-of-api-limits)
+    - [Why API Limits Matter](#why-api-limits-matter)
+    - [Implementation and Enforcement](#implementation-and-enforcement)
+    - [Handling Limits as a Developer](#handling-limits-as-a-developer)
+    - [Example: Rate Limit in Action](#example-rate-limit-in-action)
+    - [Key Takeaways](#key-takeaways-3)
+    - [1. URL Length Limit](#1-url-length-limit)
+      - [What to Limit](#what-to-limit)
+      - [Why Limit URL Length?](#why-limit-url-length)
+      - [Implementation](#implementation)
+    - [2. Body Length Limit](#2-body-length-limit)
+      - [What to Limit](#what-to-limit-1)
+      - [Why Limit Body Length?](#why-limit-body-length)
+      - [Implementation](#implementation-1)
+    - [Typical Limits](#typical-limits)
+    - [Key Considerations](#key-considerations)
+    - [Security Best Practices](#security-best-practices)
+    - [Example Flow](#example-flow)
+    - [Key Takeaways](#key-takeaways-4)
+  - [HTTP Caching](#http-caching)
+    - [How HTTP Caching Works](#how-http-caching-works)
+    - [Benefits of HTTP Caching](#benefits-of-http-caching)
+    - [Key Takeaways](#key-takeaways-5)
+  - [Private Cache vs. Public Cache](#private-cache-vs-public-cache)
+    - [Private Cache](#private-cache)
+    - [Shared Cache](#shared-cache)
+    - [Key Differences and Use Cases](#key-differences-and-use-cases)
+  - [Response Codes](#response-codes)
+    - [1xx - Information](#1xx---information)
+    - [HTTP Response Codes: Scenarios, Codes, and Response Bodies](#http-response-codes-scenarios-codes-and-response-bodies)
+    - [2xx Success](#2xx-success)
+    - [3xx Redirection](#3xx-redirection)
+    - [4xx Client Errors](#4xx-client-errors)
+    - [5xx Server Errors](#5xx-server-errors)
+    - [Key Takeaways](#key-takeaways-6)
+  - [Interview Questions](#interview-questions-2)
+    - [1. Uses for a cookie:](#1-uses-for-a-cookie)
+    - [2. Limits on your API:](#2-limits-on-your-api)
+    - [3. Five response codes for your API:](#3-five-response-codes-for-your-api)
+    - [On Site 1: Caching Strategy for an Image Sharing Application](#on-site-1-caching-strategy-for-an-image-sharing-application)
+    - [1. Brief Explanation of HTTP Caching](#1-brief-explanation-of-http-caching)
+    - [2. Caching Strategy for an Image Sharing Application](#2-caching-strategy-for-an-image-sharing-application)
+      - [Client-Side Caching](#client-side-caching)
+      - [Server-Side Caching](#server-side-caching)
+      - [Validation & Invalidation](#validation--invalidation)
+      - [Access-Based TTL](#access-based-ttl)
+      - [Security & Privacy](#security--privacy-1)
+    - [Example Flow](#example-flow-1)
+    - [Key Takeaways](#key-takeaways-7)
+    - [On-site 2: Designing an API for an Image Sharing Application](#on-site-2-designing-an-api-for-an-image-sharing-application)
+  - [1. GET /images/](#1-get-images)
+    - [2. POST /images](#2-post-images)
+    - [3. PUT /images/](#3-put-images)
+    - [Other Considerations](#other-considerations)
 
 <!-- /code_chunk_output -->
 
@@ -891,3 +964,773 @@ function handlePostRequest(request):
 ```
 
 By using an idempotency key, you effectively make your POST endpoint idempotent, ensuring that repeated requests with the same key do not cause duplicate side effects.
+
+## Request/Response Headers 
+
+### Request and Response Headers
+Headers are key-value pairs sent between clients (e.g., browsers) and servers to provide metadata about the HTTP request or response. They control behavior, define content types, manage security, and more. Below’s a breakdown:
+
+---
+
+### Request Headers
+Sent by the client to the server to provide context about the request.  
+
+#### Common Request Headers
+| **Header**             | **Purpose**                                                                 | **Example**                              |  
+|-------------------------|-----------------------------------------------------------------------------|------------------------------------------|  
+| `Accept`                | Specifies the media types the client can process (e.g., JSON, HTML).        | `Accept: application/json`               |  
+| `Authorization`         | Carries credentials (e.g., API keys, JWT tokens) for authentication.        | `Authorization: Bearer <token>`          |  
+| `Content-Type`          | Indicates the media type of the request body (for POST/PUT).                | `Content-Type: application/json`         |  
+| `User-Agent`            | Identifies the client (e.g., browser, app) making the request.              | `User-Agent: Mozilla/5.0 ...`            |  
+| `Cookie`                | Sends stored cookies to the server.                                         | `Cookie: sessionId=abc123`               |  
+| `Host`                  | Specifies the domain and port of the server being accessed.                 | `Host: api.example.com`                  |  
+| `Accept-Encoding`       | Lists compression algorithms the client supports (e.g., gzip, deflate).     | `Accept-Encoding: gzip, deflate`         |  
+
+#### Example Request
+```http
+GET /users/123 HTTP/1.1
+Host: api.example.com
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+User-Agent: Mozilla/5.0
+```
+
+---
+
+### Response Headers
+Sent by the server to the client to provide metadata about the response.  
+
+#### Common Response Headers
+| **Header**              | **Purpose**                                                                 | **Example**                              |  
+|-------------------------|-----------------------------------------------------------------------------|------------------------------------------|  
+| `Content-Type`          | Specifies the media type of the response body.                              | `Content-Type: application/json`         |  
+| `Set-Cookie`            | Instructs the client to store cookies.                                      | `Set-Cookie: sessionId=abc123; Path=/`   |  
+| `Cache-Control`         | Defines caching policies (e.g., `max-age`, `no-cache`).                     | `Cache-Control: max-age=3600`            |  
+| `Content-Encoding`      | Indicates compression applied to the response (e.g., gzip).                 | `Content-Encoding: gzip`                 |  
+| `Location`              | Redirects the client to a new URL (used with 3xx status codes).             | `Location: /new-page`                    |  
+| `Access-Control-Allow-Origin` | Enables CORS by specifying allowed origins.                           | `Access-Control-Allow-Origin: *`         |  
+| `X-Content-Type-Options` | Prevents MIME sniffing (security).                                     | `X-Content-Type-Options: nosniff`        |  
+
+#### Example Response
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: max-age=3600
+Set-Cookie: sessionId=abc123; Path=/; Secure
+Content-Encoding: gzip
+
+{"id": 123, "name": "John Doe"}
+```
+
+---
+
+### Key Use Cases
+1. **Authentication**:  
+   - Request: `Authorization` header for tokens.  
+   - Response: `WWW-Authenticate` for 401 errors.  
+2. **Caching**:  
+   - Request: `If-Modified-Since` to check cached resources.  
+   - Response: `ETag` or `Cache-Control` to manage caching.  
+3. **Security**:  
+   - Response: `Content-Security-Policy`, `Strict-Transport-Security`.  
+4. **CORS**:  
+   - Response: `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods`.  
+
+---
+
+### Key Takeaways
+1. **Request Headers**:  
+   - Tell the server what the client wants and how to process the request.  
+   - Critical for authentication (`Authorization`), content negotiation (`Accept`), and cookies.  
+2. **Response Headers**:  
+   - Tell the client how to handle the response (e.g., caching, cookies, security).  
+   - Use security headers to protect against vulnerabilities (e.g., `X-XSS-Protection`).  
+3. **Standardization**:  
+   - Follow IETF standards (e.g., RFC 7231) for consistency.  
+4. **Tools**:  
+   - Use browser dev tools or tools like **Postman** to inspect headers.  
+
+---
+
+### Summary Table
+| **Category**       | **Purpose**                                  | **Common Headers**                                |  
+|---------------------|----------------------------------------------|---------------------------------------------------|  
+| **Request**         | Client → Server metadata                     | `Accept`, `Authorization`, `Content-Type`, `Host` |  
+| **Response**        | Server → Client metadata                     | `Content-Type`, `Set-Cookie`, `Cache-Control`     |  
+| **Security**        | Protect against attacks                      | `Content-Security-Policy`, `X-Frame-Options`      |  
+| **Caching**         | Optimize performance                         | `Cache-Control`, `ETag`, `Expires`                |  
+
+Headers are the **hidden backbone** of HTTP communication, enabling everything from authentication to performance optimization. Always design and inspect them carefully!
+
+
+## Browser Cookies 
+
+**Browser Cookies** are small text files stored on a user’s device (computer, phone, etc.) by websites they visit. They enable websites to remember information about the user, such as login status, preferences, or activity, to personalize and streamline the browsing experience. Here’s a detailed breakdown:
+
+---
+
+### Key Features of Browser Cookies
+1. **Purpose**:  
+   - **Session Management**: Track user sessions (e.g., keep users logged in).  
+   - **Personalization**: Save settings like language, theme, timezone, ads, or location.  
+   - **Tracking**: Monitor user behavior for analytics or targeted ads.  
+   - **Shopping Carts**: Remember items added to a cart.  
+
+2. **How They Work**:  
+   - Created by the server via the `Set-Cookie` header in an HTTP response.  
+   - Sent back to the server with every subsequent request via the `Cookie` header.  
+   - Example:  
+     ```http
+     # Server sends:
+     Set-Cookie: sessionId=abc123; Path=/; Secure; HttpOnly
+
+     # Client sends back:
+     Cookie: sessionId=abc123
+     ```
+
+3. **Types of Cookies**:  
+   - **Session Cookies**: Temporary, deleted when the browser closes. Used for login sessions.  
+   - **Persistent Cookies**: Expire after a set date (e.g., `Expires=Wed, 21 Oct 2024 07:28:00 GMT`).  
+   - **First-Party Cookies**: Set by the domain the user is visiting (e.g., `example.com`).  
+   - **Third-Party Cookies**: Set by external domains (e.g., ads or embedded content).  
+
+4. **Cookie Attributes**:  
+   | **Attribute** | **Purpose**                                                                 |  
+   |---------------|-----------------------------------------------------------------------------|  
+   | `Domain`      | Specifies which domains can access the cookie.                              |  
+   | `Path`        | Restricts the cookie to a specific URL path (e.g., `/blog`).                |  
+   | `Expires`/`Max-Age` | Sets when the cookie will be deleted.                               |  
+   | `Secure`      | Only sends the cookie over HTTPS.                                           |  
+   | `HttpOnly`    | Prevents client-side scripts (JavaScript) from accessing the cookie.        |  
+   | `SameSite`    | Restricts cookie sharing with cross-site requests (prevents CSRF attacks).  |  
+
+---
+
+### Example Use Cases
+1. **Login Sessions**:  
+   ```http
+   Set-Cookie: authToken=eyJhbGci...; Secure; HttpOnly; SameSite=Strict
+   ```
+   - Stores an encrypted token to keep the user logged in securely.
+
+2. **Language Preference**:  
+   ```http
+   Set-Cookie: language=en-US; Expires=Wed, 21 Oct 2024 07:28:00 GMT; Path=/
+   ```
+   - Remembers the user’s preferred language for future visits.
+
+3. **Shopping Cart**:  
+   ```http
+   Set-Cookie: cartItems=[123,456]; Path=/store
+   ```
+   - Tracks items added to the cart during a session.
+
+---
+
+### Security & Privacy
+1. **Risks**:  
+   - **Cross-Site Scripting (XSS)**: Attackers steal cookies if not marked `HttpOnly`.  
+   - **Cross-Site Request Forgery (CSRF)**: Exploits cookies without `SameSite` restrictions.  
+   - **Tracking**: Third-party cookies can violate user privacy.  
+
+2. **Best Practices**:  
+   - Use `Secure`, `HttpOnly`, and `SameSite` attributes.  
+   - Encrypt sensitive data (never store passwords in cookies!).  
+   - Comply with privacy laws (e.g., GDPR, CCPA) by obtaining user consent.  
+
+---
+
+### Limitations
+- **Size Limit**: Typically **4KB** per cookie.  
+- **Domain Restrictions**: Cookies are bound to their domain and path.  
+- **Browser Settings**: Users can block or delete cookies.  
+
+---
+
+### Alternatives to Cookies
+- **LocalStorage/SessionStorage**: Client-side storage (no automatic server transmission).  
+- **JWT (JSON Web Tokens)**: Stateless authentication tokens.  
+
+---
+
+### Key Takeaways
+- Cookies are **essential for state management** in HTTP’s stateless protocol.  
+- Use security attributes (`Secure`, `HttpOnly`, `SameSite`) to protect against attacks.  
+- Balance functionality with user privacy (e.g., limit third-party cookies).  
+- Modern browsers (Chrome, Firefox) are phasing out third-party cookies for privacy reasons.  
+
+
+## API Limits 
+
+`Important to make sure the user has a good experience with my api`
+
+**API Limits: Ensuring Stability and Fair Usage**
+
+API limits are controls implemented by API providers to manage how their services are accessed and used. These limits ensure system stability, prevent abuse, and allocate resources fairly among users. Below is a structured overview:
+
+---
+
+### Types of API Limits
+1. **Rate Limiting**  
+   - Restricts the number of requests a client can make within a specific timeframe.  
+   - Example: *100 requests per minute*.  
+   - **Common Strategies**:  
+     - **Token Bucket**: Tokens are added at a fixed rate; each request consumes a token.  
+     - **Leaky Bucket**: Requests are processed at a steady rate, discarding excess.  
+
+2. **Throttling**  
+   - Slows down responses or queues excess requests instead of blocking them outright.  
+   - Example: Delaying responses after exceeding a threshold.  
+
+3. **Data Limits**  
+   - Caps on request/response sizes (e.g., *10MB per POST request*).  
+
+4. **Concurrency Limits**  
+   - Limits simultaneous connections (e.g., *5 concurrent requests per user*).  
+
+5. **Authentication Requirements**  
+   - Mandates API keys, OAuth tokens, or IP whitelisting for access.  
+
+6. **Endpoint-Specific Limits**  
+   - Stricter rules for resource-heavy endpoints (e.g., *3 requests/second for `/search`*).  
+
+---
+
+### Why API Limits Matter
+- **Prevent Overload**: Avoid server crashes due to excessive traffic.  
+- **Mitigate Abuse**: Block denial-of-service (DoS) attacks.  
+- **Fair Usage**: Ensure equitable access for all users.  
+- **Monetization**: Enforce tiered pricing plans (e.g., free vs. premium tiers).  
+
+---
+
+### Implementation and Enforcement
+- **HTTP Status Codes**:  
+  - **429 Too Many Requests**: Indicates rate limits are exceeded.  
+  - **403 Forbidden**: Denies access due to missing/invalid credentials.  
+- **Response Headers**:  
+  - `X-RateLimit-Limit`: Total allowed requests.  
+  - `X-RateLimit-Remaining`: Requests left in the window.  
+  - `Retry-After`: Time (in seconds) to wait before retrying.  
+
+---
+
+### Handling Limits as a Developer
+1. **Check Documentation**: Review the API’s rate limits, quotas, and policies.  
+2. **Implement Retry Logic**: Use exponential backoff to retry failed requests.  
+3. **Monitor Usage**: Track headers like `X-RateLimit-Remaining` to stay within bounds.  
+4. **Optimize Requests**: Batch operations or cache results to reduce calls.  
+
+---
+
+### Example: Rate Limit in Action
+```httpq
+GET /data HTTP/1.1
+Host: api.example.com
+X-API-Key: abc123
+
+HTTP/1.1 200 OK
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+```
+
+---
+
+### Key Takeaways
+- **Types of Limits**: Rate limits, throttling, data caps, and authentication.  
+- **Purpose**: Stability, security, and equitable resource sharing.  
+- **Best Practices**:  
+  - Use headers for real-time monitoring.  
+  - Design fault-tolerant retry mechanisms.  
+  - Optimize API calls to minimize usage.  
+
+---
+
+### 1. URL Length Limit
+#### What to Limit
+- The maximum allowed length of the URL (including path, query parameters, etc.).  
+
+#### Why Limit URL Length?
+- **Security**: Prevent buffer overflow attacks or overly complex queries.  
+- **Performance**: Long URLs can strain servers during parsing/routing.  
+- **Compatibility**: Browsers and proxies often cap URLs at **~2,048 characters** (varies by browser).  
+
+#### Implementation
+- **Server-Side Check**: Reject requests with URLs exceeding the limit.  
+- **HTTP Status Code**: Return **414 URI Too Long** (RFC 9110).  
+
+**Example**:  
+```javascript
+// Express.js middleware to enforce URL length limit
+app.use((req, res, next) => {
+  const maxURLLength = 2048; // Characters
+  if (req.url.length > maxURLLength) {
+    return res.status(414).send("URL too long");
+  }
+  next();
+});
+```
+
+---
+
+### 2. Body Length Limit
+#### What to Limit
+- The maximum allowed size of the request body (e.g., JSON, form data).  
+
+#### Why Limit Body Length?
+- **Resource Protection**: Large payloads consume memory/bandwidth.  
+- **Prevent Abuse**: Block malicious actors from flooding the API with oversized data.  
+- **Optimization**: Ensure predictable performance for parsing/processing.  
+
+#### Implementation
+- **Middleware**: Use frameworks like Express.js to cap body size.  
+- **HTTP Status Code**: Return **413 Payload Too Large** (RFC 9110).  
+
+**Example**:  
+```javascript
+// Express.js body-parser with a 1MB limit
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
+```
+
+---
+
+### Typical Limits
+| **Limit Type** | **Recommended Threshold** | **Notes**                              |  
+|----------------|---------------------------|----------------------------------------|  
+| **URL Length** | 2,048 characters          | Aligns with browser/HTTP standards.    |  
+| **Body Length**| 1MB – 10MB                | Adjust based on use case (e.g., file uploads may need higher limits). |  
+
+---
+
+### Key Considerations
+1. **Adjust for Use Cases**:  
+   - File upload APIs may require larger body limits (e.g., 100MB).  
+   - URL length limits can be stricter for internal APIs (e.g., 1,000 chars).  
+
+2. **Error Responses**:  
+   - Include headers like `Retry-After` or `Content-Length` to guide clients.  
+   - Provide clear error messages:  
+     ```json
+     {
+       "error": "Payload too large",
+       "max_allowed_size": "1MB"
+     }
+     ```
+
+3. **Edge Cases**:  
+   - Handle chunked transfer encoding for streaming requests.  
+   - Use CDNs or gateways (e.g., AWS API Gateway) to offload size validation.  
+
+---
+
+### Security Best Practices
+- **Reject Early**: Validate URL/body length **before** processing the request.  
+- **Log Oversized Requests**: Monitor for potential attacks.  
+- **Combine with Other Limits**: Pair with rate limiting and authentication.  
+
+---
+
+### Example Flow
+1. **Client Sends Request**:  
+   ```http
+   POST /data HTTP/1.1
+   Host: api.example.com
+   Content-Type: application/json
+   Content-Length: 2097152 # 2MB
+
+   { "data": "..." }
+   ```
+
+2. **Server Responds**:  
+   ```http
+   HTTP/1.1 413 Payload Too Large
+   Content-Type: application/json
+
+   {
+     "error": "Payload exceeds 1MB limit",
+     "documentation": "https://api.example.com/docs/limits"
+   }
+   ```
+
+---
+
+### Key Takeaways
+- **Types of Limits**: Rate limits, throttling, data caps, URL length, body length, and authentication.
+- **Purpose**: Stability, security, and equitable resource sharing.  
+- **Best Practices**:  
+  - Use headers for real-time monitoring.  
+  - Design fault-tolerant retry mechanisms.  
+  - Optimize API calls to minimize usage.  
+- **URL and body limits** are critical for security, performance, and compliance.  
+- Use status codes **414** (URL too long) and **413** (payload too large).  
+- Adjust limits based on your API’s use case (e.g., higher for file uploads).  
+- Communicate limits clearly in documentation and error responses.  
+
+## HTTP Caching 
+
+HTTP caching is a mechanism used to store copies of responses to reduce latency, network traffic, and server load. It involves storing a response—whether on the client-side, a proxy, or a dedicated caching server—and reusing that data for subsequent requests, provided it remains fresh and valid.
+
+---
+
+### How HTTP Caching Works
+
+- **Storing Responses:**  
+  When a client makes a request, the server may include caching-related headers in its response. These headers instruct caches (either on the client, intermediate proxies, or CDNs) how long to store the response and under what conditions the cache should be considered valid.
+
+- **Cache Validation:**  
+  Even when a cached response is available, caches often need to check whether the resource has been updated on the server. This is typically done using:
+  - **ETag Headers:** Unique identifiers for resource versions.
+  - **Last-Modified Headers:** Indicate when the resource was last changed.
+  If the cached copy is stale, the cache can revalidate by making a conditional request (using headers like `If-None-Match` or `If-Modified-Since`), receiving a `304 Not Modified` status if the resource hasn't changed.
+
+- **Cache-Control:**  
+  The `Cache-Control` header provides directives for caching behavior, such as:
+  - `max-age`: Specifies the number of seconds a resource is considered fresh.
+  - `no-cache`: Indicates that a cached resource must be revalidated with the server before reuse.
+  - `no-store`: Prevents caching entirely.
+  - `public` or `private`: Determines whether the response can be cached by shared caches or only by the client's browser.
+
+- **Expires Header:**  
+  An older caching mechanism that specifies a date/time after which the response is considered stale. It is often used in conjunction with `Cache-Control`.
+
+---
+
+### Benefits of HTTP Caching
+
+- **Performance Improvement:**  
+  Caching reduces the need for repeated network requests, resulting in faster page loads and reduced latency.
+  
+- **Reduced Server Load:**  
+  By serving cached content, servers can avoid processing duplicate requests, which saves resources.
+  
+- **Bandwidth Savings:**  
+  With fewer requests reaching the server, both the server and client save on data transfer costs, which is especially beneficial for high-traffic applications or limited bandwidth environments.
+
+- **Scalability:**  
+  Proper caching can improve the scalability of an application by reducing the load on the origin server during high traffic periods.
+
+---
+
+### Key Takeaways
+
+- **Efficiency:**  
+  HTTP caching dramatically increases efficiency by serving stored responses, reducing redundant processing and network usage.
+
+- **Freshness vs. Staleness:**  
+  Understand and configure caching headers (e.g., `Cache-Control`, `Expires`, `ETag`, and `Last-Modified`) to balance between serving up-to-date content and benefiting from cached responses.
+
+- **Conditional Requests:**  
+  Use conditional requests to check the validity of a cached resource, which can help avoid unnecessary data transfers while ensuring data freshness.
+
+- **Cache Invalidation:**  
+  Be aware that caching strategies require careful planning, especially for dynamic content. Knowing when and how to invalidate caches is crucial for maintaining consistency.
+
+- **Layered Caching:**  
+  Caching can occur at multiple layers (client-side, proxy, CDN) and should be configured appropriately at each level to maximize benefits.
+
+---
+
+HTTP caching is a powerful tool for improving web performance and scalability. By carefully setting caching policies, developers can ensure that users get fast, reliable access to content while also reducing server load and network traffic.
+
+## Private Cache vs. Public Cache
+
+HTTP caching can be broadly categorized into **private caches** and **shared caches**, each serving different purposes:
+
+---
+
+### Private Cache
+
+- **Definition:**  
+  A private cache stores responses for use by a single user or client. This cache is typically maintained by a browser or an application on a user's device.
+
+- **Examples:**  
+  - Browser cache: When you visit a website, your browser stores static assets like images, CSS, and JavaScript files.  
+  - Mobile app cache: An app may cache data locally to improve performance or offline access.
+
+- **Key Characteristics:**  
+  - **User-Specific:** The cached data is tied to a particular user session, so it is not shared between users.  
+  - **Security:** Private caches can store sensitive data since they are accessible only to that user, provided proper security measures are in place.  
+  - **Control:** Users have more direct control (e.g., clearing browser cache) over the stored data.
+
+---
+
+### Shared Cache
+
+- **Definition:**  
+  A shared cache is designed to store responses that can be used by multiple users. These caches are typically implemented by proxy servers, Content Delivery Networks (CDNs), or reverse proxies.
+
+- **Examples:**  
+  - CDN caches: A CDN stores copies of static and dynamic content on edge servers to serve multiple users faster.  
+  - Proxy caches: An intermediary server (such as an ISP or corporate proxy) that caches responses for multiple users to reduce load and latency.
+
+- **Key Characteristics:**  
+  - **Multi-User Environment:** Data stored in a shared cache can be served to any client that makes a request, which is ideal for public resources that don’t change frequently.  
+  - **Efficiency:** Shared caches help reduce load on the origin server by serving cached content to many users simultaneously.  
+  - **Cache-Control Directives:** HTTP headers like `Cache-Control` are crucial to define whether a response is cacheable by shared caches (using directives such as `public` or `s-maxage`).
+
+---
+
+### Key Differences and Use Cases
+
+- **Security and Sensitivity:**  
+  - **Private Cache:** Suitable for personalized or sensitive data that should not be shared across users.  
+  - **Shared Cache:** Ideal for public or non-sensitive resources, ensuring that many users can benefit from faster load times and reduced server load.
+
+- **Cache Invalidation:**  
+  - **Private Cache:** Invalidation can often be managed on a per-user basis, either manually or through application logic.  
+  - **Shared Cache:** Invalidation strategies must be carefully planned, as they affect multiple users at once. Techniques such as cache purging or setting appropriate `Cache-Control` headers are vital.
+
+- **Performance:**  
+  - **Private Cache:** Improves performance on a per-user basis by reducing redundant data downloads.  
+  - **Shared Cache:** Enhances overall scalability and reduces bandwidth consumption by serving many users from a single cached copy.
+
+---
+
+Understanding the distinctions between private and shared caches is essential for designing effective caching strategies in web applications. By appropriately leveraging each type, developers can optimize performance, maintain security, and efficiently manage resources.
+
+## Response Codes 
+
+### 1xx - Information 
+### HTTP Response Codes: Scenarios, Codes, and Response Bodies
+0. **1xx - Information** 
+Below are common HTTP status codes grouped by category, with scenarios and example response bodies.  
+
+---
+
+### 2xx Success
+0. **1xx - Information** 
+| **Code** | **Scenario**                          | **Response Body (JSON Example)**                    |  
+|----------|---------------------------------------|----------------------------------------------------|  
+| `200 OK` | Successful request (e.g., retrieving data). | `{ "data": { "id": 1, "name": "Item 1" } }`       |  
+| `201 Created` | Resource created (e.g., after `POST`). | `{ "id": 123, "message": "Resource created" }` + `Location: /items/123` header. |  
+| `204 No Content` | Successful request with no body (e.g., deletion). | *No body*. |  
+
+---
+
+### 3xx Redirection
+0. **1xx - Information** 
+| **Code** | **Scenario**                          | **Response Body (JSON Example)**                    |  
+|----------|---------------------------------------|----------------------------------------------------|  
+| `301 Moved Permanently` | Resource permanently moved. | `{ "message": "Resource moved to /new-url" }` + `Location: /new-url` header. |  
+| `302 Found` | Temporary redirect. | `{ "message": "Temporary redirect" }` + `Location: /temp` header. |  
+| `304 Not Modified` | Cached content is valid. | *No body* (client uses cached copy). |  
+
+---
+
+### 4xx Client Errors
+0. **1xx - Information** 
+| **Code** | **Scenario**                          | **Response Body (JSON Example)**                    |  
+|----------|---------------------------------------|----------------------------------------------------|  
+| `400 Bad Request` | Invalid request data (e.g., missing fields). | `{ "error": "Invalid input", "details": "Missing 'name' field" }` |  
+| `401 Unauthorized` | Missing/invalid authentication. | `{ "error": "Authentication required" }` |  
+| `403 Forbidden` | Authenticated but unauthorized. | `{ "error": "Access denied" }` |  
+| `404 Not Found` | Resource does not exist. | `{ "error": "Resource not found" }` |  
+| `409 Conflict` | Conflicting request (e.g., duplicate entry). | `{ "error": "User already exists" }` |  
+| `429 Too Many Requests` | Rate limit exceeded. | `{ "error": "Too many requests", "retryAfter": 60 }` + `Retry-After: 60` header. |  
+
+---
+
+### 5xx Server Errors
+0. **1xx - Information** 
+| **Code** | **Scenario**                          | **Response Body (JSON Example)**                    |  
+|----------|---------------------------------------|----------------------------------------------------|  
+| `500 Internal Server Error` | Generic server error. | `{ "error": "Internal server error", "requestId": "abc123" }` |  
+| `502 Bad Gateway` | Invalid response from upstream server. | `{ "error": "Bad gateway" }` |  
+
+---
+
+### Key Takeaways
+0. **1xx - Information** 
+1. **2xx Codes**: Indicate success. Use `201` for new resources and `204` for empty responses.  
+2. **3xx Codes**: Handle redirection. Include `Location` headers for new URLs.  
+3. **4xx Codes**: Client-side issues. Use `400` for bad input, `401`/`403` for auth issues, `404` for missing resources.  
+4. **5xx Codes**: Server-side failures. Always log these for debugging.  
+5. **Headers**: Use headers like `Location`, `Allow`, or `Retry-After` to guide clients.  
+
+By using appropriate codes and clear error messages, APIs become more intuitive and easier to integrate. 🔧🚀
+
+## Interview Questions
+
+**Phone Screen** 
+### 1. Uses for a cookie:
+- Session management (maintaining login state)
+- Storing user preferences
+- Tracking user activity and behavior
+- Authentication tokens
+- Personalization of content
+
+### 2. Limits on your API:
+- Rate limiting (e.g., requests per minute/hour)
+- Payload size limits (max request/response size)
+- Authentication and authorization (access control)
+- Input validation limits (length/type constraints)
+- Connection and resource usage limits
+
+### 3. Five response codes for your API:
+- **200 OK** – Successful request.
+- **201 Created** – Resource successfully created.
+- **400 Bad Request** – Invalid client request.
+- **404 Not Found** – Resource not found.
+- **500 Internal Server Error** – Server encountered an error.
+
+---
+
+### On Site 1: Caching Strategy for an Image Sharing Application
+
+1. Briefly explain HTTP caching. Outline a caching strategy for an image sharing application.
+
+**Answer:**
+
+### 1. Brief Explanation of HTTP Caching
+HTTP caching stores copies of resources (e.g., images, CSS, JS) to reduce server load, latency, and bandwidth. Key components:  
+- **Headers**:  
+  - `Cache-Control`: Directives like `max-age`, `public`, `no-cache`.  
+  - `ETag`/`Last-Modified`: Validate cached content freshness.  
+- **Status Codes**: `304 Not Modified` (use cache), `200 OK` (new content).  
+
+---
+
+### 2. Caching Strategy for an Image Sharing Application
+**Goals**: Optimize performance for frequently accessed images while ensuring updates propagate efficiently.  
+
+#### Client-Side Caching
+- **Static Assets (Images)**:  
+  - Set long `max-age` for immutable images (e.g., `Cache-Control: public, max-age=31536000`).  
+  - Use **cache-busting** via unique filenames or versioned URLs (e.g., `/image.jpg?v=2`) when images are updated.  
+- **Dynamic Content**:  
+  - Use `no-cache` for user-specific images (e.g., private albums).  
+
+#### Server-Side Caching
+- **CDN Caching**:  
+  - Cache popular images at edge locations (e.g., Cloudflare, AWS CloudFront).  
+  - Set `Cache-Control: public, max-age=86400` (24 hours) for frequently accessed content.  
+- **Reverse Proxy (e.g., Nginx/Varnish)**:  
+  - Cache images in memory/disk to reduce backend load.  
+  - Use `proxy_cache_valid 200 1d;` to retain images for 1 day.  
+
+#### Validation & Invalidation
+- **ETag/Last-Modified**:  
+  - Validate cached images via `If-None-Match` (ETag) or `If-Modified-Since` (Last-Modified).  
+- **Cache Purging**:  
+  - Invalidate CDN/proxy cache when images are updated/deleted (e.g., via CDN API or cache tags).  
+
+#### Access-Based TTL
+- **Popular Images**: Longer TTL (e.g., 1 week) to stay cached.  
+- **Less Popular Images**: Shorter TTL (e.g., 1 hour) to free resources.  
+
+#### Security & Privacy
+- **Private Images**:  
+  - Use `Cache-Control: private` or `no-store` to prevent public caching.  
+- **Access Control**:  
+  - Restrict CDN/proxy caching for authenticated routes.  
+
+---
+
+### Example Flow
+1. **User Uploads Image**:  
+   - Assign a unique URL (e.g., `/images/abc123_v1.jpg`).  
+2. **First Request**:  
+   - Server responds with `200 OK`, `Cache-Control: public, max-age=31536000`, and `ETag: "abc123"`.  
+3. **Repeat Request**:  
+   - Browser sends `If-None-Match: "abc123"`.  
+   - Server returns `304 Not Modified` if unchanged.  
+4. **Image Updated**:  
+   - New URL (e.g., `/images/abc123_v2.jpg`) forces cache refresh.  
+
+---
+
+### Key Takeaways
+- **Leverage CDNs** for global caching of popular static images.  
+- **Use versioned URLs** for cache busting when images change.  
+- **Prioritize TTL** based on image popularity to balance performance and storage.  
+- **Secure private content** with `private`/`no-store` directives.  
+
+This strategy ensures fast load times, reduces server costs, and maintains content freshness. 🖼️⚡
+
+2. Design an API for the image sharing application with GET, POST and PUT endpoints. Outline which response codes you would use for certain situations on each endpoint
+
+
+### On-site 2: Designing an API for an Image Sharing Application
+
+The API will provide endpoints for uploading, retrieving, and updating images. Below is the design with appropriate request methods, endpoints, and expected response codes.
+
+---
+
+## 1. GET /images/{image_id}
+**Purpose:** Retrieve an image by its ID.  
+
+**Request:**  
+```http
+GET /images/{image_id}
+```
+
+**Response Codes:**  
+- **200 OK** – Image is found, returns the image metadata and URL.  
+- **304 Not Modified** – If caching is enabled and the client’s cached version is still valid (`ETag`, `If-Modified-Since`).  
+- **404 Not Found** – If the image does not exist.  
+- **403 Forbidden** – If the image is private and the user lacks permission.  
+
+---
+
+### 2. POST /images
+**Purpose:** Upload a new image.  
+
+**Request:**  
+```http
+POST /images
+Content-Type: multipart/form-data
+```
+**Request Body:**  
+- `file`: The image file.  
+- `title`: (Optional) Image title.  
+- `description`: (Optional) Image description.  
+- `visibility`: (`public` or `private`).  
+
+**Response Codes:**  
+- **201 Created** – Image successfully uploaded. Returns the image ID and URL.  
+- **400 Bad Request** – Missing or invalid image file.  
+- **413 Payload Too Large** – If the image exceeds the allowed file size.  
+- **415 Unsupported Media Type** – If an invalid file format is uploaded.  
+- **401 Unauthorized** – If authentication is required.  
+
+---
+
+### 3. PUT /images/{image_id}
+**Purpose:** Update image metadata (title, description, visibility).  
+
+**Request:**  
+```http
+PUT /images/{image_id}
+Content-Type: application/json
+```
+**Request Body (JSON):**  
+```json
+{
+  "title": "Updated Title",
+  "description": "Updated Description",
+  "visibility": "private"
+}
+```
+
+**Response Codes:**  
+- **200 OK** – Successfully updated metadata.  
+- **400 Bad Request** – Invalid request body or parameters.  
+- **403 Forbidden** – If the user does not own the image.  
+- **404 Not Found** – If the image does not exist.  
+- **409 Conflict** – If there is a concurrent update conflict.  
+
+---
+
+### Other Considerations
+- **Authentication & Authorization:**  
+  - Use OAuth2 or JWT for secured endpoints (POST/PUT).  
+  - Allow only authorized users to edit their own images.
+
+- **Rate Limiting:**  
+  - Prevent abuse by limiting the number of upload requests per minute.
+
+- **Caching Strategy:**  
+  - Use `Cache-Control` and `ETag` for GET requests to optimize performance.
+
+---
