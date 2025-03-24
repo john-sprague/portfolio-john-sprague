@@ -1419,7 +1419,7 @@ Indexes in SQL databases use specific **data structures** to optimize data retri
 CREATE INDEX idx_customer_name ON customers (customer_name);
 ```
 
-#### **Key Differences: Clustered vs. Non-Clustered Index B-Trees**  
+#### Key Differences: Clustered vs. Non-Clustered Index B-Trees**
 
 | Feature              | **Clustered Index**  | **Non-Clustered Index**  |
 |----------------------|---------------------|--------------------------|
@@ -1431,7 +1431,7 @@ CREATE INDEX idx_customer_name ON customers (customer_name);
 
 ---
 
-#### **Example: Creating a Non-Clustered Index on `username`**
+#### Example: Creating a Non-Clustered Index on `username`
 ```sql
 CREATE UNIQUE INDEX idx_username ON users(username);
 ```
@@ -1440,7 +1440,7 @@ CREATE UNIQUE INDEX idx_username ON users(username);
 
 ---
 
-#### **Key Takeaways (80/20 Rule)**  
+#### Key Takeaways (80/20 Rule)**
 ✅ **Yes, non-clustered indexes use B-Trees** for fast lookups.  
 ✅ **Leaf nodes contain row pointers**, not actual table data.  
 ✅ **Best for speeding up queries on non-primary key columns** (e.g., `WHERE username = 'john_doe'`).  
@@ -1712,7 +1712,7 @@ CREATE TABLE users (...);
 
 ---
 
-### **Hybrid Approach**  
+### Hybrid Approach**
 Some systems combine both:  
 1. Partition tables within a shard.  
 2. Distribute shards across servers.  
@@ -2058,6 +2058,62 @@ Ensuring data integrity during a database migration is crucial to prevent data l
 - **Data Integrity Checks**: Conduct thorough checks to ensure all data has been accurately migrated.
 
 - **Stakeholder Feedback**: Gather feedback from end-users to identify any discrepancies or issues that may have been overlooked.
+
+## Normalizing a many-to-many relationship
+  typically involves introducing a **junction table** (also known as a join table or associative entity). Here’s how you do it:
+
+1. **Identify the Two Entities:**  
+   Suppose you have two tables, for example, `Students` and `Courses`, where a student can enroll in many courses and each course can have many students.
+
+2. **Create a Junction Table:**  
+   Introduce a new table, for example, `StudentCourses`, which will hold the associations between students and courses. This table typically includes:
+   - A foreign key referencing the primary key of the `Students` table (e.g., `student_id`).
+   - A foreign key referencing the primary key of the `Courses` table (e.g., `course_id`).
+
+3. **Define a Composite Primary Key:**  
+   The junction table can use a composite primary key composed of both `student_id` and `course_id` to ensure that each pair is unique. Alternatively, you can use a surrogate key (like an auto-incrementing ID) along with unique constraints on the combination of foreign keys.
+
+4. **Maintain Referential Integrity:**  
+   Use foreign key constraints in the junction table to ensure that the `student_id` and `course_id` values correspond to valid records in their respective tables.
+
+### Example Schema:
+
+```sql
+-- Students table
+CREATE TABLE Students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    -- other fields...
+);
+
+-- Courses table
+CREATE TABLE Courses (
+    course_id INT PRIMARY KEY,
+    title VARCHAR(100),
+    -- other fields...
+);
+
+-- Junction table to normalize the many-to-many relationship
+CREATE TABLE StudentCourses (
+    student_id INT,
+    course_id INT,
+    PRIMARY KEY (student_id, course_id), -- Composite primary key
+    FOREIGN KEY (student_id) REFERENCES Students(student_id),
+    FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+```
+
+### Key Takeaways:
+
+- **Eliminates Redundancy:**  
+  By using a junction table, you avoid duplicating data in either of the main tables.
+
+- **Enhances Data Integrity:**  
+  Referential integrity constraints ensure that relationships remain valid.
+
+- **Simplifies Queries:**  
+  You can join the tables to retrieve the many-to-many relationships without introducing data anomalies.
+
 
 # MongoDB 
 
