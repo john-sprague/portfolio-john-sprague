@@ -18,262 +18,298 @@
 
 ---
 
-## Modeling Data
+# A buy/sell marketplace (OfferUp)
 
-### 1. **Buy/Sell Marketplace (OfferUp-like)**
+**Data Model**
+**User**
+id
+f_name
+l_name
+email
+address
+password
+password_salt
 
-- **User:**  
-  - id  
-  - username  
-  - email  
-  - password hash  
-  - profile picture URL  
-  - location  
-  - ratings/reviews
+**order**
+id
+buyer_id
+seller_id
+product_id
+payment_id
+date
 
-- **Listing:**  
-  - id  
-  - title  
-  - description  
-  - price  
-  - images (array of image URLs)  
-  - category  
-  - location  
-  - createdAt / updatedAt  
-  - sellerId (foreign key to User)
+**order_payment**
+id
+payment_type
+payment_amt 
+successful
 
-- **Message/Conversation:**  
-  - id  
-  - senderId (User)  
-  - receiverId (User)  
-  - listingId  
-  - message content  
-  - timestamp
+**Product**
+id
+seller_id
+title
+desc
+listing_amt
+keywords
 
-- **Review:**  
-  - id  
-  - reviewerId (User)  
-  - revieweeId (User)  
-  - rating  
-  - comment  
-  - createdAt
 
----
+**Endpoints + Example Status Codes**
 
-### 2. **Streaming Music & Playlists (Spotify-like)**
+GET: /products?filters={...}
 
-- **User:**  
-  - id  
-  - username  
-  - email  
-  - password hash  
-  - subscription level  
-  - createdAt
-
-- **Artist:**  
-  - id  
-  - name  
-  - bio  
-  - image URL
-
-- **Album:**  
-  - id  
-  - title  
-  - artistId  
-  - releaseDate  
-  - cover image URL
-
-- **Track:**  
-  - id  
-  - title  
-  - albumId  
-  - duration  
-  - audio file URL  
-  - artistId (if single)
-
-- **Playlist:**  
-  - id  
-  - userId  
-  - title  
-  - description  
-  - list of trackIds  
-  - createdAt  
-  - updatedAt
-
----
-
-### 3. **Homework Platform**
-
-- **User:**  
-  - id  
-  - name  
-  - email  
-  - role (student, teacher)  
-  - profile information
-
-- **Course:**  
-  - id  
-  - title  
-  - description  
-  - teacherId  
-  - list of enrolled studentIds
-
-- **Assignment:**  
-  - id  
-  - courseId  
-  - title  
-  - description  
-  - dueDate  
-  - createdAt
-
-- **Submission:**  
-  - id  
-  - assignmentId  
-  - studentId  
-  - submitted file/link  
-  - timestamp  
-  - grade / feedback
-
----
-
-## B) REST API Endpoints
-
-### 1. **Buy/Sell Marketplace Endpoints**
-- **Listings:**  
-  - `GET /listings` – List all listings  
-  - `GET /listings/{id}` – Retrieve a specific listing  
-  - `POST /listings` – Create a new listing  
-  - `PUT /listings/{id}` – Update an existing listing  
-  - `DELETE /listings/{id}` – Delete a listing
-
-- **Users:**  
-  - `GET /users/{id}` – Retrieve user profile  
-  - `POST /users` – Create a new user  
-  - `PUT /users/{id}` – Update user profile
-
-- **Messages/Conversations:**  
-  - `GET /conversations?userId={id}` – List all conversations for a user  
-  - `POST /conversations` – Start a new conversation  
-  - `POST /conversations/{conversationId}/messages` – Send a message
-
----
-
-### 2. **Streaming Music & Playlists Endpoints**
-- **Users:**  
-  - `GET /users/{id}` – Retrieve user profile  
-  - `POST /users` – Register a new user  
-  - `PUT /users/{id}` – Update user settings
-
-- **Artists:**  
-  - `GET /artists` – List all artists  
-  - `GET /artists/{id}` – Get artist details
-
-- **Albums:**  
-  - `GET /albums` – List all albums  
-  - `GET /albums/{id}` – Retrieve album details
-
-- **Tracks:**  
-  - `GET /tracks` – List all tracks  
-  - `GET /tracks/{id}` – Get track details
-
-- **Playlists:**  
-  - `GET /playlists` – List all public playlists  
-  - `GET /users/{userId}/playlists` – Retrieve playlists for a user  
-  - `POST /playlists` – Create a new playlist  
-  - `PUT /playlists/{id}` – Update playlist details  
-  - `DELETE /playlists/{id}` – Delete a playlist
-
----
-
-### 3. **Homework Platform Endpoints**
-- **Users:**  
-  - `GET /users/{id}` – Retrieve user details  
-  - `POST /users` – Register a new user  
-  - `PUT /users/{id}` – Update user profile
-
-- **Courses:**  
-  - `GET /courses` – List all courses  
-  - `GET /courses/{id}` – Retrieve a specific course  
-  - `POST /courses` – Create a new course (teachers only)  
-  - `PUT /courses/{id}` – Update course details
-
-- **Assignments:**  
-  - `GET /assignments` – List all assignments  
-  - `GET /assignments/{id}` – Retrieve an assignment  
-  - `POST /courses/{courseId}/assignments` – Create a new assignment  
-  - `PUT /assignments/{id}` – Update an assignment  
-  - `DELETE /assignments/{id}` – Delete an assignment
-
-- **Submissions:**  
-  - `GET /assignments/{assignmentId}/submissions` – List all submissions for an assignment  
-  - `POST /assignments/{assignmentId}/submissions` – Submit homework  
-  - `GET /users/{userId}/submissions` – Retrieve submissions for a student
-
----
-
-## C) Examples of User Error Status Codes
-
-### **400 Bad Request**
-- **Buy/Sell Marketplace:**  
-  1. Creating a listing without required fields (e.g., missing title or price).  
+**400 Bad Request:**
+  1. Creating a listing without required fields (query params) (e.g., missing title or price).  
   2. Sending malformed JSON when updating user profile.
 
-- **Streaming Music:**  
-  1. Submitting a playlist creation request with an invalid JSON structure.  
-  2. Querying tracks with invalid query parameters (e.g., invalid date format).
+`GET /products?`
 
-- **Homework Platform:**  
-  1. Posting an assignment with missing required fields (e.g., no due date).  
-  2. Submitting homework without the required file/link in the request body.
+```json
+{
+  "error": "Missing required params 'filters'
+}
+```
+
+**401 Unauthorized:** 
+- User did not provide a valid token
+- Accessing user-specific messages without logging in.
+
+ 
+`GET /products?filters={...}`
+
+```json 
+{
+  "error": "Unauthorized: Please provide a valid API key or access token"
+}
+```
+
+**403 Forbidden:**
+- Occurs when the user is authenticated but does not have permission to access the requested resource
+- Attempting to access another user's private messages.
+
+`GET /products?filters={...}`
+`Authorization: Bearer validUserToken`
+
+```json
+{
+  "error": "Forbidden: You do not have permission to access this resource" 
+}
+```
+
+**404 Not Found:** 
+- Requesting a listing that does not exist (e.g., `GET /listings/99999`)
+- Requesting a user profile with a non-existent user ID. 
+
+
+`GET /products/99999`
+`Host: api.example.com`
+
+
+```json
+{ 
+  "error": "Product not found"
+}
+```
+
+
+GET: /product/{product_id}
+GET: /user/{userId}
+GET: /user/purchases
+GET: /user/purchase/{purchase_id}
+
+POST: /user 
+POST: /listing
+POST: /purchase
+
+PUT: /update_listing 
+
+DELETE: /listing/{listingId} 
+DELETE: /user/{userId}
 
 ---
 
-### **401 Unauthorized**
-- **Buy/Sell Marketplace:**  
-  1. Attempting to create a listing without providing a valid authentication token.  
-  2. Accessing user-specific messages without logging in.
+# An app for streaming music and creating playlists (like Spotify)
 
-- **Streaming Music:**  
-  1. Trying to access private playlists without a valid session token.  
-  2. Attempting to update user profile settings without being authenticated.
+**Data Model**
 
-- **Homework Platform:**  
-  1. Attempting to submit an assignment without being logged in.  
-  2. Accessing teacher-only course management endpoints without proper authentication.
+**User**
+id 
+f_name
+l_name
+username
+password 
+password_hash
 
----
+**user_playlist**
+id 
+user_id
+playlist_name
+created_at
 
-### **403 Forbidden**
-- **Buy/Sell Marketplace:**  
-  1. Trying to delete a listing that the user does not own.  
-  2. Attempting to access another user's private messages.
+**playlist_songs**
+playlist_id 
+song_id 
 
-- **Streaming Music:**  
-  1. Attempting to modify a playlist that belongs to another user.  
-  2. Accessing restricted artist information that requires special permissions.
+**song**
+id 
+name
+artist_id
+genre
+description 
+length
+s3_url 
 
-- **Homework Platform:**  
-  1. A student trying to access grade details for an assignment they did not submit.  
-  2. A user attempting to modify course content when they are not the instructor.
 
----
+**artist**
+id 
+name
+bio
+profile_url 
 
-### **404 Not Found**
-- **Buy/Sell Marketplace:**  
-  1. Requesting a listing that does not exist (e.g., `GET /listings/99999`).  
-  2. Trying to retrieve a user profile with a non-existent user ID.
-
-- **Streaming Music:**  
-  1. Requesting details for an album or track that does not exist.  
-  2. Accessing a playlist with an invalid or non-existent ID.
-
-- **Homework Platform:**  
-  1. Fetching an assignment that has been deleted or never existed.  
-  2. Requesting submissions for an assignment ID that is not found.
+## Endpoints 
 
 ---
 
-## D) Problems/Challenges When Updating Your API & Safest Way to Avoid Them
+### Users
+
+- **GET/user/{userId}:** returns user information 
+- **GET/user/{userId}/playlists**: returns a list of playlists names 
+- **GET/user/{userID}/playlist/{playlist_id}:** return one playlist and all the songs that are included on the playlist 
+
+- **POST/user:** Create a new user profile  
+- **PUT/user:** update a user profile 
+- **DELETE/user/{userId}:** Delete a user 
+
+---
+
+### Artist
+
+- **GET/artist/songs?limit={xx}&offset={xx}**: Returns a list of songs with required pagination query params
+- **GET/artist/song/{songId}:** Returns one song 
+
+- **POST/artist/song:** Create a new song 
+- **PUT/artist/{songId}**: Update the song
+- **DELETE/artist/{songId}:** Delete a song 
+
+## 4xx Client Errors 
+
+---
+
+### 400 Bad Request 
+- User did not provide all the required query params for a playlist 
+- Sent an improperly formed JSON body for creating a user
+
+`POST /user`
+`Host: api.example.com`
+`Body: {improperForm}`
+
+```json
+{ 
+  "error": "Bad request: improperly formed body"
+}
+```
+
+---
+
+### 401 Unauthorized 
+- User passes a bearer token that is outdated 
+- A user tries to access their playlist before signing in 
+
+`GET/user/{userId}/playlist/{playlistId}`
+`Authorization: Bearer {null}`
+
+```json 
+{
+  "error: Unauthorized: user did not provide a valid bearer token 
+}
+```
+
+---
+
+### 403 Not Found 
+- A user tries to access a playlist that does not exist 
+- An artist tries to update a song that does not exist
+
+`PUT/artist/song/{songId}:`
+
+```json
+{
+  "error": "the song_id xxx doest not exist for user xxx"
+}
+```
+
+## 404 Forbidden 
+- A user tries to access a different users playlist 
+- An artiest attempts to update a different artists bil 
+
+`PUT/artist/{artistId}:` 
+
+```json
+{ "error": "resource does not exist}
+```
+
+---
+
+# A homework platform
+
+## Data Model 
+
+**Student**
+id 
+f_name
+l_name
+username
+password
+password_hash
+
+**Teacher** 
+id 
+f_name
+l_name
+userName
+bio
+
+**Class** 
+id 
+teacher_id 
+name
+description 
+subject 
+start_date
+end_date 
+
+**class_enrollment** 
+class_id 
+student_id 
+
+**class_homework**
+id
+class_id 
+description
+subject
+due_date
+assign_date 
+create_at 
+updated_at 
+
+**student_assignment** 
+student_id 
+class_id
+class_homework_id 
+assigned_at
+
+
+**student_assignment_submission**
+student_id 
+class_id
+class_homework_id 
+submitted_at
+file_link
+feedback
+grade
+
+---
+
+## List some problems or challenges you should consider when updating your API. What's the safest way to avoid these problems?
 
 ### **Common Challenges:**
 - **Breaking Changes:**  
@@ -301,6 +337,4 @@
 - **Incremental Updates:**  
   - Roll out updates gradually, possibly using feature toggles or canary releases to minimize risk.
 
----
 
-This answer covers data modeling, REST endpoint design, error handling examples, and best practices for safely updating your API.
