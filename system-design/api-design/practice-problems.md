@@ -173,7 +173,7 @@ profile_url
 
 - **GET/user/{userId}:** returns user information 
 - **GET/user/{userId}/playlists**: returns a list of playlists names 
-- **GET/user/{userID}/playlist/{playlist_id}:** return one playlist and all the songs that are included on the playlist 
+- **GET/user/{userID}/playlists/{playlist_id}:** return one playlist and all the songs that are included on the playlist 
 
 - **POST/user:** Create a new user profile  
 - **PUT/user:** update a user profile 
@@ -184,7 +184,7 @@ profile_url
 ### Artist
 
 - **GET/artist/songs?limit={xx}&offset={xx}**: Returns a list of songs with required pagination query params
-- **GET/artist/song/{songId}:** Returns one song 
+- **GET/artist/songs/{songId}:** Returns one song 
 
 - **POST/artist/song:** Create a new song 
 - **PUT/artist/{songId}**: Update the song
@@ -225,7 +225,7 @@ profile_url
 
 ---
 
-### 403 Not Found 
+### 404 Not Found 
 - A user tries to access a playlist that does not exist 
 - An artist tries to update a song that does not exist
 
@@ -237,7 +237,7 @@ profile_url
 }
 ```
 
-## 404 Forbidden 
+## 403 Forbidden 
 - A user tries to access a different users playlist 
 - An artiest attempts to update a different artists bil 
 
@@ -308,6 +308,34 @@ feedback
 grade
 
 ---
+
+## Endpoints 
+
+**GET/student/{studentID}:** Gets a students dashboard
+**GET/student/{studentID}/assignments:** Gets all assignments 
+**GET/student/{studentID}/assignments/{assignment_id}:** Gets a particular assignment 
+
+**POST/student/{studentID}/assignments/{assignment_id}:** Submits an assignment 
+
+
+## Client Errors 
+
+### 400 Bad Request
+-- Malformed body when the student submits an assignment 
+- Not including required fields  
+
+### 401 Not Found 
+- Trying to access a student who got deleted 
+- Trying to find an assignment that was deleted 
+
+### 403 Unauthorized
+- A student viewing trying to view assignments before logging in 
+- Invalid bearer token  
+
+### 404 Forbidden 
+- A user trying to access their friends assignments 
+- A teaching trying to see a students dashboard. 
+
 
 ## List some problems or challenges you should consider when updating your API. What's the safest way to avoid these problems?
 
