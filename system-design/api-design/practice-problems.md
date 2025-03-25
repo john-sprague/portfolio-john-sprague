@@ -324,17 +324,19 @@ grade
 -- Malformed body when the student submits an assignment 
 - Not including required fields  
 
-### 401 Not Found 
-- Trying to access a student who got deleted 
-- Trying to find an assignment that was deleted 
-
-### 403 Unauthorized
+### 401 Unauthorized
 - A student viewing trying to view assignments before logging in 
 - Invalid bearer token  
 
-### 404 Forbidden 
+### 403 Forbidden
+
 - A user trying to access their friends assignments 
 - A teaching trying to see a students dashboard. 
+
+### 404 Not Found  
+- Trying to access a student who got deleted 
+- Trying to find an assignment that was deleted 
+
 
 
 ## List some problems or challenges you should consider when updating your API. What's the safest way to avoid these problems?
