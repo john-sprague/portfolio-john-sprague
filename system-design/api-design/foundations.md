@@ -379,10 +379,9 @@ Good API documentation is **developer-centric**, combining clarity, completeness
 
 ## Interview Questions 
 
-**Phone Screen**
 ---
 
-### 1. Framework for Deploying an API
+### Phone Screen 1. Framework for Deploying an API
 
 ExpressJS is a popular, lightweight web framework for Node.js that makes building APIs fast and efficient. Here’s an overview of its key features and how you might use it to deploy an API:
 
@@ -418,7 +417,7 @@ ExpressJS is a popular, lightweight web framework for Node.js that makes buildin
 - **Easy to Learn:**  
   With its simple API and clear routing mechanism, Express is easy to learn for developers familiar with JavaScript and Node.js, accelerating development time for new projects.
 
-### 2. Common Request Headers and Their Uses
+### Phone Screen 2. Common Request Headers and Their Uses
 
 APIs frequently use a set of standard HTTP request headers to control the data exchange between the client and server. Some of the most common ones include:
 
@@ -450,7 +449,7 @@ Each of these headers plays a role in ensuring that the API and its clients comm
 
 ---
 
-### 3. What Is a Cookie?
+### Phone Screen 3. What Is a Cookie?
 
 A **cookie** is a small piece of data that a server sends to the user's web browser. It is then stored locally on the client's machine and is sent back to the server with subsequent requests. Here’s a closer look:
 
@@ -470,9 +469,7 @@ A **cookie** is a small piece of data that a server sends to the user's web brow
 
 ---
 
-### Take Home Coding
-
-1. Deploy an API with a GET ‘hello  world’ route. Based on client request, return JSON or HTML. Add a POST route. Create a cookie for the user’s session.
+### Take Home 1. Deploy an API with a GET ‘hello  world’ route. Based on client request, return JSON or HTML. Add a POST route. Create a cookie for the user’s session.
 
 #### Solution
 
@@ -535,7 +532,7 @@ app.listen(PORT, () => {
 
 This example serves as a basic foundation. In a production scenario, you might want to integrate a more robust session management solution (like `express-session`), add error handling, and further secure your API endpoints.
 
-## Parts of a URL 
+## Take Home Coding 2: Parts of a URL 
 
 A **URL (Uniform Resource Locator)** is the address used to access resources on the web. It consists of several parts, each serving a specific purpose. Below is a detailed breakdown of the **URL structure**:
 
@@ -658,7 +655,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 - Each part (scheme, domain, path, etc.) serves a specific purpose.  
 - Understanding URLs is essential for web development, API design, and SEO.  
 
-## HTTP Methods 
+### Take Home Coding 3: HTTP Methods 
 
 **Def:** Http methods define the actions that should be performed on a resource. 
 
@@ -666,7 +663,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-### Common HTTP Methods
+**Common HTTP Methods**
 
 | **Method**  | **Description**                                                                 | **Idempotent?** | **Safe?** | **Example Use Case**                     |
 |-------------|---------------------------------------------------------------------------------|------------------|-----------|------------------------------------------|
@@ -680,9 +677,9 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-### Detailed Explanation
+**Detailed Explanations**
 
-#### 1. GET
+**1. GET**
 - **Purpose**: **Read** data from the server.  
 - **Idempotent**: Yes (repeated requests return the same result).  
 - **Safe**: Yes (does not modify the server state).  
@@ -695,7 +692,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-#### 2. POST
+**2. POST**
 - **Purpose**: Submit data to **create** a new resource.  
 - **Idempotent**: No (repeated requests may create multiple resources).  
 - **Safe**: No (modifies the server state).  
@@ -714,7 +711,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-#### 3. PUT
+**3. PUT**
 - **Purpose**: **Update** an existing resource or **create** it if it doesn’t exist.  
 - **Idempotent**: Yes (repeated requests have the same effect).  
 - **Safe**: No (modifies the server state).  
@@ -733,7 +730,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-#### 4. PATCH
+**4. PATCH**
 - **Purpose**: Partially update an existing resource.  
 - **Idempotent**: No (repeated requests may have different effects).  
 - **Safe**: No (modifies the server state).  
@@ -751,7 +748,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-#### 5. DELETE
+**5. DELETE**
 - **Purpose**: **Delete** a resource from the server.  
 - **Idempotent**: Yes (repeated requests have the same effect).  
 - **Safe**: No (modifies the server state).  
@@ -764,7 +761,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-#### 6. HEAD
+**6. HEAD**
 - **Purpose**: Retrieve only the headers of a response (no body).  
 - **Idempotent**: Yes (repeated requests return the same headers).  
 - **Safe**: Yes (does not modify the server state).  
@@ -777,7 +774,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-#### 7. OPTIONS
+**7. OPTIONS**
 - **Purpose**: Retrieve the supported HTTP methods for a resource.  
 - **Idempotent**: Yes (repeated requests return the same result).  
 - **Safe**: Yes (does not modify the server state).  
@@ -790,7 +787,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-### Key Concepts
+#### Key Concepts
 1. **Idempotent**:  
    - Repeated requests have the same effect as a single request.  
    - Example: `GET`, `PUT`, `DELETE` are idempotent.  
@@ -804,7 +801,7 @@ https://www.example.com:8080/path/to/resource?query=value#section
 
 ---
 
-### Real-World Examples
+#### Real-World Examples
 1. **Social Media API**:  
    - `GET /posts`: Fetch posts.  
    - `POST /posts`: Create a new post.  
@@ -1062,10 +1059,10 @@ By using an idempotency key, you effectively make your POST endpoint idempotent,
 
 In a distributed system like an airline booking system where you’re coordinating parallel actions—such as booking a flight and a hotel—using a **saga** is a great way to ensure idempotency and consistency across these long-running transactions.
 
-#### What is a Saga?
+###What is a Saga?
 A saga is a pattern for managing distributed transactions that consist of multiple, independent operations. Rather than using a single ACID transaction, a saga breaks the overall process into a sequence of smaller, individual steps that each have their own local transaction and a corresponding compensating action to roll back changes if needed.
 
-#### How It Ensures Idempotency
+**How It Ensures Idempotency**
 In the context of an airline booking system, idempotency ensures that if any booking operation is retried (due to network issues, system failures, etc.), the outcome remains consistent. Here’s how a saga helps:
 
 1. **Sequential Steps with Local Transactions:**
@@ -1078,7 +1075,7 @@ In the context of an airline booking system, idempotency ensures that if any boo
 3. **Unique Transaction Identifiers:**
    - Each saga transaction can include a unique identifier (idempotency key) that helps the system recognize and ignore duplicate requests. When a retry occurs, the system checks for this key and returns the previous result rather than executing the same step again.
 
-#### Example Flow
+**Example Flow**
 1. **Initiate Saga:** The user initiates a booking for both flight and hotel.
 2. **Parallel Booking:**
    - **Flight Service:** Reserves a seat using a unique booking ID. If retried with the same key, the service checks if the booking exists and returns the same confirmation.
@@ -1096,7 +1093,7 @@ Using a saga in this way allows your airline booking system to maintain consiste
 
 ## Request/Response Headers 
 
-### Request and Response Headers
+### Def
 Headers are key-value pairs sent between clients (e.g., browsers) and servers to provide metadata about the HTTP request or response. They control behavior, define content types, manage security, and more. Below’s a breakdown:
 
 ---
@@ -1115,7 +1112,7 @@ Sent by the client to the server to provide context about the request.
 | `Host`                  | Specifies the domain and port of the server being accessed.                 | `Host: api.example.com`                  |  
 | `Accept-Encoding`       | Lists compression algorithms the client supports (e.g., gzip, deflate).     | `Accept-Encoding: gzip, deflate`         |  
 
-#### Example Request
+**Example Request**
 ```http
 GET /users/123 HTTP/1.1
 Host: api.example.com
@@ -1129,7 +1126,7 @@ User-Agent: Mozilla/5.0
 ### Response Headers
 Sent by the server to the client to provide metadata about the response.  
 
-#### Common Response Headers
+**Common Response Headers**
 | **Header**              | **Purpose**                                                                 | **Example**                              |  
 |-------------------------|-----------------------------------------------------------------------------|------------------------------------------|  
 | `Content-Type`          | Specifies the media type of the response body.                              | `Content-Type: application/json`         |  
@@ -1140,7 +1137,7 @@ Sent by the server to the client to provide metadata about the response.
 | `Access-Control-Allow-Origin` | Enables CORS by specifying allowed origins.                           | `Access-Control-Allow-Origin: *`         |  
 | `X-Content-Type-Options` | Prevents MIME sniffing (security).                                     | `X-Content-Type-Options: nosniff`        |  
 
-#### Example Response
+**Example Response**
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -1198,7 +1195,7 @@ Headers are the **hidden backbone** of HTTP communication, enabling everything f
 
 ---
 
-### Key Features of Browser Cookies
+**Key Features of Browser Cookies**
 1. **Purpose**:  
    - **Session Management**: Track user sessions (e.g., keep users logged in).  
    - **Personalization**: Save settings like language, theme, timezone, ads, or location.  
@@ -1235,7 +1232,7 @@ Headers are the **hidden backbone** of HTTP communication, enabling everything f
 
 ---
 
-### Example Use Cases
+**Example Use Cases**
 1. **Login Sessions**:  
    ```http
    Set-Cookie: authToken=eyJhbGci...; Secure; HttpOnly; SameSite=Strict
@@ -1269,14 +1266,14 @@ Headers are the **hidden backbone** of HTTP communication, enabling everything f
 
 ---
 
-### Limitations
+**Limitations**
 - **Size Limit**: Typically **4KB** per cookie.  
 - **Domain Restrictions**: Cookies are bound to their domain and path.  
 - **Browser Settings**: Users can block or delete cookies.  
 
 ---
 
-### Alternatives to Cookies
+**Alternatives to Cookies**
 - **LocalStorage/SessionStorage**: Client-side storage (no automatic server transmission).  
 - **JWT (JSON Web Tokens)**: Stateless authentication tokens.  
 
@@ -1325,7 +1322,7 @@ API limits are controls implemented by API providers to manage how their service
 
 ---
 
-### Why API Limits Matter
+**Why API Limits Matter**
 - **Prevent Overload**: Avoid server crashes due to excessive traffic.  
 - **Mitigate Abuse**: Block denial-of-service (DoS) attacks.  
 - **Fair Usage**: Ensure equitable access for all users.  
@@ -1333,7 +1330,7 @@ API limits are controls implemented by API providers to manage how their service
 
 ---
 
-### Implementation and Enforcement
+**Implementation and Enforcement**
 - **HTTP Status Codes**:  
   - **429 Too Many Requests**: Indicates rate limits are exceeded.  
   - **403 Forbidden**: Denies access due to missing/invalid credentials.  
@@ -1344,7 +1341,7 @@ API limits are controls implemented by API providers to manage how their service
 
 ---
 
-### Handling Limits as a Developer
+**Handling Limits as a Developer**
 1. **Check Documentation**: Review the API’s rate limits, quotas, and policies.  
 2. **Implement Retry Logic**: Use exponential backoff to retry failed requests.  
 3. **Monitor Usage**: Track headers like `X-RateLimit-Remaining` to stay within bounds.  
@@ -1352,7 +1349,7 @@ API limits are controls implemented by API providers to manage how their service
 
 ---
 
-### Example: Rate Limit in Action
+**Example: Rate Limit in Action**
 ```httpq
 GET /data HTTP/1.1
 Host: api.example.com
@@ -1375,16 +1372,16 @@ X-RateLimit-Remaining: 99
 
 ---
 
-### 1. URL Length Limit
-#### What to Limit
+##  1. URL Length Limit
+**What to Limit**
 - The maximum allowed length of the URL (including path, query parameters, etc.).  
 
-#### Why Limit URL Length?
+**Why Limit URL Length?**
 - **Security**: Prevent buffer overflow attacks or overly complex queries.  
 - **Performance**: Long URLs can strain servers during parsing/routing.  
 - **Compatibility**: Browsers and proxies often cap URLs at **~2,048 characters** (varies by browser).  
 
-#### Implementation
+**Implementation**
 - **Server-Side Check**: Reject requests with URLs exceeding the limit.  
 - **HTTP Status Code**: Return **414 URI Too Long** (RFC 9110).  
 
@@ -1403,15 +1400,15 @@ app.use((req, res, next) => {
 ---
 
 ### 2. Body Length Limit
-#### What to Limit
+**What to Limit**
 - The maximum allowed size of the request body (e.g., JSON, form data).  
 
-#### Why Limit Body Length?
+**Why Limit Body Length?**
 - **Resource Protection**: Large payloads consume memory/bandwidth.  
 - **Prevent Abuse**: Block malicious actors from flooding the API with oversized data.  
 - **Optimization**: Ensure predictable performance for parsing/processing.  
 
-#### Implementation
+**Implementation**
 - **Middleware**: Use frameworks like Express.js to cap body size.  
 - **HTTP Status Code**: Return **413 Payload Too Large** (RFC 9110).  
 
@@ -1453,14 +1450,14 @@ app.use(express.urlencoded({ limit: '1mb', extended: true }));
 
 ---
 
-### Security Best Practices
+**Security Best Practices**
 - **Reject Early**: Validate URL/body length **before** processing the request.  
 - **Log Oversized Requests**: Monitor for potential attacks.  
 - **Combine with Other Limits**: Pair with rate limiting and authentication.  
 
 ---
 
-### Example Flow
+**Example Flow**
 1. **Client Sends Request**:  
    ```http
    POST /data HTTP/1.1
@@ -1621,7 +1618,7 @@ Understanding the distinctions between private and shared caches is essential fo
 ## Response Codes 
 
 ### 1xx - Information 
-### HTTP Response Codes: Scenarios, Codes, and Response Bodies
+**HTTP Response Codes: Scenarios, Codes, and Response Bodies**
 0. **1xx - Information** 
 Below are common HTTP status codes grouped by category, with scenarios and example response bodies.  
 
@@ -1707,24 +1704,27 @@ Below are common HTTP status codes grouped by category, with scenarios and examp
 - **Incremental Updates:**  
   - Roll out updates gradually, possibly using feature toggles or canary releases to minimize risk.
 
+---
+
 ## Interview Questions
 
-**Phone Screen** 
-### 1. Uses for a cookie:
+---
+
+### Phone Screen 1. Uses for a cookie:
 - Session management (maintaining login state)
 - Storing user preferences
 - Tracking user activity and behavior
 - Authentication tokens
 - Personalization of content
 
-### 2. Limits on your API:
+**2. Limits on your API:**
 - Rate limiting (e.g., requests per minute/hour)
 - Payload size limits (max request/response size)
 - Authentication and authorization (access control)
 - Input validation limits (length/type constraints)
 - Connection and resource usage limits
 
-### 3. Five response codes for your API:
+**3. Five response codes for your API:**
 - **200 OK** – Successful request.
 - **201 Created** – Resource successfully created.
 - **400 Bad Request** – Invalid client request.
@@ -1739,7 +1739,7 @@ Below are common HTTP status codes grouped by category, with scenarios and examp
 
 **Answer:**
 
-### 1. Brief Explanation of HTTP Caching
+**1. Brief Explanation of HTTP Caching**
 HTTP caching stores copies of resources (e.g., images, CSS, JS) to reduce server load, latency, and bandwidth. Key components:  
 - **Headers**:  
   - `Cache-Control`: Directives like `max-age`, `public`, `no-cache`.  
@@ -1751,14 +1751,14 @@ HTTP caching stores copies of resources (e.g., images, CSS, JS) to reduce server
 ### 2. Caching Strategy for an Image Sharing Application
 **Goals**: Optimize performance for frequently accessed images while ensuring updates propagate efficiently.  
 
-#### Client-Side Caching
+**Client-Side Caching**
 - **Static Assets (Images)**:  
   - Set long `max-age` for immutable images (e.g., `Cache-Control: public, max-age=31536000`).  
   - Use **cache-busting** via unique filenames or versioned URLs (e.g., `/image.jpg?v=2`) when images are updated.  
 - **Dynamic Content**:  
   - Use `no-cache` for user-specific images (e.g., private albums).  
 
-#### Server-Side Caching
+**Server-Side Caching**
 - **CDN Caching**:  
   - Cache popular images at edge locations (e.g., Cloudflare, AWS CloudFront).  
   - Set `Cache-Control: public, max-age=86400` (24 hours) for frequently accessed content.  
@@ -1766,17 +1766,17 @@ HTTP caching stores copies of resources (e.g., images, CSS, JS) to reduce server
   - Cache images in memory/disk to reduce backend load.  
   - Use `proxy_cache_valid 200 1d;` to retain images for 1 day.  
 
-#### Validation & Invalidation
+**Validation & Invalidation**
 - **ETag/Last-Modified**:  
   - Validate cached images via `If-None-Match` (ETag) or `If-Modified-Since` (Last-Modified).  
 - **Cache Purging**:  
   - Invalidate CDN/proxy cache when images are updated/deleted (e.g., via CDN API or cache tags).  
 
-#### Access-Based TTL
+**Access-Based TTL**
 - **Popular Images**: Longer TTL (e.g., 1 week) to stay cached.  
 - **Less Popular Images**: Shorter TTL (e.g., 1 hour) to free resources.  
 
-#### Security & Privacy
+**Security & Privacy**
 - **Private Images**:  
   - Use `Cache-Control: private` or `no-store` to prevent public caching.  
 - **Access Control**:  
@@ -1784,7 +1784,7 @@ HTTP caching stores copies of resources (e.g., images, CSS, JS) to reduce server
 
 ---
 
-### Example Flow
+**Example Flow**
 1. **User Uploads Image**:  
    - Assign a unique URL (e.g., `/images/abc123_v1.jpg`).  
 2. **First Request**:  
@@ -1803,18 +1803,15 @@ HTTP caching stores copies of resources (e.g., images, CSS, JS) to reduce server
 - **Prioritize TTL** based on image popularity to balance performance and storage.  
 - **Secure private content** with `private`/`no-store` directives.  
 
-This strategy ensures fast load times, reduces server costs, and maintains content freshness. 🖼️⚡
-
-2. Design an API for the image sharing application with GET, POST and PUT endpoints. Outline which response codes you would use for certain situations on each endpoint
-
-
 ### On-site 2: Designing an API for an Image Sharing Application
 
+  Design an API for the image sharing application with GET, POST and PUT endpoints. Outline which response codes you would use for certain situations on each endpoint
+  
 The API will provide endpoints for uploading, retrieving, and updating images. Below is the design with appropriate request methods, endpoints, and expected response codes.
 
 ---
 
-## 1. GET /images/{image_id}
+**1. GET /images/{image_id}**
 **Purpose:** Retrieve an image by its ID.  
 
 **Request:**  
@@ -1830,7 +1827,7 @@ GET /images/{image_id}
 
 ---
 
-### 2. POST /images
+**2. POST /images**
 **Purpose:** Upload a new image.  
 
 **Request:**  
@@ -1853,7 +1850,7 @@ Content-Type: multipart/form-data
 
 ---
 
-### 3. PUT /images/{image_id}
+**3. PUT /images/{image_id}**
 **Purpose:** Update image metadata (title, description, visibility).  
 
 **Request:**  
@@ -1900,7 +1897,7 @@ Both REST and GraphQL are popular approaches for designing APIs, but they differ
 
 ## REST
 
-### Overview
+**Overview**
 - **Architecture:**  
   REST (Representational State Transfer) is an architectural style that uses standard HTTP methods (GET, POST, PUT, DELETE) to perform operations on resources identified by URLs.
 - **Statelessness:**  
@@ -1918,8 +1915,7 @@ Both REST and GraphQL are popular approaches for designing APIs, but they differ
 - **Multiple Representations:**  
   Resources can be returned in various formats (JSON, XML, etc.) based on client needs.
 
-### Best Practices & Use Cases
-- **Use Cases:**  
+**Best Practices & Use Cases**
   - Applications with simple CRUD operations.
   - Services where caching and HTTP-level optimizations are important.
   - Systems that benefit from a standardized and widely-adopted approach.
@@ -1934,7 +1930,7 @@ Both REST and GraphQL are popular approaches for designing APIs, but they differ
 
 ## GraphQL
 
-### Overview
+**Overview**
 - **Query Language:**  
   GraphQL is a query language for APIs that enables clients to request exactly the data they need, no more and no less.
 - **Single Endpoint:**  
@@ -2044,7 +2040,7 @@ A RESTful API is one that adheres to the architectural principles of REST (Repre
 - **Client-Server:**
     Can scale each independently of each other, as long as the interface is unaltered.  
 
-**Key Takeaways:**
+### Key Takeaway
 
 - **Consistency and Predictability:**  
   A uniform interface and standard HTTP methods make the API easier to understand and consume.
@@ -2055,15 +2051,151 @@ A RESTful API is one that adheres to the architectural principles of REST (Repre
 
 By following these principles, an API becomes RESTful, promoting simplicity, performance, and scalability.
 
-## Phone Screen Interview Question 1 - What is GraphQL? What are a couple differences from REST? 
+## Interview Questions 
 
-## Take Home Interview Question 1: Build a "hello world" GraphQL API
+---
 
-## On Site Interview Question 1: Explain the benefits and drawbacks of using GraphQL vs REST APIs
+### Phone Screen Interview Question 1 - What is GraphQL? What are a couple differences from REST?
 
-## On Site Interview Question 2: What issues typically arise when using REST APIs? 
+✅ **What is GraphQL?**  
+GraphQL is a **query language for APIs** and a runtime for executing queries against your data. It provides a flexible and efficient alternative to REST by allowing clients to request exactly the data they need.  
+
+✅ **Key Differences from REST:**  
+| Feature       | GraphQL | REST |
+|--------------|---------|------|
+| **Data Fetching** | Clients request **only the fields they need**. | Fetches **fixed responses**, often requiring multiple requests. |
+| **Single Endpoint** | Uses **one endpoint** (`/graphql`). | Uses **multiple endpoints** (`/users`, `/posts`, etc.). |
+| **Over-fetching & Under-fetching** | Eliminates both. Clients request exactly what they need. | May over-fetch (extra data) or under-fetch (missing fields requiring extra requests). |
+| **Versioning** | Not required; schema changes are handled with deprecations. | Requires **versioning** (`/v1/users`, `/v2/users`). |
+
+---
+
+### Take-Home Interview Question 1: Build a "Hello World" GraphQL API
+
+✅ **Implementation using Express & Apollo Server (Node.js):**  
+
+**Install Dependencies**
+```bash
+npm install express apollo-server-express graphql
+```
+
+**Code**
+```javascript
+const express = require('express');
+const { ApolloServer, gql } = require('apollo-server-express');
+
+const app = express();
+
+// Define GraphQL Schema
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+
+// Define Resolvers
+const resolvers = {
+  Query: {
+    hello: () => "Hello, World!"
+  }
+};
+
+// Initialize Apollo Server
+const server = new ApolloServer({ typeDefs, resolvers });
+
+async function startServer() {
+  await server.start();
+  server.applyMiddleware({ app });
+
+  app.listen(4000, () => console.log('Server running at http://localhost:4000/graphql'));
+}
+
+startServer();
+```
+
+✅ **Test the API**  
+1. Run `node server.js`.  
+2. Open **http://localhost:4000/graphql**.  
+3. Enter the query:  
+   ```graphql
+   {
+     hello
+   }
+   ```
+4. Expected Response:  
+   ```json
+   {
+     "data": {
+       "hello": "Hello, World!"
+     }
+   }
+   ```
+
+---
+
+### On-Site Interview Question 1: Explain the benefits and drawbacks of using GraphQL vs REST APIs
+
+✅ **Benefits of GraphQL:**  
+- **Flexible Data Retrieval** → Clients request only the data they need.  
+- **Single Endpoint** → Reduces complexity compared to multiple REST endpoints.  
+- **No Over-fetching/Under-fetching** → Efficient for large-scale apps.  
+- **Strongly Typed Schema** → Helps avoid data inconsistency.  
+
+✅ **Drawbacks of GraphQL:**  
+- **Performance Concerns** → Nested queries can be costly on the server.  
+- **Complexity** → More complex to implement than REST.  
+- **Caching Issues** → Harder to cache responses compared to REST.  
+
+✅ **When to Use Each:**  
+| Use Case | Choose REST | Choose GraphQL |
+|----------|------------|---------------|
+| **Simple APIs** | ✅ | ❌ |
+| **Complex Data Relationships** | ❌ | ✅ |
+| **High Performance & Caching** | ✅ | ❌ |
+| **Mobile Apps with Limited Bandwidth** | ❌ | ✅ |
+
+---
+
+### On-Site Interview Question 2: What Issues Typically Arise When Using REST APIs?
+
+✅ **Common Issues with REST APIs:**  
+
+1. **Over-fetching & Under-fetching**  
+   - Clients may get **too much or too little data**, requiring multiple requests.  
+   - Example: Fetching `/users/1` returns user details **but not their posts**, requiring another request.  
+
+2. **Versioning Complexity**  
+   - API updates can **break old clients**, requiring `/v1/` and `/v2/` versions.  
+
+3. **N+1 Query Problem**  
+   - Example: A client requests a list of users, then makes **another API call per user** to get their posts, causing performance issues.  
+
+4. **Lack of Flexibility**  
+   - REST APIs return **fixed responses**. If a client needs more fields, the backend must be updated.  
+
+5. **Limited Real-Time Support**  
+   - REST is stateless and does not **natively support real-time data** (WebSockets or polling required).  
+
+✅ **Best Practices to Address These Issues:**  
+- **Use Pagination** → Avoid over-fetching large datasets.  
+- **Implement API Gateways** → Helps manage multiple versions efficiently.  
+- **Optimize Query Performance** → Use indexing, caching, and batch requests.  
+- **Use WebSockets for Real-Time Data** → Enables live updates.  
+
+---
+
+## Summary of All Questions & Answers
+| Question | Key Takeaways |
+|----------|--------------|
+| **What is GraphQL? How is it different from REST?** | GraphQL provides flexible queries with a single endpoint, while REST uses fixed endpoints and responses. |
+| **Build a "Hello World" GraphQL API** | Implemented using **Express + Apollo Server** in Node.js. |
+| **GraphQL vs REST Pros & Cons** | GraphQL is more flexible but complex; REST is simple but can over-fetch data. |
+| **Issues with REST APIs?** | Over-fetching, versioning, query performance, and real-time support challenges. |
+
+---
 
 # Authentication vs Authorization 
+
 ## Authentication:  "Who are you"
 
 **Authentication** is the process of verifying who a user or system is—essentially, confirming their identity. For example, when you log in using your username and password, the system checks your credentials to ensure you are who you claim to be.
@@ -2075,7 +2207,7 @@ By following these principles, an API becomes RESTful, promoting simplicity, per
 - Utilized Access Token 
 - Backend owns authorization policies
 
-### In summary:
+### Key Takeaways 
 - **Authentication:** "Who are you?"  
 - **Authorization:** "What can you do?"
 
@@ -2284,9 +2416,124 @@ Each method has its place, depending on the security needs and architecture of t
 
 ---
 
-### Phone Screen 2: What is stateful vs. stateless Authentication
+### Phone Screen 2: What is Stateful vs. Stateless Authentication?
 
-### On-Site 1: How do you typically handle authentication in Node.js? hlibrary do you use?**  
+Authentication can be handled in two main ways: **stateful** and **stateless**. The key difference lies in **how the server tracks user sessions** after authentication.  
+
+---
+
+#### 1. Stateful Authentication (Session-Based Auth)
+✅ **The server stores session data** for each authenticated user.  
+✅ Each user has a unique **session ID**, which is stored in **server memory or a database**.  
+
+**How It Works:**  
+1. **User Logs In** → Server verifies credentials and creates a **session ID**.  
+2. **Session is Stored** → Server keeps the session data in memory or a database.  
+3. **User Sends Cookie in Requests** → The browser stores a session cookie (e.g., `sessionId=abc123`).  
+4. **Server Verifies the Session** → For every request, the server checks the session store to validate the user.  
+
+**Example (Express + Session-Based Auth)**  
+```javascript
+const express = require('express');
+const session = require('express-session');
+
+const app = express();
+app.use(session({ secret: 'supersecret', resave: false, saveUninitialized: true }));
+
+app.post('/login', (req, res) => {
+  req.session.user = { id: 1, username: 'john' };
+  res.send('Logged in');
+});
+
+app.get('/profile', (req, res) => {
+  if (!req.session.user) return res.status(401).send('Unauthorized');
+  res.json(req.session.user);
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+```
+
+**Pros & Cons:**  
+✅ Works well for web apps (cookies & sessions).  
+✅ Can **invalidate sessions immediately** when users log out.  
+❌ **Not scalable**—server must store session data.  
+❌ Can lead to **session management complexity**.  
+
+---
+
+#### 2. Stateless Authentication (Token-Based / JWT)
+✅ The server **does not store user sessions**—each request is **self-contained**.  
+✅ Authentication is handled via **JWT (JSON Web Token)**.  
+
+**How It Works:**  
+1. **User Logs In** → Server generates a **JWT** and sends it to the client.  
+2. **Client Stores JWT** → The client stores it in local storage or sends it in headers.  
+3. **Client Sends JWT in Requests** → Each request includes:  
+   ```http
+   Authorization: Bearer <JWT>
+   ```  
+4. **Server Verifies JWT** → If valid, the request proceeds **without checking a session store**.  
+
+**Example (Express + JWT)**  
+```javascript
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+const SECRET_KEY = 'supersecret';
+
+app.use(express.json());
+
+app.post('/login', (req, res) => {
+  const user = { id: 1, username: 'john' };
+  const token = jwt.sign(user, SECRET_KEY, { expiresIn: '1h' });
+  res.json({ token });
+});
+
+app.get('/profile', (req, res) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+  try {
+    const user = jwt.verify(token, SECRET_KEY);
+    res.json(user);
+  } catch {
+    res.status(403).json({ error: 'Invalid token' });
+  }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+```
+
+**Pros & Cons:**  
+✅ **Scalable**—no session storage required.  
+✅ Works well for **APIs & microservices**.  
+✅ Tokens can be **used across multiple services (SSO)**.  
+❌ **Revoking a JWT is difficult** (requires blacklists or short expiration times).  
+❌ If **JWT is stolen,** an attacker can use it until it expires.  
+
+---
+
+#### Comparison Table: Stateful vs. Stateless Authentication
+
+| Feature              | Stateful (Session-Based) | Stateless (Token-Based JWT) |
+|----------------------|------------------------|----------------------------|
+| **Server Stores Session?** | ✅ Yes (In-memory or DB) | ❌ No (Client stores token) |
+| **Authentication Method** | Session ID (Cookie) | JWT (Token) |
+| **Scalability** | ❌ Limited (State is stored) | ✅ Highly Scalable |
+| **Security** | ✅ Session can be invalidated | ❌ Token remains valid until expiry |
+| **Best For** | Web apps (Traditional Login) | APIs, Microservices, Mobile Apps |
+
+---
+
+#### Key Takeaways
+- **Stateful Authentication (Session-Based)** → Server stores sessions, uses cookies.  
+- **Stateless Authentication (JWT-Based)** → No session storage, relies on tokens.  
+- **Stateful = Easier to revoke access. Stateless = More scalable for APIs.**  
+
+---
+
+### On-Site 1: How do you typically handle authentication in Node.js? What library do you use?**  
 
 **Handling Authentication in Node.js:**  
 1. **Using Passport.js (Most Common Approach)**  
@@ -2348,7 +2595,7 @@ Each method has its place, depending on the security needs and architecture of t
 4. **App Requests Access Token** → The app exchanges the Authorization Code for an **Access Token**.  
 5. **App Uses Access Token** → The app sends the token with API requests to fetch user data.  
 
-### Example OAuth Request (Exchanging Code for Token)
+**Example OAuth Request (Exchanging Code for Token)**
 ```http
 POST https://oauth2.googleapis.com/token
 Content-Type: application/x-www-form-urlencoded
@@ -2360,7 +2607,7 @@ client_id=yourClientID
 &redirect_uri=yourRedirectURI
 ```
 
-### OAuth Grant Types (Different Ways OAuth Works)
+#### OAuth Grant Types (Different Ways OAuth Works)
 | Grant Type         | Use Case |
 |--------------------|---------|
 | **Authorization Code** | Most secure, used for web apps (redirects user to provider). |
@@ -2375,12 +2622,172 @@ client_id=yourClientID
 
 ---
 
+### On-Site 3: How Does Password-Less Authentication Work?
+
+**What It Is:**
+Password-less authentication allows users to log in **without using a traditional password**. Instead, it relies on one-time codes, magic links, biometrics, or hardware keys.  
+
+**How It Works:**
+1. **User Enters Identifier** → Instead of a password, the user provides an identifier like an email or phone number.  
+2. **System Sends a One-Time Code or Link** → The system generates a temporary, time-sensitive authentication method (e.g., an OTP or magic link).  
+3. **User Verifies** → The user enters the OTP or clicks the link to confirm their identity.  
+4. **System Logs the User In** → If the code or link is valid, the user gains access.  
+
+### Common Password-Less Methods:
+| Method | Example |
+|--------|---------|
+| **Email Magic Link** | User receives a login link via email. |
+| **One-Time Password (OTP)** | A 6-digit code sent via SMS, email, or authenticator app. |
+| **Biometric Authentication** | Fingerprint, Face ID (device-dependent). |
+| **Hardware Tokens** | YubiKey, WebAuthn (FIDO2). |
+
+✅ **Pros:**  
+- No risk of stolen or weak passwords.  
+- Reduces phishing attacks.  
+- Improves user experience.  
+
+❌ **Cons:**  
+- Requires secure token transmission.  
+- Risk of interception (e.g., SMS hijacking).  
+
+---
+
+### On-Site 4: How Does Multi-Factor Authentication (MFA) Work?
+
+**What It Is:**
+Multi-Factor Authentication (MFA) enhances security by requiring **two or more independent verification methods** before granting access.  
+
+**How It Works:**
+1. **User Provides Primary Credential** (e.g., username & password).  
+2. **System Requests Secondary Factor** (e.g., a one-time code).  
+3. **User Verifies Secondary Factor** → If correct, access is granted.  
+
+### Types of Authentication Factors:
+| Factor Type | Example |
+|------------|---------|
+| **Something You Know** | Password, PIN. |
+| **Something You Have** | Phone (SMS OTP), Security Key (YubiKey). |
+| **Something You Are** | Fingerprint, Face ID, Voice Recognition. |
+
+**MFA Flow Example (SMS-Based MFA):**
+1. User enters **username & password**.  
+2. System sends a **6-digit OTP via SMS**.  
+3. User enters OTP **to complete login**.  
+
+✅ **Pros:**  
+- Enhances security beyond passwords.  
+- Mitigates brute-force and credential stuffing attacks.  
+
+❌ **Cons:**  
+- Can be inconvenient for users.  
+- SMS-based MFA is vulnerable to **SIM swapping attacks**.  
+
+**Best Practice:** Prefer **app-based MFA** (Google Authenticator, Authy) or **hardware tokens** over SMS.  
+
+---
+
+### On-Site 5: Draw a Design for an API That Uses Password-Less Authentication
+**API Overview**
+This API implements **email-based magic link authentication** for a password-less login system.  
+**Endpoints:**
+
+**1. Request Magic Link (Send Email)**
+```http
+POST /auth/request-magic-link
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+✅ System generates a **one-time, time-sensitive login token** and emails the user a magic link.  
+
+---
+
+**2. Verify Magic Link**
+```http
+GET /auth/verify-magic-link?token=abc123xyz
+```
+✅ If valid, system logs in the user and issues a JWT token for session management.  
+
+---
+
+#### API Workflow:
+1. **User Requests a Magic Link** → Sends email to `/auth/request-magic-link`.  
+2. **Server Generates a Secure Token** → Stores it with an expiration time (e.g., 10 minutes).  
+3. **User Clicks the Link** → Redirects to `/auth/verify-magic-link?token=abc123xyz`.  
+4. **Server Verifies Token** → If valid, logs in the user and issues a session token (JWT).  
+
+---
+
+##Backend Implementation Example (Node.js + Express + JWT)##
+```javascript
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+const app = express();
+app.use(express.json());
+
+const users = {};  // Mock database
+const tokens = {}; // Stores temporary magic links
+
+const SECRET_KEY = 'supersecret';
+
+// Email Transporter Setup (Mock)
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: { user: 'your-email@gmail.com', pass: 'your-password' }
+});
+
+// Request Magic Link
+app.post('/auth/request-magic-link', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  const token = crypto.randomBytes(32).toString('hex');
+  tokens[token] = { email, expires: Date.now() + 10 * 60 * 1000 }; // 10 min expiry
+
+  const magicLink = `http://localhost:3000/auth/verify-magic-link?token=${token}`;
+  
+  transporter.sendMail({
+    to: email,
+    subject: 'Your Magic Login Link',
+    text: `Click here to login: ${magicLink}`
+  });
+
+  res.json({ message: 'Magic link sent!' });
+});
+
+// Verify Magic Link
+app.get('/auth/verify-magic-link', (req, res) => {
+  const { token } = req.query;
+  const data = tokens[token];
+
+  if (!data || Date.now() > data.expires) return res.status(400).json({ error: 'Invalid or expired token' });
+
+  const accessToken = jwt.sign({ email: data.email }, SECRET_KEY, { expiresIn: '1h' });
+  delete tokens[token]; // Remove token after use
+
+  res.json({ message: 'Logged in successfully!', accessToken });
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+```
+
+---
+
 ### Summary of All Questions
 
 | Question | Key Concept |
 |----------|------------|
 | **AuthN vs. AuthZ** | AuthN = Who are you? / AuthZ = What can you do? |
 | **Node.js Authentication** | Use Passport.js, JWT, or Sessions for handling user authentication. |
+| **Stateful Authentication (Session-Based)** | Server stores sessions, uses cookies. |
+| **Stateless Auth** | Use Passport.js, JWT, or Sessions for handling user authentication. |
+| **Stateless Authentication (JWT-Based)** | No session storage, relies on tokens. |
 | **How OAuth Works** | Secure, delegated authentication via Access Tokens. |
-
-Would you like code examples for any of these in more detail? 🚀
+| **Password-Less Authentication** | Eliminates password risks; relies on email magic links, OTPs, or biometrics. |
+| **Multi-Factor Authentication (MFA)** | Strengthens security by requiring an extra verification step. |
+| **API Design for Password-Less Login** | Uses magic links with JWT for session management. |  
