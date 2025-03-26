@@ -254,7 +254,7 @@ An **API Gateway** is a centralized server that acts as the entry point for mana
    - Applies SSL/TLS termination, IP whitelisting, and DDoS protection.
 
 10. **Aggregation**:  
-    - Combines responses from multiple services into a single payload to reduce client roundtrips.
+    - Combines responses from multiple services into a single payload to reduce client round-trips.
 
 ---
 
@@ -422,11 +422,11 @@ ExpressJS is a popular, lightweight web framework for Node.js that makes buildin
 
 APIs frequently use a set of standard HTTP request headers to control the data exchange between the client and server. Some of the most common ones include:
 
-- **Accept:**  
+- **Accept (About the data we expect to receive):**  
   *Purpose:* Indicates the media types (e.g., JSON, XML) that the client is prepared to receive.  
   *Usage Example:* `Accept: application/json`
 
-- **Content-Type:**  
+- **Content-Type (About data we are sending):**  
   *Purpose:* Tells the server the format of the data in the request body, which is critical for parsing the data correctly.  
   *Usage Example:* `Content-Type: application/json`
 
@@ -904,12 +904,9 @@ The **PUT** method is **inherently idempotent**, meaning that making the same re
 
 ## Interview Questions 
 
-**Phone Screen**
-Below are detailed answers for both questions:
-
 ---
 
-### 1. What Types of HTTP Methods Are Idempotent? When Would Idempotent Methods Be Used?
+### Phone Screen 1. What Types of HTTP Methods Are Idempotent? When Would Idempotent Methods Be Used?
 
 **Idempotent HTTP methods** are those that can be called multiple times without changing the result beyond the initial application. In other words, repeating the request should have the same effect as making it once.
 
@@ -978,19 +975,9 @@ Each method is designed to serve a specific purpose, helping to ensure that web 
 
 ---
 
-**On Site**
-1. What path or method would you use for writing an endpoint for verifying a resource's existence?
+### 3. On Site 1: Verifying a Resource's Existence
 
-2. Explain the difference between api.site.com and site.com/api
-
-3. Can you make a POST request idempotent?
-
-
-Below are comprehensive answers for both questions:
-
----
-
-### 3. Verifying a Resource's Existence
+`What path or method would you use for writing an endpoint for verifying a resource's existence?`
 
 **Path/Method Approach:**
 
@@ -1009,7 +996,9 @@ Below are comprehensive answers for both questions:
 
 ---
 
-### 4. Difference Between `api.site.com` and `site.com/api`
+### 4. On Site 2: Difference Between `api.site.com` and `site.com/api`
+
+`Explain the difference between api.site.com and site.com/api`
 
 **Subdomain (`api.site.com`):**
 
@@ -1035,7 +1024,9 @@ Below are comprehensive answers for both questions:
 
 ---
 
-### Can you make a POST request Idempotent? 
+### On Site 3: Can you make a POST request Idempotent? 
+
+`Can you make a POST request idempotent?`
 
 To make a POST request idempotent, you can implement an **idempotency key** mechanism. Here’s how it generally works:
 
@@ -1064,6 +1055,44 @@ function handlePostRequest(request):
 ```
 
 By using an idempotency key, you effectively make your POST endpoint idempotent, ensuring that repeated requests with the same key do not cause duplicate side effects.
+
+---
+
+### Onsite 4: A user initiates a booking for both a flight and a hotel (SAGA)
+
+In a distributed system like an airline booking system where you’re coordinating parallel actions—such as booking a flight and a hotel—using a **saga** is a great way to ensure idempotency and consistency across these long-running transactions.
+
+#### What is a Saga?
+A saga is a pattern for managing distributed transactions that consist of multiple, independent operations. Rather than using a single ACID transaction, a saga breaks the overall process into a sequence of smaller, individual steps that each have their own local transaction and a corresponding compensating action to roll back changes if needed.
+
+#### How It Ensures Idempotency
+In the context of an airline booking system, idempotency ensures that if any booking operation is retried (due to network issues, system failures, etc.), the outcome remains consistent. Here’s how a saga helps:
+
+1. **Sequential Steps with Local Transactions:**
+   - **Flight Booking Step:** The system attempts to reserve a seat on the flight. This operation is idempotent because if the booking is retried, the system can check whether the seat is already reserved by the same request, avoiding duplicate reservations.
+   - **Hotel Booking Step:** In parallel or after the flight reservation, the hotel room booking is processed with its own local transaction, also designed to be idempotent.
+
+2. **Compensating Transactions:**
+   - If one step fails (e.g., hotel booking fails after a flight booking has succeeded), a compensating action is triggered to roll back the successful booking (cancel the flight reservation). This rollback is also designed to be idempotent so that multiple compensating actions won’t further alter the state unexpectedly.
+
+3. **Unique Transaction Identifiers:**
+   - Each saga transaction can include a unique identifier (idempotency key) that helps the system recognize and ignore duplicate requests. When a retry occurs, the system checks for this key and returns the previous result rather than executing the same step again.
+
+#### Example Flow
+1. **Initiate Saga:** The user initiates a booking for both flight and hotel.
+2. **Parallel Booking:**
+   - **Flight Service:** Reserves a seat using a unique booking ID. If retried with the same key, the service checks if the booking exists and returns the same confirmation.
+   - **Hotel Service:** Reserves a room similarly using its own idempotency mechanism.
+3. **Transaction Coordination:** A saga orchestrator manages the sequence:
+   - If both bookings succeed, the saga completes successfully.
+   - If one booking fails, the orchestrator triggers compensating transactions (e.g., cancel the flight booking if the hotel booking fails).
+
+#### Key Takeaways
+- **Idempotent Steps:** Each service (flight, hotel) must be designed to handle duplicate requests gracefully.
+- **Compensating Actions:** Ensure that if one part of the transaction fails, the system can undo previous actions without causing further side effects.
+- **Saga Orchestration:** A central orchestrator or event-driven mechanism can coordinate the overall process, ensuring that retries and compensations are managed effectively.
+
+Using a saga in this way allows your airline booking system to maintain consistency and reliability across distributed services, even in the face of partial failures and retries, while ensuring that the overall process remains idempotent.
 
 ## Request/Response Headers 
 
@@ -2034,3 +2063,324 @@ By following these principles, an API becomes RESTful, promoting simplicity, per
 
 ## On Site Interview Question 2: What issues typically arise when using REST APIs? 
 
+# Authentication vs Authorization 
+## Authentication:  "Who are you"
+
+**Authentication** is the process of verifying who a user or system is—essentially, confirming their identity. For example, when you log in using your username and password, the system checks your credentials to ensure you are who you claim to be.
+
+## Authorization: "What can you do"
+**Authorization** on  the other hand, determines what that authenticated user is allowed to do. It defines the permissions and access levels, such as whether you can view, edit, or delete certain data or resources.
+
+- After successful authentication 
+- Utilized Access Token 
+- Backend owns authorization policies
+
+### In summary:
+- **Authentication:** "Who are you?"  
+- **Authorization:** "What can you do?"
+
+### Cookies vs. Headers vs. URL Parameters
+Here’s a breakdown of how cookies, headers, and URL parameters differ in web development, including their **use cases**, **security implications**, and **technical characteristics**:
+
+---
+
+### 1. Cookies
+**What They Are**:  
+- Small key-value pairs stored **on the client side** (browser).  
+- Sent automatically with **every request** to the domain that set them.  
+
+**Use Cases**:  
+- **Session management** (e.g., login tokens).  
+- **Personalization** (e.g., theme/language preferences).  
+- **Tracking** (e.g., user behavior analytics).  
+
+**Key Features**:  
+- **Persistence**: Can be session-only (deleted when the browser closes) or persistent (expires at a set time).  
+- **Security**:  
+  - `Secure`: Only sent over HTTPS.  
+  - `HttpOnly`: Prevents client-side JavaScript access.  
+  - `SameSite`: Restricts cross-site requests.  
+- **Size Limit**: ~4KB per cookie.  
+
+**Example**:  
+```http  
+Set-Cookie: sessionId=abc123; Secure; HttpOnly; SameSite=Strict  
+```
+
+---
+
+### 2. Headers
+**What They Are**:  
+- Metadata attached to **HTTP requests/responses**.  
+- Not stored on the client by default (except for headers like `Cookie`).  
+
+**Use Cases**:  
+- **Authentication**: `Authorization: Bearer <token>`.  
+- **Content Negotiation**: `Accept: application/json`.  
+- **Caching**: `Cache-Control: max-age=3600`.  
+- **Security**: `Content-Security-Policy: default-src 'self'`.  
+
+**Key Features**:  
+- **Stateless**: No automatic persistence (unlike cookies).  
+- **Flexibility**: Can include custom headers (e.g., `X-API-Key`).  
+- **Security**:  
+  - Headers like `Authorization` are safer than cookies for sensitive data.  
+  - Avoid exposing sensitive info in headers (e.g., `X-Secret-Key`).  
+
+**Example**:  
+```http  
+GET /data HTTP/1.1  
+Authorization: Bearer eyJhbGci...  
+Accept: application/json  
+```
+
+---
+
+### Comparison Table
+| **Aspect**            | **Cookies**                          | **Headers**                          | **URL Parameters**                  |  
+|------------------------|---------------------------------------|---------------------------------------|--------------------------------------|  
+| **Storage Location**   | Client-side (browser).               | Part of HTTP requests/responses.     | Part of the URL.                    |  
+| **Persistence**        | Yes (until expiration).              | No (reset per request).              | No (reset per URL).                 |  
+| **Security**           | Use `Secure`, `HttpOnly`, `SameSite`.| Secure for tokens (e.g., `Authorization`). | Exposed in logs/URLs; avoid sensitive data. |  
+| **Use Case**           | Sessions, personalization.           | Authentication, content negotiation. | Filtering, pagination, search.      |  
+| **Size Limits**        | ~4KB per cookie.                     | Varies (no strict limit).            | ~2,000 characters (browser limits). |  
+
+---
+
+### Key Takeaways
+1. **Cookies**:  
+   - Best for **stateful interactions** (e.g., sessions).  
+   - Secure with `HttpOnly` and `Secure` flags.  
+
+2. **Headers**:  
+   - Ideal for **stateless metadata** (e.g., auth tokens).  
+   - Safer than cookies for sensitive data.
+
+
+## Basic Authorization, OAuth, and JWTs Explained
+
+These are three different approaches to authentication and authorization, each suited for different use cases.  
+
+---
+
+## 1. Basic Authorization
+
+### What It Is:
+- A simple authentication mechanism that uses a username and password sent with every request.  
+- Relies on **Base64 encoding** (not encryption), making it insecure unless used with HTTPS.  
+
+### How It Works:
+1. The client sends an HTTP request with an `Authorization` header:  
+   ```http
+   Authorization: Basic Base64(username:password)
+   ```  
+2. The server decodes the Base64 string and validates the credentials.  
+3. If valid, the user gains access; otherwise, authentication fails.  
+
+### Pros & Cons:
+✅ Simple and easy to implement.  
+❌ Requires sending credentials with every request (high security risk if not using HTTPS).  
+❌ No built-in token expiration or session management.  
+
+### Best Use Case:
+- Internal or low-security APIs where encryption (TLS) is guaranteed.  
+
+---
+
+## 2. OAuth (Open Authorization)
+
+### What It Is:
+- A secure, token-based authorization framework allowing users to grant limited access to their data without sharing passwords.  
+- Commonly used by third-party services (e.g., logging in with Google or Facebook).  
+
+### How It Works (OAuth 2.0 Example):
+1. The user requests authorization from an OAuth provider (e.g., Google).  
+2. The provider returns an **authorization code** to the client.  
+3. The client exchanges this code for an **access token**.  
+4. The client uses this token to access protected resources on behalf of the user.  
+
+### Pros & Cons:
+✅ More secure than Basic Auth, as credentials aren’t exposed (I don't have to store or manage them myself)
+✅ Allows **scoped access** (e.g., an app can only read your profile, not edit it).  
+✅ Supports third-party authentication.  
+❌ More complex to implement.  
+❌ Requires token refresh mechanisms.  
+
+### Best Use Case:
+- APIs that need delegated access (e.g., allowing an app to access a user’s Google Drive files).  
+
+---
+
+## 3. JWT (JSON Web Token)
+
+### What It Is:
+- A compact, self-contained token format used for authentication and authorization.  
+- Can be signed and optionally encrypted.  
+
+### How It Works:
+1. A user logs in and receives a **JWT** from the server.  
+2. The client includes this token in the `Authorization` header of each request:  
+   ```http
+   Authorization: Bearer <JWT>
+   ```  
+3. The server verifies the token’s signature and grants access.  
+
+### JWT Structure:
+A JWT consists of three parts, separated by dots (`.`):  
+```
+Header.Payload.Signature
+```
+Example:  
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIn0.s4hhP3Njlh7N5GzQl
+```
+
+### Pros & Cons:
+✅ **Stateless** (no need to store sessions on the server).  
+✅ **Efficient** (small, easily parsed token format).  
+✅ **Secure** when used properly with signing and expiration times.  
+❌ Cannot be revoked unless additional mechanisms (e.g., blacklists) are used.  
+❌ If too large, it may impact request size.  
+
+### Best Use Case:
+- Stateless authentication for APIs (e.g., Single Sign-On (SSO), microservices).  
+
+---
+
+### Comparison Summary
+| Feature        | Basic Auth | OAuth 2.0 | JWT  |
+|---------------|-----------|----------|------|
+| **Security**   | Low       | High     | Medium-High |
+| **Stateless**  | No        | Yes      | Yes |
+| **Token Expiry** | No      | Yes      | Yes |
+| **Ease of Use** | Easy     | Complex  | Moderate |
+| **Use Case**  | Internal APIs | Third-party access | API authentication |
+
+Each method has its place, depending on the security needs and architecture of the system. Would you like an example implementation of one? 🚀
+
+---
+
+## Interview Question Solutions
+
+---
+
+### Phone Screen 1: Describe the difference between AuthN and AuthZ
+
+✅ **Authentication (AuthN) → "Who are you?"**  
+- Authentication verifies **identity** (e.g., logging in with a username & password).  
+- Example: When you enter your credentials on a website, the system checks if they match a registered user.  
+
+✅ **Authorization (AuthZ) → "What can you do?"**  
+- Authorization determines **what actions or resources** an authenticated user can access.  
+- Example: After logging in, a **regular user** can view their profile, but only an **admin** can modify user roles.  
+
+🔹 **Key Differences:**  
+| Feature         | Authentication (AuthN) | Authorization (AuthZ) |
+|----------------|---------------------|---------------------|
+| **Purpose**     | Verifies identity   | Grants permissions |
+| **Question**    | "Who are you?"       | "What can you access?" |
+| **Example**     | Login with email & password | Checking if user can delete a post |
+| **Techniques**  | Passwords, OAuth, JWT | Role-based access (RBAC), API permissions |
+
+---
+
+### Phone Screen 2: What is stateful vs. stateless Authentication
+
+### On-Site 1: How do you typically handle authentication in Node.js? hlibrary do you use?**  
+
+**Handling Authentication in Node.js:**  
+1. **Using Passport.js (Most Common Approach)**  
+   - Passport.js is a popular middleware for authentication in Express.js apps.  
+   - Supports multiple strategies (Local, OAuth, JWT).  
+   - Example:
+     ```javascript
+     const passport = require('passport');
+     const LocalStrategy = require('passport-local').Strategy;
+
+     passport.use(new LocalStrategy(
+       function(username, password, done) {
+         User.findOne({ username: username }, function(err, user) {
+           if (err) return done(err);
+           if (!user) return done(null, false, { message: 'Incorrect username.' });
+           if (!user.verifyPassword(password)) return done(null, false, { message: 'Incorrect password.' });
+           return done(null, user);
+         });
+       }
+     ));
+     ```
+
+2. **JWT-Based Authentication (Stateless, API-Friendly)**  
+   - Uses **jsonwebtoken (JWT)** library.  
+   - Ideal for securing REST APIs.  
+   - Example:
+     ```javascript
+     const jwt = require('jsonwebtoken');
+     const secretKey = 'yourSecretKey';
+
+     function generateToken(user) {
+       return jwt.sign({ id: user._id, role: user.role }, secretKey, { expiresIn: '1h' });
+     }
+     ```
+
+3. **Session-Based Authentication (Express-Session & Cookies)**  
+   - Stores session in memory or a database.  
+   - Example:
+     ```javascript
+     const session = require('express-session');
+     app.use(session({ secret: 'yourSecretKey', resave: false, saveUninitialized: true }));
+     ```
+
+**Best Library to Use?**  
+- **Passport.js** → When supporting multiple auth strategies (OAuth, JWT, Local, etc.).  
+- **jsonwebtoken (JWT)** → For API authentication (stateless, token-based).  
+- **express-session** → For web apps that require sessions (stateful).  
+
+---
+
+### On-Site 2: Describe how OAuth works
+
+✅ **OAuth (Open Authorization) → Secure, third-party authentication and authorization.**  
+
+### How It Works (OAuth 2.0 Flow):
+1. **User Requests Access** → A user clicks “Sign in with Google.”  
+2. **Authorization Server Prompts for Consent** → Google asks, "Do you allow this app to access your profile?"  
+3. **User Grants Access** → If the user agrees, Google redirects them back to the app with an **Authorization Code**.  
+4. **App Requests Access Token** → The app exchanges the Authorization Code for an **Access Token**.  
+5. **App Uses Access Token** → The app sends the token with API requests to fetch user data.  
+
+### Example OAuth Request (Exchanging Code for Token)
+```http
+POST https://oauth2.googleapis.com/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=yourClientID
+&client_secret=yourClientSecret
+&code=authorizationCode
+&grant_type=authorization_code
+&redirect_uri=yourRedirectURI
+```
+
+### OAuth Grant Types (Different Ways OAuth Works)
+| Grant Type         | Use Case |
+|--------------------|---------|
+| **Authorization Code** | Most secure, used for web apps (redirects user to provider). |
+| **Implicit Grant** | Deprecated, used for single-page apps (no backend exchange). |
+| **Client Credentials** | Used for machine-to-machine authentication (e.g., API integrations). |
+| **Password Grant** | Not recommended, but allows direct exchange of username/password. |
+
+🔹 **Key Takeaways:**  
+- OAuth **allows apps to access user data without exposing passwords**.  
+- The **Access Token** grants limited access to user data, reducing security risks.  
+- OAuth is commonly used by Google, Facebook, GitHub for third-party authentication.  
+
+---
+
+### Summary of All Questions
+
+| Question | Key Concept |
+|----------|------------|
+| **AuthN vs. AuthZ** | AuthN = Who are you? / AuthZ = What can you do? |
+| **Node.js Authentication** | Use Passport.js, JWT, or Sessions for handling user authentication. |
+| **How OAuth Works** | Secure, delegated authentication via Access Tokens. |
+
+Would you like code examples for any of these in more detail? 🚀
