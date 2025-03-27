@@ -2392,6 +2392,98 @@ Each method has its place, depending on the security needs and architecture of t
 
 ---
 
+## Password-less Authentication, Multi-Factor Authentication, and Common Authentication Tools
+
+---
+
+### 1. Password-less Authentication
+
+✅ **What is it? Anything that is unique to the user**  
+Password-less authentication allows users to log in **without using a traditional password**. Instead, it uses **a one-time link, a verification code, biometrics, or hardware tokens** to authenticate users.  
+
+✅ **How It Works:**  
+1. **User enters their identifier** (e.g., email or phone number).  
+2. **System sends a one-time code or magic link** (via email, SMS, or an authenticator app).  
+3. **User verifies by clicking the link or entering the code**.  
+4. **If valid, access is granted**, and an authentication token (e.g., JWT, session) is issued.  
+
+✅ **Common Methods:**  
+| Method | Example |
+|--------|---------|
+| **Email Magic Link** | Click a login link sent via email. |
+| **One-Time Password (OTP)** | Enter a 6-digit code sent via SMS or email. |
+| **Biometrics** | Fingerprint, Face ID (device-based). |
+| **Hardware Tokens** | YubiKey, WebAuthn (FIDO2). |
+
+✅ **Pros & Cons:**  
+✅ No weak/stolen passwords to exploit.  
+✅ Reduces phishing risks.  
+✅ Better user experience (no need to remember passwords).  
+❌ If an attacker intercepts OTPs (e.g., SIM swap attack), security can be compromised.  
+❌ If email-based, relies on **email security**, which can also be vulnerable.  
+
+---
+
+### 2. Multi-Factor Authentication (MFA)
+
+✅ **What is it?**  
+Multi-Factor Authentication (MFA) **adds an extra layer of security** by requiring users to verify their identity using at least two different factors.  
+
+✅ **How It Works:**  
+1. **User enters their password (first factor)**.  
+2. **System requests a second verification method** (e.g., SMS code, authenticator app, biometric scan).  
+3. **User enters the second factor and gains access**.  
+
+✅ **Types of Authentication Factors:**  
+| Factor Type | Example |
+|------------|---------|
+| **Something You Know** | Password, PIN. |
+| **Something You Have** | One-time password (OTP), Security key (YubiKey). |
+| **Something You Are** | Biometric (fingerprint, Face ID). |
+
+✅ **Example MFA Flow (SMS-Based MFA):**  
+1. User logs in with **email & password**.  
+2. System sends a **6-digit OTP via SMS**.  
+3. User enters OTP **to complete authentication**.  
+
+✅ **Pros & Cons:**  
+✅ **Significantly improves security**—even if a password is stolen, access is still blocked.  
+✅ **Commonly used in high-security apps** (banking, enterprise systems).  
+❌ SMS-based MFA is vulnerable to **SIM swapping**.  
+❌ Adds extra steps, which some users find inconvenient.  
+
+🔹 **Best Practice:** Use **app-based MFA (Google Authenticator, Authy)** instead of SMS for better security.  
+
+---
+
+### 3. Common Authentication Tools & Libraries
+
+| **Tool / Library** | **Use Case** | **Best For** |
+|-------------------|-------------|-------------|
+| **Auth0** | Managed authentication | Passwordless, OAuth, SSO, MFA |
+| **Firebase Authentication** | Backend authentication | Mobile & web apps (Google, Apple, Facebook login) |
+| **Okta** | Identity & access management | Enterprise-level authentication |
+| **Keycloak** | Open-source identity provider | Enterprise security, SSO |
+| **Passport.js** | Authentication middleware for Node.js | Local, OAuth, JWT, Google, Facebook login |
+| **jsonwebtoken (JWT)** | Token-based authentication | Stateless authentication for APIs |
+
+✅ **Which One to Use?**  
+- Use **Auth0, Firebase, or Okta** if you want an **easy-to-manage** authentication solution.  
+- Use **Passport.js** if building authentication **inside a Node.js app**.  
+- Use **JWT (jsonwebtoken)** if you need **stateless authentication for APIs**.  
+- Use **Keycloak** for **self-hosted identity and access management**.  
+
+---
+
+### Summary
+| Feature | Key Takeaways |
+|---------|--------------|
+| **Passwordless Authentication** | Uses OTPs, magic links, or biometrics instead of passwords. |
+| **Multi-Factor Authentication (MFA)** | Adds a second layer of security (e.g., OTP, biometric scan). |
+| **Common Auth Tools** | Auth0, Firebase, Okta, Passport.js, JWT, Keycloak. |
+
+Would you like **code examples** for implementing any of these? 🚀
+
 ## Interview Question Solutions
 
 ---
@@ -2791,3 +2883,729 @@ app.listen(3000, () => console.log('Server running on port 3000'));
 | **Password-Less Authentication** | Eliminates password risks; relies on email magic links, OTPs, or biometrics. |
 | **Multi-Factor Authentication (MFA)** | Strengthens security by requiring an extra verification step. |
 | **API Design for Password-Less Login** | Uses magic links with JWT for session management. |  
+
+---
+
+# Testing APIs
+
+## Why Test APIs? (Motivations)
+Several good reasons to have tests on your mind:
+
+- You haven’t thought of everything
+- External dependencies
+- Keep promises (SLAs)
+- Secure your data and business
+- **Proactive** vs. Responsive: Find things before our users do 
+- Quick, confident releases
+
+1. **Ensure Reliability & Stability**  
+   - Detects **bugs early**, preventing failures in production.  
+   - Ensures the API functions correctly across different inputs and conditions.  
+
+2. **Prevent Regressions**  
+   - Helps ensure that **new code changes** do not break existing functionality.  
+   - Automated tests provide **continuous validation**.  
+
+3. **Validate Business Logic**  
+   - Ensures that API responses follow expected **business rules** (e.g., an order cannot be placed with negative pricing).  
+
+4. **Improve Security**  
+   - Helps catch **security vulnerabilities** (e.g., SQL injection, unauthorized access).  
+   - Ensures **proper authentication and authorization** (AuthN & AuthZ).  
+
+5. **Optimize Performance**  
+   - Identifies **slow endpoints** and potential **bottlenecks**.  
+   - Ensures the API can handle **high traffic loads**.  
+
+6. **Improve Documentation & Maintainability**  
+   - Well-tested APIs help **document expected behavior** for developers.  
+   - Tests act as **living documentation**, making it easier for teams to maintain the API.  
+
+---
+
+### What Do We Test in APIs?
+
+| **Category** | **What to Test** | **Example** |
+|-------------|----------------|------------|
+| **Functional Testing** | Verify API behavior & responses | Sending a `POST /users` request should create a new user. |
+| **Validation Testing** | Ensure correct input handling | A `POST /users` request with a missing email should return `400 Bad Request`. |
+| **Authentication & Authorization** | Ensure security rules are enforced | An unauthenticated user should not access `GET /admin/dashboard`. |
+| **Error Handling** | Validate error messages & status codes | A request to `GET /users/9999` should return `404 Not Found`. |
+| **Performance Testing** | Measure response times & scalability | The API should handle 1000+ requests per second. |
+| **Load Testing** | Simulate heavy traffic to test stability | API should not crash under peak load. |
+| **Security Testing** | Identify vulnerabilities | API should reject SQL injection attempts. |
+
+---
+
+### Example API Test (Using Jest + Supertest for Node.js)
+
+**Install Dependencies**
+```bash
+npm install jest supertest express
+```
+
+**Test Examples**
+```javascript
+const request = require('supertest');
+const app = require('../server'); // Import your API
+
+describe('User API Tests', () => {
+  test('should create a new user', async () => {
+    const response = await request(app)
+      .post('/users')
+      .send({ name: 'John Doe', email: 'john@example.com' });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  test('should return 400 for missing email', async () => {
+    const response = await request(app)
+      .post('/users')
+      .send({ name: 'John Doe' });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Email is required');
+  });
+});
+```
+
+✅ **This ensures:**  
+- API **creates users correctly**.  
+- API **handles errors properly** when missing required fields.  
+
+---
+
+## Unit Testing vs. Integration Testing vs. Functional Testing in APIs
+
+When testing APIs, **Unit Testing, Integration Testing, and Functional Testing** serve different purposes. Here’s how they compare and when to use them:  
+
+---
+
+### 1. Unit Testing (Testing Individual Components in Isolation)
+
+✅ **What It Tests:**  
+- Ensures that **a single function, method, or class works correctly**.  
+- Tests **small, isolated** pieces of logic **without dependencies** (e.g., no database, no external services).  
+
+✅ **Example:**  
+Testing a **utility function** that formats dates in a Node.js API:  
+
+```javascript
+// dateUtils.js (Function to Test)
+function formatDate(date) {
+  return new Date(date).toISOString().split('T')[0]; // Returns YYYY-MM-DD
+}
+
+module.exports = formatDate;
+```
+
+**Unit Test (Jest Example)**
+```javascript
+const formatDate = require('../utils/dateUtils');
+
+test('should format date correctly', () => {
+  expect(formatDate('2025-03-25')).toBe('2025-03-25');
+});
+```
+
+✅ **Best Practices for Unit Testing:**  
+- **Mock dependencies** (e.g., databases, APIs).  
+- Write **small, fast tests** with **clear assertions**.  
+- Use **test-driven development (TDD)** for API logic.  
+
+✅ **Tools:**  
+- **Jest** (Node.js), **JUnit** (Java), **PyTest** (Python)  
+
+✅ **When to Use It:**  
+- Testing **pure functions, validation logic, helper utilities**.  
+- Ensuring **edge cases** (e.g., handling `null` values, incorrect inputs).  
+
+---
+
+### 2. Integration Testing (Testing Multiple Components Together)
+
+✅ **What It Tests:**  
+- Ensures that **different parts of the system work together** (e.g., API + database).  
+- Verifies **correct interactions** between controllers, services, and databases.  
+
+✅ **Example:**  
+Testing an API **that interacts with a database**.  
+
+#### Express API Route (To Be Teste
+```javascript
+const express = require('express');
+const db = require('./database'); // Simulated database
+const app = express();
+
+app.use(express.json());
+
+app.post('/users', async (req, res) => {
+  const { name, email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  const user = await db.createUser({ name, email });
+  res.status(201).json(user);
+});
+
+module.exports = app;
+```
+
+**Integration Test (Supertest + Jest)**
+```javascript
+const request = require('supertest');
+const app = require('../app');
+const db = require('../database');
+
+// Mock database interactions
+jest.mock('../database', () => ({
+  createUser: jest.fn().mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com' })
+}));
+
+test('should create a new user', async () => {
+  const response = await request(app)
+    .post('/users')
+    .send({ name: 'John Doe', email: 'john@example.com' });
+
+  expect(response.status).toBe(201);
+  expect(response.body).toHaveProperty('id');
+  expect(db.createUser).toHaveBeenCalled(); // Ensures DB interaction occurred
+});
+```
+
+✅ **Best Practices for Integration Testing:**  
+- Use **mock databases** (e.g., SQLite in-memory, MongoDB in-memory).  
+- Verify **API calls, database queries, and response correctness**.  
+- Run tests **in a controlled environment** (e.g., Docker containers).  
+
+✅ **Tools:**  
+- **Supertest (Node.js)**, **RestAssured (Java)**, **PyTest (Python)**  
+
+✅ **When to Use It:**  
+- Verifying **database queries** and **service-to-service communication**.  
+- Testing **middleware, authentication, API routes**.  
+
+---
+
+### 3. Functional Testing (End-to-End API Testing)
+
+✅ **What It Tests:**  
+- Ensures that the **API behaves as expected from a user perspective**.  
+- Covers **endpoints, request/response handling, and business logic**.  
+
+✅ **Example:**  
+Testing if a **user authentication flow works correctly**.  
+
+#### Functional Test (Postman / Jest + Supertest)
+```javascript
+test('should return 401 for unauthorized user', async () => {
+  const response = await request(app).get('/profile');
+  expect(response.status).toBe(401);
+});
+```
+
+✅ **Best Practices for Functional Testing:**  
+- **Test real-world scenarios** (e.g., login, purchase flow, checkout process).  
+- Ensure **correct status codes and response formats**.  
+- Use **API mocks or staging environments** when needed.  
+
+✅ **Tools:**  
+- **Postman, Newman (CLI for Postman), Cypress, Selenium (for UI + API)**  
+
+✅ **When to Use It:**  
+- Testing **business logic and API workflows**.  
+- Ensuring API responses **match expectations for real users**.  
+
+---
+
+## Comparison Table: Unit vs. Integration vs. Functional Testing
+
+| **Test Type** | **What It Tests** | **Example Tools** | **Scope** | **Use Case** |
+|--------------|------------------|----------------|---------|-----------|
+| **Unit Testing** | Individual functions, methods | Jest, Mocha, JUnit | Small | Pure functions, utilities, validation logic |
+| **Integration Testing** | Interaction between modules (API ↔ DB) | Supertest, PyTest, RestAssured | Medium | API calls, database queries, authentication |
+| **Functional Testing** | Entire API behavior | Postman, Cypress, Newman | Large | User authentication, business logic validation |
+
+---
+
+**Final Takeaways**
+- **Unit Tests** → Isolate & test **individual functions** for correctness.  
+- **Integration Tests** → Verify **API interactions with databases & services**.  
+- **Functional Tests** → Ensure the **API behaves correctly for end users**.  
+
+Would you like **real-world CI/CD integration examples** for running these tests? 🚀
+
+### Summary
+
+| **Motivation for API Testing** | **What We Test** |
+|--------------------------------|------------------|
+| Ensure reliability & prevent regressions | Functional behavior |
+| Improve security & performance | Authentication & error handling |
+| Validate business logic | Performance & load testing |
+
+--
+
+## Load Testing, Reliability Testing, and Security Testing in APIs  
+
+Each of these testing types helps ensure an API performs well under stress, remains stable over time, and is protected against security threats.  
+
+---
+
+### 1. Load Testing (Performance Under Heavy Traffic)  
+
+✅ **What It Tests:**  
+- Determines how an API **handles high traffic volumes**.  
+- Identifies **bottlenecks** and **performance limits** (e.g., max concurrent users).  
+
+✅ **How It Works:**  
+1. Simulate **multiple users** making concurrent API requests.  
+2. Measure **response times, error rates, and throughput**.  
+3. Identify **at what point the system slows down or crashes**.  
+
+✅ **Example Load Test (Using k6)**  
+**Install k6:**  
+```bash
+brew install k6  # macOS
+choco install k6  # Windows
+```
+
+**Run Load Test (100 Users for 30 Seconds)**  
+```javascript
+import http from 'k6/http';
+import { check } from 'k6';
+
+export let options = {
+  vus: 100, // Virtual users
+  duration: '30s', // Test duration
+};
+
+export default function () {
+  let res = http.get('https://api.example.com/products');
+  check(res, { 'status was 200': (r) => r.status === 200 });
+}
+```
+
+✅ **Best Practices for Load Testing:**  
+- Define **acceptable response times** (e.g., API should respond < 200ms).  
+- Simulate **different types of loads** (gradual increase, sudden spikes).  
+- Test **in a staging environment** to avoid affecting production.  
+
+✅ **Tools:**  
+- **k6, Apache JMeter, Gatling, Locust**  
+
+✅ **When to Use It:**  
+- Before a **major release** to check if the API can handle expected traffic.  
+- For **high-traffic APIs** (e.g., e-commerce, ticketing systems).  
+
+---
+
+### 2. Reliability Testing (Ensuring API Stability Over Time)
+
+✅ **What It Tests:**  
+- Verifies that an API **remains stable over an extended period**.  
+- Identifies **memory leaks, crashes, and unexpected failures**.  
+
+✅ **How It Works:**  
+1. Run API requests **continuously for hours or days**.  
+2. Monitor **memory consumption, CPU usage, and error rates**.  
+3. Ensure the system **recovers gracefully** from failures.  
+
+✅ **Example Reliability Test (Using Locust)**  
+Locust is a Python-based load-testing tool that can simulate **continuous API requests**.  
+
+**Install Locust:**  
+```bash
+pip install locust
+```
+
+**Run a Long-Term API Test (Simulating 50 Users for 1 Hour)**  
+```python
+from locust import HttpUser, task
+
+class ReliabilityTest(HttpUser):
+    @task
+    def test_api(self):
+        self.client.get("/health-check")
+
+# Run with: locust -f reliability_test.py --run-time 1h
+```
+
+✅ **Best Practices for Reliability Testing:**  
+- Simulate **real-world traffic patterns** (not just constant requests).  
+- Use **chaos engineering** (e.g., randomly kill API instances to test recovery).  
+- Track **API uptime** using monitoring tools (Datadog, Prometheus).  
+
+✅ **Tools:**  
+- **Locust, Chaos Monkey (Netflix), Prometheus (Monitoring), Datadog**  
+
+✅ **When to Use It:**  
+- Before launching **mission-critical APIs**.  
+- For **APIs that need 24/7 uptime** (banking, healthcare, etc.).  
+
+---
+
+### 3. Security Testing (Identifying Vulnerabilities & Protecting API Data)
+
+✅ **What It Tests:**  
+- Detects **security flaws** (e.g., SQL injection, broken authentication).  
+- Ensures **data protection** (encryption, authorization checks).  
+
+✅ **Common API Security Issues:**  
+| Issue | Description | Example |
+|-------|------------|---------|
+| **Broken Authentication** | Weak or missing login protections | Login without rate limiting |
+| **SQL Injection** | Malicious input manipulates DB queries | `GET /users?id=1 OR 1=1` |
+| **Insecure Data Storage** | Sensitive data is exposed | API returns passwords in plaintext |
+| **Improper Authorization** | Unauthorized users access restricted data | User A can view User B’s orders |
+
+✅ **How to Test API Security?**  
+
+1. **Use OWASP ZAP for Automated Scanning**  
+```bash
+zap-baseline.py -t https://api.example.com
+```
+
+2. **Manually Test for SQL Injection (Example in Postman)**  
+Send this request:  
+```http
+GET /users?id=1' OR '1'='1
+```
+If the API **returns all users**, it’s vulnerable!  
+
+3. **Check for Unprotected Endpoints**  
+- Try accessing **admin-only routes** as a regular user.  
+- Ensure **API tokens (JWTs, API keys) are required** for sensitive actions.  
+
+✅ **Best Practices for Security Testing:**  
+- **Use rate limiting** to prevent brute-force attacks.  
+- **Encrypt sensitive data** (passwords, tokens).  
+- **Scan dependencies** for vulnerabilities (`npm audit`, `snyk`).  
+
+✅ **Tools:**  
+- **OWASP ZAP, Burp Suite, Postman Security Checks, Snyk**  
+
+✅ **When to Use It:**  
+- Before an API **goes live** to ensure security best practices are followed.  
+- Regularly in **CI/CD pipelines** to catch new security risks.  
+
+---
+
+### Comparison Table: Load Testing vs. Reliability Testing vs. Security Testing**  
+
+| **Test Type** | **What It Checks** | **Best Tools** | **When to Use** |
+|--------------|-----------------|------------|-------------|
+| **Load Testing** | Handles **high traffic loads** | k6, JMeter, Gatling | Before a launch or major traffic spike |
+| **Reliability Testing** | Ensures **API uptime over time** | Locust, Chaos Monkey | Mission-critical systems |
+| **Security Testing** | Identifies **vulnerabilities** | OWASP ZAP, Burp Suite | Before going live & in CI/CD |
+
+---
+
+### Final Takeaways 
+✅ **Load Testing** → Simulates **high traffic loads** to check API performance.  
+✅ **Reliability Testing** → Ensures **long-term stability** (memory leaks, crash handling).  
+✅ **Security Testing** → Identifies **vulnerabilities** (SQL injection, broken authentication).  
+
+Would you like **an automated CI/CD pipeline** that includes all three types of testing? 🚀
+
+### Purpose of Mocks in API Testing
+
+In API testing, **mocks** (or mock APIs) are simulated versions of real APIs that emulate their behavior, allowing developers and testers to interact with them as if they were the actual services. Here's a detailed breakdown:
+
+1. **Isolate Components**: Test specific parts of an application (e.g., frontend) without relying on backend APIs or external services.
+2. **Parallel Development**: Enable teams to work independently (e.g., frontend and backend teams) by simulating unimplemented APIs.
+3. **Scenario Simulation**: Mimic edge cases (errors, timeouts, rate limits) or specific responses (success, failure) to validate application behavior.
+4. **Reduce Dependencies**: Avoid flaky tests caused by unstable third-party APIs or environments.
+5. **Cost/Resource Savings**: Prevent hitting paid
+
+**What do we mock?**
+- Functions 
+- Data 
+- Dependencies
+
+---
+
+## Phone Screen Software Engineering Questions & Answers**  
+
+---
+
+### 1. What framework(s) do you use when testing?
+
+✅ **Popular Testing Frameworks & When to Use Them:**  
+
+| Framework | Best For | Language |
+|-----------|---------|----------|
+| **Jest** | Unit & integration testing, snapshot testing | JavaScript (Node.js, React) |
+| **Mocha + Chai** | Flexible test runner with an assertion library | JavaScript (Node.js) |
+| **Jasmine** | BDD-style testing | JavaScript |
+| **JUnit** | Unit testing for backend logic | Java (Spring Boot) |
+| **PyTest** | Simple and powerful test automation | Python |
+| **RSpec** | BDD for Ruby | Ruby |
+
+✅ **Which One to Use?**  
+- **Jest** → Best for **Node.js & React projects** (built-in assertions, easy setup).  
+- **Mocha + Chai** → Good for flexible testing setups with custom assertions.  
+- **JUnit** → Best for **Java apps** (Spring Boot, Android).  
+- **PyTest** → Ideal for **Python projects** (easy test discovery).  
+
+---
+
+### 2. Briefly explain what is code coverage.
+
+✅ **What It Is:**  
+Code coverage measures **how much of your code is executed** by tests. It helps identify **uncovered code paths**, ensuring better reliability.  
+
+✅ **Common Coverage Metrics:**  
+| Metric | Meaning |
+|--------|---------|
+| **Function Coverage** | % of functions tested |
+| **Statement Coverage** | % of statements executed |
+| **Branch Coverage** | % of control flow branches tested (`if`/`else`) |
+| **Line Coverage** | % of total lines executed |
+
+✅ **Example: Code Coverage in Jest**  
+Run tests with coverage report:  
+```bash
+jest --coverage
+```
+Example Output:  
+```
+----------------|----------|----------|----------|
+File            | % Stmts  | % Branch | % Funcs |
+----------------|----------|----------|----------|
+app.js         | 100%     | 100%     | 100%    |
+utils.js       | 80%      | 60%      | 70%     |
+----------------|----------|----------|----------|
+```
+✅ **Best Practice:** Aim for **80%+ coverage**, but focus on **critical paths, not 100%**.  
+
+---
+
+### 3. What is an assertion library?
+
+✅ **What It Is:**  
+An assertion library provides **functions to compare expected vs actual values** in tests.  
+
+✅ **Example Assertion in Jest:**  
+```javascript
+test('sum function should add two numbers', () => {
+  expect(sum(2, 3)).toBe(5); // Assertion
+});
+```
+
+✅ **Popular Assertion Libraries:**  
+| Library | Works With | Example Assertion |
+|---------|------------|-------------------|
+| **Chai** | Mocha | `expect(value).to.equal(5);` |
+| **Jest (built-in)** | Jest | `expect(value).toBe(5);` |
+| **Assert (Node.js)** | Node.js | `assert.strictEqual(value, 5);` |
+
+✅ **Best Practice:**  
+Use **descriptive assertions** (e.g., `expect(user.name).toEqual('Alice')`) to improve test clarity.  
+
+---
+
+## Summary of All Questions
+
+| Question | Key Takeaways |
+|----------|--------------|
+| **Testing Frameworks** | Jest (JS), Mocha+Chai (Node), JUnit (Java), PyTest (Python). |
+| **Code Coverage** | Measures % of tested code (statements, branches, functions). |
+| **Assertion Library** | Provides functions to compare expected vs actual values (e.g., Jest, Chai). |
+
+---
+
+## On-Site Software Engineering Questions & Answers
+
+---
+
+### 1. In Unit Testing, What Are Some Quantitative Metrics for Testing a Codebase?
+
+✅ **Quantitative Metrics for Testing:**  
+
+| Metric | Definition | Why It Matters |
+|--------|-----------|---------------|
+| **Code Coverage** | % of code executed by tests (statements, branches, functions). | Higher coverage means fewer untested code paths. |
+| **Test Pass Rate** | % of test cases that pass. | Ensures reliability and catches regressions. |
+| **Mutation Score** | Measures how well tests detect code changes. | Higher scores mean more effective tests. |
+| **Cyclomatic Complexity** | Number of independent paths in the code. | Lower complexity improves maintainability and testability. |
+| **Time to Run Tests** | Measures execution time of test suites. | Faster tests mean quicker feedback loops. |
+
+✅ **Best Practice:** Aim for **80%+ code coverage** but focus on **testing critical paths rather than achieving 100% coverage**.  
+
+---
+
+### 2. How Would You Find a Memory Leak?
+
+✅ **What is a Memory Leak?**  
+A memory leak occurs when memory is allocated but never released, leading to increasing resource consumption and potential crashes.  
+
+✅ **Steps to Detect Memory Leaks:**  
+
+1. **Monitor Memory Usage Over Time**  
+   - Use **`top` or `htop` (Linux)** to check memory consumption.  
+   - In **Node.js**, use `process.memoryUsage()`.  
+
+2. **Use Profiling Tools**  
+   - **Chrome DevTools Memory Tab** (for web apps).  
+   - **Node.js: `--inspect` + Chrome DevTools** (`node --inspect index.js`).  
+   - **Valgrind** (for C/C++ apps).  
+
+3. **Heap Snapshot Analysis**  
+   - Take **heap dumps** and compare snapshots to see objects growing over time.  
+   - Use `pprof` for Go applications.  
+
+4. **Use Garbage Collection Logs**  
+   - In Node.js, enable GC tracking:  
+     ```bash
+     node --expose-gc app.js
+     ```  
+   - In Java, use JVM flags:  
+     ```bash
+     java -XX:+UseG1GC -XX:+PrintGCDetails -jar myapp.jar
+     ```
+
+5. **Check for Unreleased References**  
+   - Watch for **global variables**, **event listeners not removed**, and **circular references**.  
+
+✅ **Best Practice:**  
+- Use **WeakMaps** for caching.  
+- Always clean up event listeners (`removeEventListener`).  
+- Run **automated performance tests** to catch leaks before deployment.  
+
+---
+
+### 3. Explain the Steps in Continuous Integration (CI).
+
+✅ **What is CI?**  
+Continuous Integration (CI) automates the process of **building, testing, and validating code changes** before merging into production.  
+
+✅ **Steps in a CI Pipeline:**  
+
+1. **Code Commit**  
+   - Developers push code to a version control system (GitHub, GitLab, Bitbucket).  
+
+2. **Automated Build**  
+   - A CI/CD tool (Jenkins, GitHub Actions, GitLab CI) triggers a build.  
+
+3. **Run Unit Tests & Code Analysis**  
+   - Executes unit tests (e.g., Jest, JUnit, PyTest).  
+   - Runs static analysis (e.g., ESLint, SonarQube).  
+
+4. **Integration & Functional (E2E) Tests**  
+   - API tests using Postman or Cypress.  
+   - UI tests using Selenium.  
+
+5. **Security & Vulnerability Scans**  
+   - Dependency checks using tools like **Snyk** or **OWASP Dependency Check**.  
+
+6. **Generate Artifacts (Optional)**  
+   - Creates **build artifacts** (JAR files, Docker images) for later deployment.  
+
+7. **Deploy to Staging (Optional)**  
+   - If all tests pass, the code is **automatically deployed to a staging environment**.  
+
+✅ **Best Practice:**  
+- Use **feature flags** to test new functionality before full rollout.  
+- Automate rollback strategies if a build fails.  
+- Ensure CI runs in **parallel** for faster execution.  
+
+---
+
+
+## Summary of All Questions & Answers
+
+| Question | Key Takeaways |
+|----------|--------------|
+| **Quantitative Metrics for Testing** | Code coverage, mutation score, test pass rate, complexity. |
+| **Finding Memory Leaks** | Use profiling tools (Chrome DevTools, Node.js `--inspect`), heap snapshots, and GC monitoring. |
+| **Steps in CI** | Code commit → Automated build → Run tests → Security scans → Deploy. |
+
+## On-Site Software Engineering Questions & Answers
+
+### Phone Screen 1. What is Dependency Injection?
+**Dependency Injection (DI)** is a design pattern where an object receives its dependencies (e.g., services, components) from an external source rather than creating them internally. This promotes loose coupling, testability, and maintainability.  
+
+#### Key Points:  
+- **Decoupling**: Components rely on abstractions (interfaces) rather than concrete implementations.  
+- **External Management**: Dependencies are "injected" via constructors, setters, or method parameters.  
+- **Benefits**:  
+  - Easier unit testing (e.g., injecting mock dependencies).  
+  - Reusable, modular code.  
+  - Centralized control over dependency lifetimes (e.g., singletons).  
+
+**Example**:  
+```java  
+// Without DI  
+class UserService {  
+    private UserRepository userRepo = new UserRepository(); // Tight coupling  
+}  
+
+// With DI  
+class UserService {  
+    private UserRepository userRepo;  
+    public UserService(UserRepository userRepo) { // Dependency injected  
+        this.userRepo = userRepo;  
+    }  
+}  
+```  
+
+---
+
+### Phone Screen 2: What Are Pretenders in Tests?
+"Pretenders" (often called **test doubles**) are simulated objects used in testing to mimic the behavior of real dependencies. They isolate the system under test (SUT) from external systems or complex logic.  
+
+#### Types of Test Doubles:  
+- **Mocks**: Preprogrammed to verify interactions (e.g., ensuring a method was called).  
+- **Stubs**: Provide predefined responses to method calls.  
+- **Fakes**: Simplified, in-memory implementations (e.g., a fake database).  
+- **Spies**: Record interactions for later inspection (e.g., tracking method calls).  
+
+**Example**:  
+```javascript  
+// Using a mock for a payment gateway in a test  
+const mockPaymentGateway = {  
+  charge: jest.fn(() => Promise.resolve({ success: true })) // Mock function  
+};  
+
+test("processPayment calls charge method", async () => {  
+  await processPayment(mockPaymentGateway, 100);  
+  expect(mockPaymentGateway.charge).toHaveBeenCalledWith(100);  
+});  
+```  
+
+---
+
+### On Site 1: Inversion of Control (IoC) and Decoupling
+**Inversion of Control (IoC)** is a principle where control over object creation and flow is delegated to a framework or container, rather than being managed by the components themselves. Dependency Injection is a common implementation of IoC.  
+
+#### Relationship to Decoupling:  
+- **Decentralized Control**: Components don’t instantiate dependencies directly. Instead, an IoC container (e.g., Spring, .NET Core DI) manages their lifecycle.  
+- **Abstraction Over Concretion**: Dependencies are defined via interfaces, allowing interchangeable implementations.  
+- **Layered Systems**: Layers (e.g., UI, Business Logic, Data Access) interact through abstractions, reducing tight coupling.  
+
+**Example**:  
+```csharp  
+// IoC Container Setup (e.g., in .NET Core)  
+services.AddScoped<IUserRepository, UserRepository>(); // Interface mapped to concrete class  
+
+// Class uses injected interface  
+class UserController {  
+    private IUserRepository _userRepo;  
+    public UserController(IUserRepository userRepo) { // IoC provides implementation  
+        _userRepo = userRepo;  
+    }  
+}  
+```  
+
+**Benefits of IoC for Decoupling:**
+- **Flexibility**: Swap implementations (e.g., mock vs. real database) without code changes.  
+- **Testability**: Inject test doubles for isolated unit tests.  
+- **Maintainability**: Changes to one component don’t ripple through the system.  
+
+---
+
+### Summary
+- **Dependency Injection**: Delegates dependency management externally to reduce coupling.  
+- **Pretenders (Test Doubles)**: Simulate dependencies to isolate tests.  
+- **Inversion of Control**: Centralizes control to enable modular, decoupled architectures.  
+
