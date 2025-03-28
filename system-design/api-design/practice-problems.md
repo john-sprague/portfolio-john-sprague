@@ -532,7 +532,7 @@ describe('API Endpoints', () => {
 
 ---
 
-### 1. Marketplace
+**1. Marketplace**
 **Endpoints**:  
 - `DELETE /items/:id` (remove non-compliant items)  
 - `PATCH /items/:id/sold` (mark item as sold)  
@@ -563,7 +563,7 @@ describe('API Endpoints', () => {
 
 ---
 
-### 2. Playlists
+**2. Playlists**
 **Endpoints**:  
 - `POST /playlists` (create)  
 - `PUT /playlists/:id` (update)  
@@ -584,7 +584,7 @@ describe('API Endpoints', () => {
 
 ---
 
-### 3. Homeworks
+**Homeworks**
 **Endpoints**:  
 - `POST /homeworks` (create homework)  
 - `GET /homeworks/:id` (view homework)  
@@ -779,3 +779,471 @@ curl -u seller1:sellerpass -X PUT -H "Content-Type: application/json" -d '{"name
 3. **ABAC**: Compares the user’s `id` against the resource’s `ownerId` attribute.
 4. **Basic Auth**: Validates credentials against the mock user database.
 
+# Practice Problem 3: 
+
+  Write a GraphQL server for the Playlists app, you can use a hardcoded list for songs and albums, and an in-memory list for playlists.
+
+```javascript 
+const { ApolloServer, gql } = require('apollo-server');
+
+// Sample hardcoded data
+const songs = [
+  { id: '1', title: 'Bohemian Rhapsody', artist: 'Queen', duration: 354, albumId: '1' },
+  { id: '2', title: 'Another One Bites the Dust', artist: 'Queen', duration: 215, albumId: '1' },
+  { id: '3', title: 'Billie Jean', artist: 'Michael Jackson', duration: 294, albumId: '2' },
+  { id: '4', title: 'Beat It', artist: 'Michael Jackson', duration: 258, albumId: '2' },
+  { id: '5', title: 'Sweet Child O\' Mine', artist: 'Guns N\' Roses', duration: 356, albumId: '3' },
+  { id: '6', title: 'Welcome to the Jungle', artist: 'Guns N\' Roses', duration: 275, albumId: '3' },
+];
+
+const albums = [
+  { id: '1', title: 'A Night at the Opera', artist: 'Queen', year: 1975 },
+  { id: '2', title: 'Thriller', artist: 'Michael Jackson', year: 1982 },
+  { id: '3', title: 'Appetite for Destruction', artist: 'Guns N\' Roses', year: 1987 },
+];
+
+let playlists = [
+  { 
+    id: '1', 
+    name: 'Classic Rock', 
+    songs: ['1', '5', '6'], 
+    createdAt: new Date('2023-01-15').toISOString() 
+  },
+  { 
+    id: '2', 
+    name: '80s Hits', 
+    songs: ['2', '3', '4'], 
+    createdAt: new Date('2023-02-20').toISOString() 
+  },
+];
+
+// GraphQL type definitions
+const typeDefs = gql`
+  type Song {
+    id: ID!
+    title: String!
+    artist: String!
+    duration: Int! # in seconds
+    album: Album!
+  }
+
+  type Album {
+    id: ID!
+    title: String!
+    artist: String!
+    year: Int!
+    songs: [Song!]!
+  }
+
+  type Playlist {
+    id: ID!
+    name: String!
+    songs: [Song!]!
+    createdAt: String!
+    duration: Int! # total duration in seconds
+  }
+
+  type Query {
+    songs: [Song!]!
+    song(id: ID!): Song
+    albums: [Album!]!
+    album(id: ID!): Album
+    playlists: [Playlist!]!
+    playlist(id: ID!): Playlist
+    searchSongs(query: String!): [Song!]!
+  }
+
+  type Mutation {
+    createPlaylist(name: String!, songIds: [ID!]!): Playlist!
+    addSongToPlaylist(playlistId: ID!, songId: ID!): Playlist!
+    removeSongFromPlaylist(playlistId: ID!, songId: ID!): Playlist!
+    deletePlaylist(id: ID!): Boolean!
+  }
+`;
+
+// Resolvers
+const resolvers = {
+  Query: {
+    songs: () => songs,
+    song: (parent, { id }) => songs.find(song => song.id === id),
+    albums: () => albums,
+    album: (parent, { id }) => albums.find(album => album.id === id),
+    playlists: () => playlists,
+    playlist: (parent, { id }) => playlists.find(playlist => playlist.id === id),
+    searchSongs: (parent, { query }) => {
+      const lowerQuery = query.toLowerCase();
+      return songs.filter(song => 
+        song.title.toLowerCase().includes(lowerQuery) || 
+        song.artist.toLowerCase().includes(lowerQuery)
+      );
+    },
+  },
+
+  Mutation: {
+    createPlaylist: (parent, { name, songIds }) => {
+      const newPlaylist = {
+        id: String(playlists.length + 1),
+        name,
+        songs: songIds,
+        createdAt: new Date().toISOString(),
+      };
+      playlists.push(newPlaylist);
+      return newPlaylist;
+    },
+    
+    addSongToPlaylist: (parent, { playlistId, songId }) => {
+      const playlist = playlists.find(p => p.id === playlistId);
+      if (!playlist) throw new Error('Playlist not found');
+      
+      if (!playlist.songs.includes(songId)) {
+        playlist.songs.push(songId);
+      }
+      
+      return playlist;
+    },
+    
+    removeSongFromPlaylist: (parent, { playlistId, songId }) => {
+      const playlist = playlists.find(p => p.id === playlistId);
+      if (!playlist) throw new Error('Playlist not found');
+      
+      playlist.songs = playlist.songs.filter(id => id !== songId);
+      return playlist;
+    },
+    
+    deletePlaylist: (parent, { id }) => {
+      playlists = playlists.filter(playlist => playlist.id !== id);
+      return true;
+    },
+  },
+
+  Song: {
+    album: (parent) => albums.find(album => album.id === parent.albumId),
+  },
+
+  Album: {
+    songs: (parent) => songs.filter(song => song.albumId === parent.id),
+  },
+
+  Playlist: {
+    songs: (parent) => parent.songs.map(songId => songs.find(song => song.id === songId)),
+    duration: (parent) => {
+      return parent.songs.reduce((total, songId) => {
+        const song = songs.find(s => s.id === songId);
+        return total + (song ? song.duration : 0);
+      }, 0);
+    },
+  },
+};
+
+// Create Apollo Server
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  introspection: true, // Enable for development
+});
+
+// Start the server
+server.listen().then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
+});
+```
+
+**Example Query**
+
+```javascript 
+//Get all playlists with their songs and durations
+query GetPlaylists {
+  playlists {
+    id
+    name
+    duration
+    songs {
+      title
+      artist
+      duration
+    }
+  }
+}
+
+//Create a new playlist
+mutation CreatePlaylist {
+  createPlaylist(name: "My New Mix", songIds: ["1", "3"]) {
+    id
+    name
+    songs {
+      title
+    }
+  }
+}
+
+//Search for songs
+query SearchSongs {
+  searchSongs(query: "queen") {
+    id
+    title
+    artist
+    album {
+      title
+    }
+  }
+}
+```
+
+# Practice Problem 3: Safeguards against SQL Injections 
+
+# Preventing SQL Injection When Inserting Multiple Items
+
+## 1. Parameterized Queries (Best Approach)
+
+```javascript
+// Safe way to insert multiple items using parameterized queries
+const insertMultipleItemsSafe = (items) => {
+  const placeholders = items.map(() => '(?, ?)').join(', ');
+  const values = items.flatMap(item => [item.name, item.price]);
+  
+  db.run(
+    `INSERT INTO products (name, price) VALUES ${placeholders}`,
+    values,
+    function(err) {
+      if (err) throw err;
+      console.log(`Inserted ${this.changes} rows`);
+    }
+  );
+};
+
+// Example usage:
+const products = [
+  { name: 'Laptop', price: 999.99 },
+  { name: 'Phone', price: 699.99 },
+  { name: 'Tablet', price: 399.99 }
+];
+
+insertMultipleItemsSafe(products);
+```
+
+## 2. Using a Transaction with Prepared Statements
+
+```javascript
+// Even safer with transaction and individual prepared statements
+const insertWithTransaction = async (items) => {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION');
+      
+      const stmt = db.prepare('INSERT INTO products (name, price) VALUES (?, ?)');
+      
+      items.forEach(item => {
+        stmt.run(item.name, item.price, (err) => {
+          if (err) {
+            db.run('ROLLBACK');
+            reject(err);
+          }
+        });
+      });
+      
+      stmt.finalize(err => {
+        if (err) {
+          db.run('ROLLBACK');
+          reject(err);
+        } else {
+          db.run('COMMIT', (err) => {
+            if (err) reject(err);
+            resolve(`Inserted ${items.length} items`);
+          });
+        }
+      });
+    });
+  });
+};
+```
+
+## 3. Using an ORM (Sequelize Example)
+
+```javascript
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory:');
+
+const Product = sequelize.define('Product', {
+  name: { type: DataTypes.STRING, allowNull: false },
+  price: { type: DataTypes.FLOAT, allowNull: false }
+});
+
+// Safe bulk insert with ORM
+const bulkInsertSafe = async (items) => {
+  try {
+    await Product.bulkCreate(items);
+    console.log('Items inserted successfully');
+  } catch (error) {
+    console.error('Error inserting items:', error);
+  }
+};
+
+// Example usage:
+bulkInsertSafe([
+  { name: 'Monitor', price: 249.99 },
+  { name: 'Keyboard', price: 49.99 }
+]);
+```
+
+## 4. Additional Safety Measures
+
+1. **Input Validation**:
+```javascript
+const validateItems = (items) => {
+  return items.every(item => 
+    typeof item.name === 'string' && 
+    typeof item.price === 'number' &&
+    item.name.length <= 255
+  );
+};
+
+if (!validateItems(products)) {
+  throw new Error('Invalid product data');
+}
+```
+
+2. **Sanitization** (as extra precaution):
+```javascript
+const sanitizeInput = (input) => {
+  return input.replace(/[;\-\-]/g, '');
+};
+
+// Apply to each item before insertion
+products.forEach(item => {
+  item.name = sanitizeInput(item.name);
+});
+```
+
+## Key Principles to Remember:
+
+1. **Never concatenate SQL strings** with user input
+2. **Always use parameterized queries** or prepared statements
+3. **Validate all inputs** before they reach the database
+4. **Use transactions** for multiple operations to maintain data integrity
+5. **Consider ORMs** that handle parameterization automatically
+6. **Limit database permissions** - application shouldn't need admin privileges
+
+The first approach (parameterized queries) is generally the best combination of safety and performance for most use cases. The ORM approach provides the highest level of abstraction and safety if you're already using an ORM in your project.
+
+---
+
+# Practice Problem 5: Incremental responses and WebSockets
+  1. Why are incremental responses useful?
+
+  2.  Use WebSockets to create a collaborative web counter, where two different browser tabs can add to a counter, and the total count reflects on all tabs.
+
+
+### **A) Why are incremental responses useful?**
+
+Incremental responses (or streaming/partial responses) are useful for several reasons:
+
+1. **Improved User Experience (UX)**  
+   - Users see data as it loads rather than waiting for the entire response.  
+   - Example: A search bar showing results as they arrive instead of waiting for all matches.
+
+2. **Reduced Perceived Latency**  
+   - Early parts of a response can be processed while the rest is still loading.  
+   - Example: A news feed loading posts one by one instead of all at once.
+
+3. **Efficiency for Large Data**  
+   - Avoids memory overload by processing data in chunks.  
+   - Example: Streaming a large CSV file download instead of loading it all in memory.
+
+4. **Real-Time Updates**  
+   - Enables live updates (e.g., stock prices, chat messages).  
+   - Example: A live sports score updating without page refresh.
+
+5. **Better Error Handling**  
+   - If a request fails midway, partial data is still usable.  
+   - Example: A video buffering in segments rather than failing entirely if interrupted.
+
+---
+
+### **B) WebSocket-Based Collaborative Counter**  
+**Goal:** Two browser tabs increment a counter, and updates reflect in real-time across all tabs.  
+
+#### **Backend (Node.js + WebSocket)**
+```javascript
+// server.js
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
+
+let count = 0;
+
+wss.on('connection', (ws) => {
+  // Send current count to new client
+  ws.send(JSON.stringify({ type: 'INIT', count }));
+
+  ws.on('message', (message) => {
+    const data = JSON.parse(message);
+    if (data.type === 'INCREMENT') {
+      count++;
+      // Broadcast new count to all clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ type: 'UPDATE', count }));
+        }
+      });
+    }
+  });
+});
+
+console.log('WebSocket server running on ws://localhost:8080');
+```
+
+#### **Frontend (HTML + JavaScript)**
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Collaborative Counter</title>
+</head>
+<body>
+  <h1>Count: <span id="counter">0</span></h1>
+  <button id="increment">Add +1</button>
+
+  <script>
+    const counterEl = document.getElementById('counter');
+    const incrementBtn = document.getElementById('increment');
+    
+    // Connect to WebSocket
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'INIT' || data.type === 'UPDATE') {
+        counterEl.textContent = data.count;
+      }
+    };
+
+    incrementBtn.addEventListener('click', () => {
+      ws.send(JSON.stringify({ type: 'INCREMENT' }));
+    });
+  </script>
+</body>
+</html>
+```
+
+#### **How It Works**
+1. **Backend**  
+   - Maintains a global `count` variable.  
+   - Broadcasts updates to all connected clients when a tab increments the count.
+
+2. **Frontend**  
+   - Each tab connects to the WebSocket server.  
+   - Clicking the button sends an `INCREMENT` message.  
+   - All tabs update in real-time when they receive `UPDATE`.
+
+#### **Testing**
+1. Run the server:  
+   ```bash
+   node server.js
+   ```
+2. Open `index.html` in two browser tabs.  
+3. Click the button in one tab → both tabs update simultaneously.
+
+#### **Key Concepts**
+- **WebSockets** enable full-duplex communication (unlike HTTP).  
+- **Real-time sync** avoids polling (no `setInterval` checks).  
+- **No SQL Injection Risk** (no raw queries, just in-memory `count`).  
