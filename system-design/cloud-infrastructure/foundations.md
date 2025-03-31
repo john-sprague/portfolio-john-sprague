@@ -517,6 +517,8 @@ You are asked to improve a company’s current architecture. They noticed when a
     - These tools make it easy to add common features, e.g. “admin” booleans
     - They generate signed tokens, making it a quick solution for most common requirements
 
+--- 
+
 ## Queues in the Cloud
 
 - Move your state into a cloud queue to handle concurrently across instances
