@@ -206,16 +206,16 @@ A want's to say "Yo" to person "B"
 
 **API Schema & Data Model**
 
-**POST/{userID}**
-
-**GET/{userId}** 
+- **POST/{userID}:** Sends a Yo to {userID} from the authorized user
+- **GET/{userId}** Gets Yos sent to the authorized user
 
 **Data Model** 
-Recipient(receiver)
-Sender
-Timestamp
 
-- Composite Key: {recipientID}-{senderID}-{timestamp}
+- Fields
+    - Recipient(receiver)
+    - Sender
+    - Timestamp
+- Composite Key: {recipientID}-{senderID}-{timestamp} (conceptually acts as a primary unique key)
     - Primary Key
 - Partition Key {recipientID}-{senderID}
     - Quick Hash map to "go here" and quickly retrieve all messages
@@ -236,8 +236,6 @@ We'll use a NoSQL Database because
 - Key-Value Datastore is horizontally scaled by sharding data to servers 
 - Sharding is based on hashing the key - key must be high cardinality to avoid hot zone and efficient query
 - **High Cardinality**
-
-
 
 **Why Does This Matter?**
 
