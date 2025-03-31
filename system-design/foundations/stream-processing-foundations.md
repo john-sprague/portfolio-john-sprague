@@ -160,7 +160,7 @@ Being able to identify what type of system is extremely important. What to check
 ## Interview Considerations
 
 - As I’m going through the design, mention things that I can go deeper on. This is one technique to use up more time.
-- I don’t have to know ALL the details, but I should know more than “Use a quadtree in this situation.”
+- I don’t have to know ALL the details, but I should know more than “Use a quad tree in this situation.”
 - The interviewer wants to know what you don’t know.
 - Make a list of 10 things that are most appealing to me:
   - Sharding.
