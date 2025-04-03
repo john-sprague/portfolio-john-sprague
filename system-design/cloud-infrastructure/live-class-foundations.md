@@ -30,8 +30,6 @@
 
 <!-- /code_chunk_output -->
 
-
-
 **Instructor:** Thong Trans
 
 # Cloud Primitives Reviews
@@ -60,9 +58,9 @@
 
 4. **DynamoDB/Key Value Store**
 
-- Key:Value data stores
-- Can horizontally scale 
-- Partition Key/Shard Key 
+- Key:Value data store
+- Can horizontally scale
+- Partition Key/Shard Key
 - Still requires clustered management 
 - Billed on read/writes that we use
 - Indices and composite keys are a big advantage
@@ -70,10 +68,10 @@
 5. **S3/File Storage** 
 
 - Object Storage on Disk
-- Distributed Globally: so you don't have to wait for vide to download from a different country. 
+- Distributed Globally: so you don't have to wait for video to download from a different country. 
 - Pay for traffic and the disk to store the files, but don't have to pay for the traffic. 
 
-6. Simple Queue Service (SQS):
+6. **Simple Queue Service (SQS):**
 
 - **Queue ensures a piece of data will be dequeued exactly one time**  
   - A client **enqueues** a **message** on a **queue** for another client to **dequeue**  
@@ -165,6 +163,8 @@ Here is the extracted text from the image:
     - Generally small scale is more effective on native
     - Large scale projects may see value in time-based billing
 
+---
+
 # System Design Approaches 
 
 - How do I approach a system design using the technologies that's appropriate for the solution. What are the trade-offs. 
@@ -234,14 +234,14 @@ We'll use a NoSQL Database because
 - Google's Bigtable paper is a good overview of how sharding systems work 
 - We partition tables into tablets and annotate them with key ranges
 - Key-Value Datastore is horizontally scaled by sharding data to servers 
-- Sharding is based on hashing the key - key must be high cardinality to avoid hot zone and efficient query
+- Sharding is based on hashing the key - key must be **high cardinality** to avoid hot zone and efficient query
 - **High Cardinality**
 
 **Why Does This Matter?**
 
 - If we construct keys wisely, we can optimize reads
     - Our Yo API lists records for `{recipientID};` the keys then are`{recipientID}-* `
-    - We could filter further: `{recipientID}{senderID}`
+    - We could filter further: `{recipientID}-{senderID}`
 - What if we swapped them?
     - `{senderID}{recipientID) {timestamp}`
     - Lookup would be `*-{recipientID}-*;` two wildcards is naturally harder than one!
@@ -250,22 +250,18 @@ We'll use a NoSQL Database because
     - Imagine indices as another composite key, optimized for a specific lookup
     - The index will filter down to an ID, which we can then lookup trivially
 
-
 **Recap on keys and Indexes (DynamoDB)**
 
-Partition Key and Sort Key
-O Partition Key determines where this data is located in the group of servers
-O Partition Key + Sort Key (Composition Partition Key) groups all data related to a partition key following by Sort Key.
-O In both cases, a row must be uniquely identified by Partition Key or (Partition Key + Sort Key) 
-
-GSI and LSI
-O GSI creates a different set of Partition Key + Sort Key
-O LSI reuses the same partition key but creates different Sort Key
-
-Big Question: What are the query patterns we need?
-(Understanding this question is the key to design efficient database)
+- **Partition Key and Sort Key**
+    - Partition Key determines where this data is located in the group of servers
+    - Partition Key + Sort Key (Composition Partition Key) groups all data related to a partition key following by Sort Key.
+    - In both cases, a row must be uniquely identified by Partition Key or (Partition Key + Sort Key) 
+- **GSI and LSI**
+    - GSI creates a different set of Partition Key + Sort Key
+    - LSI reuses the same partition key but creates different Sort Key
+- **Big Question: What are the query patterns we need?**
+    -(Understanding this question is the key to design efficient database)
 - How to partition for good performance on reads and writes. 
-
 
 **Yo Lambda Function**
 
@@ -274,17 +270,16 @@ Big Question: What are the query patterns we need?
     - For simplicity, we will use one for both GET and POST
     - Can group this into one function if needed. 
 
-
 **Quick Aside: Managing Functions like Microservice**
-Microservice architecture has been popular for a number of years
-    As the number of services increases, so too does the **complexity** of the system **(Tracing, Security, Discoverability, Network Partitions, Compatibility)**
-    How do you manage shared code across the services, and coordinate updates? O Poorly optimized microservice interactions can add a lot of latency
-Creating a function for each endpoint has similar drawbacks
-    If a function needs data from another endpoint, it either needs to reimplement or call it 
-    Creating **shared packages** helps reduce some of the stress of code sharing
-**Distributed Monolith** architecture reasons about code as a **single program**
-    The serverless architecture reduces the value of microservices in general
-    Versioning endpoints can solve some problems, but increase code complexity
+- Microservice architecture has been popular for a number of years
+    - As the number of services increases, so too does the **complexity** of the system **(Tracing, Security, Discoverability, Network Partitions, Compatibility)**
+    - How do you manage shared code across the services, and coordinate updates? O Poorly optimized microservice interactions can add a lot of latency
+- Creating a function for each endpoint has similar drawbacks
+    - If a function needs data from another endpoint, it either needs to reimplement or call it 
+    - Creating **shared packages** helps reduce some of the stress of code sharing
+- **Distributed Monolith** architecture reasons about code as a **single program**
+    - The serverless architecture reduces the value of microservices in general
+    - Versioning endpoints can solve some problems, but increase code complexity
 
 **Review Slides**
 
@@ -312,7 +307,7 @@ Here is the extracted text from the image:
 
 ---
 
-**(REVIEW SLIDES)**
+**(REVIEW SLIDES)** TODO
 
 # Interview Question
 
@@ -348,50 +343,53 @@ Here is the extracted text from the image:
 ---
 
 **Cold Startup Latency**
-How long does it take your app to start up?
-    O Consider connecting to databases, updating configuration data, etc.
-    O Can your app receive traffic at this point?
+- How long does it take your app to start up?
+    - Consider connecting to databases, updating configuration data, etc.
+    - Can your app receive traffic at this point?
 
-Use readychecks, healthchecks, and warmup endpoints
-    O The cloud provider will manage when to scale, and will only send traffic when your instance
+- Use ready-checks, health-checks, and warmup endpoints
+    - The cloud provider will manage when to scale, and will only send traffic when your instance
 says it's ready
-    O This prevents timeouts while waiting for the application to scale
+    - This prevents timeouts while waiting for the application to scale
 
-
+--
 
 ## Hug of Death
 See Slashdot effect
-O Sudden increases in traffic can overwhelm resources; similar to a DDoS
+- Sudden increases in traffic can overwhelm resources; similar to a DDoS
 Most databases have a connection limit based on instance type
-O Although stateless services can scale effectively, some stateful connections may not
+- Although stateless services can scale effectively, some stateful connections may not
 Use a cloud connection pool, e.g. HAProxy to maximize connections across instances Cloud-native datastores usually don't have connection limits
-O Another great reason to consider using DynamoDB or Firestore if you can
+- Another great reason to consider using DynamoDB or Firestore if you can
 
+---
 
 ## Thundering Herd 
 
+---
 
 ## Managing Deployable and Code
 Private git repositories Private artifact registries
-O JAR
-O NPM
-O Docker
-O etc
+- JAR
+- NPM
+- Docker
+- etc
 
+---
 
 ## Managing Secrets
-AWS Secrets Manager
-GCP Secret Manager
-• Encrypt Data
-O Decrypt with app-level framework
-O Allows easy credential rotation without redeploying the service
-O Expensive (6 cents per secret per location) but worth it for large projects
+- AWS Secrets Manager
+- GCP Secret Manager
+- Encrypt Data
+    - Decrypt with app-level framework
+    - Allows easy credential rotation without redeploying the service
+    - Expensive (6 cents per secret per location) but worth it for large projects
 
 
 ## Cloud Logs
-• Usually quickest and easiest way to find root cause of problems
-    O Ensure your logs are helpful! You should be able to tell where the issue is coming from 
-    O console.log('errorrrrrrr!') is not helpful; consider using human-readable codepath name 
+- Usually quickest and easiest way to find root cause of problems
+    - Ensure your logs are helpful! You should be able to tell where the issue is coming from 
+    - console.log('errorrrrrrr!') is not helpful; consider using human-readable codepath name 
 - Most cloud providers offer a console to see logs with ERROR severity        
     - This is useful for seeing frequency of issues and verifying fixes
     - Acknowledge issues you've decided to tackle; close them when they're fixed
@@ -400,13 +398,13 @@ O Expensive (6 cents per secret per location) but worth it for large projects
 
 
 ## Cloud Analytics
-Log events with associated data that can be queried later in reports
-    O Consider adding userID, timestamp, and request ID to make it easy to find related logs 
-We can count logs to use as metrics, too!
-    "How many errors did we have?"
-Use time spans to measure latency and identify slow codepaths
-    O Especially useful in microservice architecture with many downstream calls
-    O These metrics are great to quantify infrastructure improvements, like co-locating databases
+-Log events with associated data that can be queried later in reports
+    - Consider adding userID, timestamp, and request ID to make it easy to find related logs 
+- We can count logs to use as metrics, too!
+    - "How many errors did we have?"
+- Use time spans to measure latency and identify slow codepaths
+    - Especially useful in microservice architecture with many downstream calls
+    - These metrics are great to quantify infrastructure improvements, like co-locating databases
 
 **Stakeholders**
   - Product managers want to know how their product is doing and whether or not 
@@ -414,18 +412,22 @@ Use time spans to measure latency and identify slow codepaths
 
 **Time series abstraction introductions by netflix**
 
+---
+
 ## Cloud Reports
-Use console tools to visualize analytics collected throughout your project
-Collate and correlate disparate metrics to show related trends
-Set up alert thresholds to page on-call engineers when necessary
-Tools to consider
-    O AWS CloudWatch
-    O GCP Operations Suite
-    O Grafana (self-hosted or managed)
+- Use console tools to visualize analytics collected throughout your project
+- Collate and correlate disparate metrics to show related trends
+- Set up alert thresholds to page on-call engineers when necessary
+- Tools to consider
+    - AWS CloudWatch
+    - GCP Operations Suite
+    - Grafana (self-hosted or managed)
 
 **Stakeholders**
   - Product managers want to know how their product is doing and whether or not 
   - Manager and upper leadership 
+
+---
 
 ## Managing Cloud Resources Idiomatically (IaC)
 - Manually spinning up resources is error-prone and hard to replicate
@@ -434,33 +436,34 @@ Tools to consider
 - New environment? Just give the laC engine new credentials and target
 - Don't make changes in the console; those won't persist in the next deploy
 
+---
 
 ## Classic Infrastructure as Code Tools
-Terraform
-    O Maintained by Hashicorp; they make other powerful tools for enterprise cloud computing
-    O Uses drivers to target multiple cloud providers; requires rewrite if deploying to new provider
-Ansible
-    Open source via RedHat; Python based
-    Uses Playbook to target specific hosts; can be used for cloud or on-prem resources
+- Terraform
+    - Maintained by Hashicorp; they make other powerful tools for enterprise cloud computing
+    - Uses drivers to target multiple cloud providers; requires rewrite if deploying to new provider
+- Ansible
+    - Open source via RedHat; Python based
+    - Uses Playbook to target specific hosts; can be used for cloud or on-prem resources
     - Really good at managing low-level resources
 
+---
 
-Using laC to Improve Developer Quality of
-Chaos Engineering
-O Experiment with system's ability to withstand unexpected conditions
-O Popularized by Netflix; designed to improve end-user experience with resilience O Randomly delete resources in the console; how does the system react?
-O lac tools can be used to restore lost resources, but do users notice a hiccup? Development Pipeline Testing
-O Verify you can recover from a total loss of existing infrastructure
-O How quickly can you get back online? How will you verify data integrity?
 
+## Using laC to Improve Developer Quality of
+- Chaos Engineering
+- Experiment with system's ability to withstand unexpected conditions
+- Popularized by Netflix; designed to improve end-user experience with resilience O Randomly delete resources in the console; how does the system react?
+- lac tools can be used to restore lost resources, but do users notice a hiccup? Development Pipeline Testing
+- Verify you can recover from a total loss of existing infrastructure
+- How quickly can you get back online? How will you verify data integrity?
+
+---
 
 ## Pop Quiz: Imagine a project you're familiar with.
 Describe the process you would use to redesign the system using cloud-native architecture.
 
 - CAP Theorem 
-- 
-
-
 
 **Describe the process of migrating to cloud-native**
 

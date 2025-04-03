@@ -1,3 +1,76 @@
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [VM and Containers](#vm-and-containers)
+  - [What is virtualization?](#what-is-virtualization)
+  - [What are Virtual Machines](#what-are-virtual-machines)
+  - [What are containers?](#what-are-containers)
+    - [VMs vs. Containers: A Comparison](#vms-vs-containers-a-comparison)
+  - [When to Use Each?](#when-to-use-each)
+    - [Final Thought](#final-thought)
+- [Docker](#docker)
+  - [Docker & Best Practices*](#docker--best-practices)
+  - [Best Practices for Docker](#best-practices-for-docker)
+  - [Key Takeaways](#key-takeaways)
+  - [Interview Question: Design a scalable system to handle and store customer input that can be run on any company machine.](#interview-question-design-a-scalable-system-to-handle-and-store-customer-input-that-can-be-run-on-any-company-machine)
+- [Scaling (Growing or Shrinking Resources Automatically)](#scaling-growing-or-shrinking-resources-automatically)
+  - [Compute Bound Services](#compute-bound-services)
+  - [I/O Bound Services](#io-bound-services)
+  - [Choosing the correct methodology](#choosing-the-correct-methodology)
+  - [Optimizing Startup Latency](#optimizing-startup-latency)
+  - [Testing Scaling Systems](#testing-scaling-systems)
+  - [Interview Question](#interview-question)
+- [Stateless & Stateful Programming](#stateless--stateful-programming)
+  - [Stateful Programming](#stateful-programming)
+  - [Stateless Programming](#stateless-programming)
+  - [But what about the cloud?](#but-what-about-the-cloud)
+  - [Interview Question](#interview-question-1)
+- [Cloud Native Primitives](#cloud-native-primitives)
+  - [Data Centers, Availability Zones, and PoPs](#data-centers-availability-zones-and-pops)
+  - [Virtual Machines in the Cloud](#virtual-machines-in-the-cloud)
+  - [Containers in the Cloud](#containers-in-the-cloud)
+  - [Functions in the Cloud](#functions-in-the-cloud)
+  - [Applications in the Cloud](#applications-in-the-cloud)
+  - [Relational Databases in the Cloud](#relational-databases-in-the-cloud)
+  - [Key/Value Datastores in the Cloud](#keyvalue-datastores-in-the-cloud)
+  - [Files/Blobs/Objects in the Cloud](#filesblobsobjects-in-the-cloud)
+  - [API Gateway](#api-gateway)
+  - [Users in the Cloud](#users-in-the-cloud)
+  - [Queues in the Cloud](#queues-in-the-cloud)
+  - [Pub/Sub Methodology](#pubsub-methodology)
+- [5 Key Cloud-Native Primitives](#5-key-cloud-native-primitives)
+  - [1. Containers](#1-containers)
+  - [2. Microservices](#2-microservices)
+  - [3. Serverless Computing](#3-serverless-computing)
+  - [4. Service Mesh](#4-service-mesh)
+  - [5. Auto-Scaling](#5-auto-scaling)
+  - [Key Takeaways:](#key-takeaways-1)
+- [Infrastructure As Code (IaC)](#infrastructure-as-code-iac)
+  - [Managing Cloud Resources Idiomatically](#managing-cloud-resources-idiomatically)
+  - [Managing Cloud Resources Idiomatically](#managing-cloud-resources-idiomatically-1)
+  - [Classic Infrastructure as Code Tools](#classic-infrastructure-as-code-tools)
+  - [Cloud Specific Infrastructure as Code Tools](#cloud-specific-infrastructure-as-code-tools)
+  - [Using IaC to Improve Developer Quality of Life](#using-iac-to-improve-developer-quality-of-life)
+  - [Interview Question](#interview-question-2)
+    - [Proposed Solution: Automation & Self-Service Platform](#proposed-solution-automation--self-service-platform)
+    - [Real-World Examples:](#real-world-examples)
+    - [Key Takeaways:](#key-takeaways-2)
+- [Analytics, Reporting, & Logs](#analytics-reporting--logs)
+  - [Logs](#logs)
+    - [Cloud Logs](#cloud-logs)
+    - [How Logs are Stored](#how-logs-are-stored)
+    - [Log User Activity](#log-user-activity)
+  - [Cloud Analytics](#cloud-analytics)
+    - [Cloud Reports](#cloud-reports)
+    - [Additional Features and Benefits](#additional-features-and-benefits)
+    - [Key Takeaways](#key-takeaways-3)
+
+<!-- /code_chunk_output -->
+
+
+
 # VM and Containers
 
 ---
@@ -17,7 +90,7 @@ A **Virtual Machine (VM)** is an emulation of a physical computer. It runs on a 
 ✔ **Strong isolation** – Each VM runs a separate OS, reducing security risks.  
 ✔ **Supports multiple OSs** – Can run Linux, Windows, or other OSs on the same hardware.  
 ✔ **Good for legacy applications** – Useful for apps that require a full OS environment.  
-✔ **More stable and secure** – Less affected by issues in other VMs.  
+✔ **More stable and secure** – Less affected by issues in other VMs.
 
 **Cons of VMs**
 ❌ **Heavy resource usage** – Each VM requires its own OS, consuming more memory and CPU.  
@@ -59,11 +132,12 @@ A **Container** is a lightweight, standalone executable package that includes ev
     - Base image tends to be OS + language runtime
     - Layers usually copy executables and define startup script
 
-### VMs vs. Containers: A Comparis
+--- 
+
+### VMs vs. Containers: A Comparison
 
 Virtual Machines (VMs) and Containers are both technologies used to package and run applications in isolated environments. However, they differ in architecture, performance, and use cases.
 
----
 
 **Key Takeaways**
 | Feature            | Virtual Machines (VMs) | Containers |
@@ -99,7 +173,6 @@ Virtual Machines (VMs) and Containers are both technologies used to package and 
 
 ---
 
-
 ### Final Thought
 VMs and containers **complement** each other rather than replacing one another. Many organizations use a **hybrid approach**—running containers inside VMs for both isolation and efficiency. If you're starting fresh with cloud-native applications, containers are likely the better choice. However, if security and multi-OS support are priorities, VMs may be the way to go. 🚀
 
@@ -107,8 +180,8 @@ VMs and containers **complement** each other rather than replacing one another. 
 Cloud computing provides **virtual machines (VMs) and containers** to run applications. Instead of buying physical servers, you can rent computing power on-demand.  
 
 💡 **Real-World Example:**  
-- Netflix runs its video streaming services on Amazon Web Services (AWS) using **EC2 instances** (virtual machines).  
-- Developers use **Google Cloud Run** to deploy applications in containers without managing servers.  
+- Netflix runs its video streaming services on Amazon Web Services (AWS) using **EC2 instances** (virtual machines).
+- Developers use **Google Cloud Run** to deploy applications in containers without managing servers.
 
 ✅ **Why it matters?**  
 - **Flexible & scalable**: Get more or fewer servers as needed.  
@@ -116,9 +189,7 @@ Cloud computing provides **virtual machines (VMs) and containers** to run applic
 
 ---
 
----
-
-## Docker
+# Docker
 
 ## Docker & Best Practices*
 
@@ -131,7 +202,7 @@ Docker is an open-source platform that enables developers to automate the deploy
 **How Docker Works**  
 Docker uses **containerization**, which packages applications and their dependencies together in an isolated unit. Unlike virtual machines (VMs), containers **share the host OS kernel**, making them **more efficient and faster to start**.  
 
-- **Docker Engine**: Runs and manages containers.  
+- **Docker Engine**: Runs and manages containers.
 - **Docker Images**: Blueprint for containers (includes OS, application, and dependencies).  
 - **Docker Containers**: Instances of images that run applications.  
 - **Docker Compose**: Defines multi-container applications with YAML.  
@@ -238,7 +309,7 @@ For production environments, manage containers with **orchestration tools** like
 
 ---
 
-## Key Takeawa
+## Key Takeaways
 ✅ **Keep images small** (use minimal base images, multi-stage builds).  
 ✅ **Run as a non-root user** to enhance security.  
 ✅ **Use health checks** to ensure application uptime.  
@@ -246,7 +317,7 @@ For production environments, manage containers with **orchestration tools** like
 ✅ **Limit CPU and memory usage** to avoid resource exhaustion.  
 ✅ **Use orchestration tools** for production scaling.  
 
-By following these best practices, you’ll have **secure, efficient, and scalable** Docker containers that are easier to manage in production. 🚀
+By following these best practices, you’ll have **secure, efficient, and scalable** Docker containers that are easier to manage in production.
 
 ---
 
@@ -259,6 +330,8 @@ By following these best practices, you’ll have **secure, efficient, and scalab
 ---
 
 # Scaling (Growing or Shrinking Resources Automatically)
+
+---
 
 ## Compute Bound Services
 
@@ -356,7 +429,6 @@ A small company’s service API just went viral. Suddenly it’s receiving 10x t
 - A stateful system has memory of past events
 - In-RAM caching can be a powerful tool, especially when bundled with session stickiness
 
-
 ![alt text](image.png)
 
 ---
@@ -383,7 +455,7 @@ A small company’s service API just went viral. Suddenly it’s receiving 10x t
 - Consider “Chaos Engineering” where services are randomly shut off to test
     - How should the system behave? How does stateless programming help here?
 
-** Is this serverless?
+**Is this serverless?**
 
 - Serverless architecture is a common buzzword
     - In general, these are cloud-native solutions that don’t use traditional instance counts
@@ -398,6 +470,7 @@ AWS Lambda Functions can be invoked to process requests meaning there is no serv
 
 ![alt text](image-2.png)
 
+---
 
 ## Interview Question 
 
@@ -405,6 +478,7 @@ You are asked to improve a company’s current architecture. They noticed when a
 
 # Cloud Native Primitives 
 
+---
 
 ## Data Centers, Availability Zones, and PoPs
 
@@ -419,6 +493,8 @@ You are asked to improve a company’s current architecture. They noticed when a
 **Point of Presence (PoP)**
 - Usually leased hardware in a third-party datacenter used to decrease latency to local users
 - Generally this is a term used by cloud consumers; cloud providers focus on DCs and AZs
+
+--- 
 
 ## Virtual Machines in the Cloud
 
@@ -481,7 +557,7 @@ You are asked to improve a company’s current architecture. They noticed when a
 
 - Harder to query, but much easier to scale and much lower cost
     - AWS: DynamoDB
-    - GCP: Cloud Firestore (originally Firebase)
+    - GCP: Cloud Fire-store (originally Firebase)
 - If you usually do “lookup by ID(s)”, strongly consider a K/V Store
     - K/V engine uses key to lookup correct “shard” for data
     - Shards are easy to scale, and can be cached and distributed across many availability zones
@@ -709,9 +785,17 @@ One effective solution is to **automate resource provisioning** using Infrastruc
 
 By implementing these strategies, the company can significantly reduce the time spent on resource provisioning, allowing developers to focus more on building new features and innovating.
 
+---
+
 # Analytics, Reporting, & Logs
 
-## Cloud Logs
+---
+
+## Logs 
+
+---
+
+### Cloud Logs
 
 - Usually quickest and easiest way to find root cause of problems
     - Ensure your logs are helpful! You should be able to tell where the issue is coming from
@@ -720,11 +804,11 @@ By implementing these strategies, the company can significantly reduce the time 
     - This is useful for seeing frequency of issues and verifying fixes
     - Acknowledge issues you’ve decided to tackle; close them when they’re fixed
     - Not all errors need to be fixed immediately; consider user impact and engineering time
-    - Log Level Hierarchy: TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+- **Log Level Hierarchy: TRACE, DEBUG, INFO, WARN, ERROR, FATAL**
 
 ---
 
-## How Logs are Stored
+### How Logs are Stored
 
 - Usually only the last hour of logs are stored on the machine itself (if you’re not using serverless)
 - Some type of log mover usually called a LogPusher will move the logs off the machine, compress them and store into a separate long term data store
@@ -732,7 +816,7 @@ By implementing these strategies, the company can significantly reduce the time 
 
 ---
 
-## Log User Activity 
+### Log User Activity 
 
 - In addition to logging data and metrics from a running service, it is also important to log user activity within a cloud account
 - This can be done with AWS CloudTrail or GCP Cloud Audit Logs
@@ -752,7 +836,7 @@ By implementing these strategies, the company can significantly reduce the time 
 
 -- 
 
-## Cloud Reports
+### Cloud Reports
 
 - Use console tools to visualize analytics collected throughout your project
 - Collate and correlate disparate metrics to show related trends
@@ -802,12 +886,12 @@ By implementing these strategies, the company can significantly reduce the time 
 
 ---
 
-- **Integration with Incident Response & Automation:**  
+- **Integration with Incident Response & Automation:** 
   - **What it is:** Coupling logs and analytics with automated workflows for incident response.  
   - **Benefits:**  
     - Automatically triggers alerts, sends notifications, or even initiates remediation workflows when certain thresholds are exceeded.  
     - Streamlines the process of troubleshooting and resolving issues.  
-  - **Real-World Example:** Using PagerDuty integrated with CloudWatch to automatically notify on-call engineers when error rates spike.
+  - **Real-World Example:** Using **PagerDuty** integrated with CloudWatch to automatically notify on-call engineers when error rates spike.
 
 ---
 
