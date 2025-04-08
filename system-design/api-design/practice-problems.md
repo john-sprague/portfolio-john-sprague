@@ -22,12 +22,25 @@
 - [Coding Problem 2: Write an API endpoint that only accepts requests if the user send basic auth](#coding-problem-2-write-an-api-endpoint-that-only-accepts-requests-if-the-user-send-basic-auth)
 - [Coding question 3: Write tests to cover the previously written endpoints](#coding-question-3-write-tests-to-cover-the-previously-written-endpoints)
 - [Practice Problem 2](#practice-problem-2)
-    - [1. Marketplace](#1-marketplace)
-    - [2. Playlists](#2-playlists)
-    - [3. Homeworks](#3-homeworks)
     - [How to Check Access](#how-to-check-access)
     - [Testing the Endpoints:](#testing-the-endpoints)
     - [Key Implementation Notes:](#key-implementation-notes)
+- [Practice Problem 3:](#practice-problem-3)
+- [Practice Problem 3: Safeguards against SQL Injections](#practice-problem-3-safeguards-against-sql-injections)
+- [Preventing SQL Injection When Inserting Multiple Items](#preventing-sql-injection-when-inserting-multiple-items)
+  - [1. Parameterized Queries (Best Approach)](#1-parameterized-queries-best-approach)
+  - [2. Using a Transaction with Prepared Statements](#2-using-a-transaction-with-prepared-statements)
+  - [3. Using an ORM (Sequelize Example)](#3-using-an-orm-sequelize-example)
+  - [4. Additional Safety Measures](#4-additional-safety-measures)
+  - [Key Principles to Remember:](#key-principles-to-remember)
+- [Practice Problem 5: Incremental responses and WebSockets](#practice-problem-5-incremental-responses-and-websockets)
+    - [**A) Why are incremental responses useful?**](#a-why-are-incremental-responses-useful)
+    - [**B) WebSocket-Based Collaborative Counter**](#b-websocket-based-collaborative-counter)
+      - [**Backend (Node.js + WebSocket)**](#backend-nodejs--websocket)
+      - [**Frontend (HTML + JavaScript)**](#frontend-html--javascript)
+      - [**How It Works**](#how-it-works)
+      - [**Testing**](#testing)
+      - [**Key Concepts**](#key-concepts)
 
 <!-- /code_chunk_output -->
 
@@ -337,6 +350,33 @@ app.listen(PORT, () => {
 
 # Coding Problem 2: Write an API endpoint that only accepts requests if the user send basic auth 
 
+
+```javascript
+const express = require('express')
+const app = express(); 
+const basicAuth = require('basic-auth');
+
+// middleware to check credentials 
+
+const USER_NAME = 'test'; 
+const PASSWORD = 'password'; 
+
+app.get('/test', async (req, res) => {
+  const {userName, password } = basicAuth(req); 
+  
+
+  if (userName !== USER_NAME || password !== PASSWORD) {
+    res.set('WWW-Authenticate', 'Basic realm="Authentication Required"');
+    return res.status(401).json({error: 'unauthorized', message: 'credentials are not valid' })
+  } 
+
+  res.json({message: 'successfully authenticated', data: '..'})
+})
+
+```
+
+
+
   Write an API endpoint that only accepts requests if the user sends a basic auth.
 
   Authorization header with a hardcoded username and password. Return a 401 error if it’s invalid or a 400 if it’s using HTTP instead of HTTPS.
@@ -398,6 +438,10 @@ app.listen(PORT, () => {
 3. GET /params: returns a JSON with the query params of the request
 4. GET /me: returns status 401 if the auth is invalid, 400 if using
 5. HTTP, or 200 if the username and password are valid
+adam melli8sa 
+
+4178488877
+
 
 ```javascript 
 const request = require('supertest');
@@ -1247,3 +1291,33 @@ console.log('WebSocket server running on ws://localhost:8080');
 - **WebSockets** enable full-duplex communication (unlike HTTP).  
 - **Real-time sync** avoids polling (no `setInterval` checks).  
 - **No SQL Injection Risk** (no raw queries, just in-memory `count`).  
+
+
+Never Sink Farm Subversive Paper Pot Transplanter - Price $300
+	◦	Paperchain pots - I think it's the 4" or 6" cell 25 pack retails for $100
+	◦	1 x Spreader frame
+	◦	1 x Pair of Opening Rods
+
+Kwik Klick for paperpot system with accessories - paid $846 - Price $350 
+	◦	Kwik Klik Frame - paid $450
+	◦	The bottom plate - paid $99
+	◦	Top plates x 3  $99 each - paid $297
+    	◦	3mm x 3mm
+      ◦	3mm x 5mm
+    	◦	1.5mm x 2.5mm 
+
+Paperpot dibbler - paid $229 - Price $50
+
+Farmers friend classic caterpillar tunnel 16’x100’ 5ft spacing - Price $1100
+	◦	Tunnel paid - paid $3472
+	◦	Wind bracing - paid $130
+	◦	One single zipper end wall ($312)
+  ◦	Needs new plastic and fabric perlin strap that runs down the middle
+    ◦	I'd recommend to upgrade to the Steel Center Purlin for better wind support. 
+
+
+
+
+
+  
+
