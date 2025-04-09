@@ -1,0 +1,18 @@
+{
+    "family": "my-nginx-task",
+    "containerDefinitions": [
+      {
+        "name": "my-nginx-webserver",
+        "image": "937590957145.dkr.ecr.us-east-1.amazonaws.com/my-nginx-webserver",
+        "memory": 512,
+        "cpu": 256,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 80,
+            "hostPort": 80
+          }
+        ]
+      }
+    ]
+}
