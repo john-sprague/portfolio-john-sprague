@@ -125,11 +125,11 @@ Fantastic! Below is a **30-Day Reality Hacking Challenge**—a blend of **neuros
 
 ### **🌌 Week 1: Rewiring the Subconscious**  
 **Focus:** **Clearing mental blocks + installing new beliefs.**  
-
+Every conversation I have is meaningful and energizing.
 #### **Daily Practices:**  
 ✅ **Morning Mantra (5 min)**  
    - Repeat your chosen phrase (e.g., *"I am the architect of my quantum reality"*) with **strong emotion**.  
-   - *Science:* Emotional repetition strengthens neural pathways (*neuroplasticity*).  
+   - *Science:* Emotional repetition strengthens neural pathways (*neuroplasticity*).
 
 ✅ **Evening Visualization (10 min)**  
    - Close your eyes and **immerse yourself** in a scene where your hack is already true. Engage all 5 senses.  
