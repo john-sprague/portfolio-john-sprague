@@ -25,7 +25,7 @@ If you're exploring how **thoughts, words, and beliefs influence reality**, here
 
 ### **Your Idea in a Nutshell:**  
 - **Microtubules** (in the brain) + **conscious intent** → Shaping perceived reality?  
-  - This aligns with **Roger Penrose & Stuart Hameroff’s "Orchestrated Objective Reduction" (Orch-OR)** theory, linking quantum processes in microtubules to consciousness.  
+  - This aligns with **Roger Penrose & Stuart Hameroff’s "Orchestrated Objective Reduction" (Orch-OR)** theory, linking quantum processes in micro-tubules to consciousness.  
 - **Linguistic Manifestation** (like your phrase) echoes **"speaking things into existence"** in mysticism and modern psychology.  
 
 Would you like deeper dives into any of these directions? For example:  

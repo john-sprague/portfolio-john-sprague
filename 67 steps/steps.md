@@ -4,7 +4,7 @@
 
 - "There is nothing either good or bad, but thinking makes it so" ~ Shakespeare 
 
-- "Whatever doesn't kill us makes us stronger" ~ Nietzsche
+- "Whatever doesn't kill you **CAN** makes us stronger" ~ Nietzsche
     - Have things that goes wrong because it will make you stronger
 
 - you got breath, you got hope
@@ -61,12 +61,11 @@
     if it was easy to go to the gym, how big would the reward be? 
     What if I was instantly at the gym, and what if I looked good in the gym, and all the girls were looking at me, and everything would go smooth, then would I continue to go to the gym? 
 
-
 - **Limiting beliefs:** Be careful of inaccurate beliefs in things, for example having a college degree get's you respect. 
+
 - **Humans need to be social:** The brain will go bonkers if disconnected from social settings.
 
 **Questions to ask myself:**
-
 - What if I know how to only meet the best people, and completely screen out all the worst people? What would my life look like? 
 - How would I live if I get out of this situation? 
 - I had a terrible upbringing, What if I didn't let that affect me negatively? 
@@ -106,3 +105,49 @@ What's a simple method to know what's true in the world? How do we find truth.
         - We don't have the teeth or the digestive tract to be either. 
     
 
+Worry means suffering twice 
+
+Projecting fears into the future ---- where's cataphosziation --- 
+
+Challenging negative thought 6 questions - take your thought - 
+
+Best outcome...
+Worst outcome... 
+most likely...
+
+Will it matter in a week - 
+Will it matter in a month - 
+Will it matter in a year -
+Will it matter in 5 years -
+
+The best thing I can do is provide love and support - provide a voice of reason and rationality. Be there for emotional capacity - it will be difficult for sure - but people come through situation like this and they thrive. 
+
+She won't believe what she doesn't want to believe.
+
+Keep in mind, this is a tempery place - your anger and bitterness can turn into long lasting - but that's your choice. 
+
+A prophet is never respected in his home town
+
+Resialcy theory - Think of working out - growing in confidence and capable of moving through this and learning from it as well. 
+
+Need a support structure around you - you can do this and when you come out the other side, you will thrive. 
+
+What is she going to learn from - 
+
+Gisthault theory - 
+
+It's not about what happens, it's about how we deal with the circumstances. 
+
+I want to anticipate what will go wrong and prepare. 
+
+I don't want to be responsibilities... 
+
+Can't force people to accept ideas that --- 
+
+failing often - making mistakes --- everyone goes through this and get's better
+
+We're always choosing - the worst possible thing is for something to be her fault --- things happen to us but we don't do them... It's a lot easier to believe that because it's not my fault.
+
+Events do happen - but what do I do after the accident - 
+
+--- aMCC --- 
