@@ -448,3 +448,96 @@ Test Engineering
 
 SRE (Infrastructure, Cloud, DevOps)
 ![alt text](.images/image-4.png)
+
+# Foundations Review Class
+
+![Understanding Behavioral Interviews](image.png)
+
+- Negative questions - Am I self-aware of my weakness and am i'm improving on that weakness 
+    - Failures are almost given, fail and fail fast. We take the learning from the failures and take that as leverage for my next opportunity. 
+    - Even if I failed, what I'm I doing to make sure this failure doesn't happen again. 
+    - What guardrails am I putting up so that it doesn't happen again
+
+![alt text](image-1.png)
+
+- point-in-time question
+    - Think about all the details of the answer
+    - Interviewers will poke holes in the answer. They will need to know if I'm making it up.
+        - What the problem was, what actions you toke, and if it was solved. 
+- Difficult problem and how to solve it - Choose examples that are difficult. If it's a small debugging problem, that's not really difficult. 
+    - Dig withing my experience and where I managed the difficulty and articulate what that difficulty and complexity. 
+- Teamwork/leadership - Can sometimes be coaching, mentoring, stepping up and helping someone 
+- Communication 
+    - Verbal and written 
+- Adaptability 
+    - How do I deal with ambiguity/ how do I adopt. 
+- Achievement oriented 
+    - If you have a conflict with someone, can you still work with that person? 
+    - PM, manager, different team 
+
+![alt text](image-2.png)
+
+- Get insights from the recruiter 
+- Do my own research - there's a lot of people that have gone through the same interviews. 
+- Hire fungable developers and place them on the correct team that can use their skill sets. 
+
+![alt text](image-3.png)
+- Very much aligned with how the recruiter is feeling for the day 
+    - Stars have to align but at the end of the day, preparation is the most important 
+
+
+![alt text](image-4.png)
+- **Think of situation as a trailer to a story.**
+- **Make sure I mention the challenges** - Short teammates because of leave or vacation. 
+- Results to need to realated to the challenges, in fact 
+
+![alt text](image-5.png)
+- Really take the time to do a brain dump of all your experience. It's so hard to recall all the specific details --- 
+- Be prepared to answer questions that I did not prepare for. This is the reason whey a **brain dump** will come in handy. Even though I didn't prepare for a question, I can start thinking about the those situations from the brain dump. 
+    - Think about all the major projects i've done, what are the metrics, the accomplishments, write it down, so it's fresh in my brain, I can fallback to an example.
+    - Don't always go back to the same experience. 
+
+![alt text](image-6.png)
+
+- How can I make sure there's is recall, that the interview remembers be. 
+- 
+
+![alt text](image-7.png)
+
+![alt text](image-8.png)
+
+- Ask questions, especially when the ask for questions 
+    - Prepare thoughtful questions 
+    - Gives insights to my personality and what I do to prepare for the interview
+
+Transferable skills 
+
+- Started my own business - even if it's not in tech --- There's so many things I'm going to learn as an entrepreneur
+    - They really want me to own my career --- in and out of scope 
+    - It was a passion of mine 
+- Be authentic - during this time I felt strong about the community and building the business - I got it to where it was now and now i'm going back to
+- Pick the right things to say and highlight the right things to say. 
+- Write a very completing ane robust, experience, trajectory and journey, why I started in tech --- and why I started building community and sustainable agriculture - I wanted to help people directly in my community 
+    - Talked about how I help other farms get online.
+    - Really sold his story - Really took my step to do it in a different area. 
+- 
+
+
+![alt text](image-9.png)
+
+- Only talk about relevant answers - as it relates to the work and the workplace. Don't talk about an experience at church. 
+
+![alt text](image-10.png)
+- Ask clarifyying question 
+
+
+
+**Make sure I answer the question correctly**
+
+Pick the right example that will answer the question
+
+- **Example:** tell me about a time you were able to deliver the project on a tight deadline 
+    - Deliver results 
+    - 
+
+**Example:** Tell me a time when you were assigned a project and you had to learn from it
