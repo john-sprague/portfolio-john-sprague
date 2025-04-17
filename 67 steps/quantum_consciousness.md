@@ -25,7 +25,7 @@ If you're exploring how **thoughts, words, and beliefs influence reality**, here
 
 ### **Your Idea in a Nutshell:**  
 - **Microtubules** (in the brain) + **conscious intent** → Shaping perceived reality?  
-  - This aligns with **Roger Penrose & Stuart Hameroff’s "Orchestrated Objective Reduction" (Orch-OR)** theory, linking quantum processes in microtubules to consciousness.  
+  - This aligns with **Roger Penrose & Stuart Hameroff’s "Orchestrated Objective Reduction" (Orch-OR)** theory, linking quantum processes in micro-tubules to consciousness.  
 - **Linguistic Manifestation** (like your phrase) echoes **"speaking things into existence"** in mysticism and modern psychology.  
 
 Would you like deeper dives into any of these directions? For example:  
@@ -125,11 +125,11 @@ Fantastic! Below is a **30-Day Reality Hacking Challenge**—a blend of **neuros
 
 ### **🌌 Week 1: Rewiring the Subconscious**  
 **Focus:** **Clearing mental blocks + installing new beliefs.**  
-
+Every conversation I have is meaningful and energizing.
 #### **Daily Practices:**  
 ✅ **Morning Mantra (5 min)**  
    - Repeat your chosen phrase (e.g., *"I am the architect of my quantum reality"*) with **strong emotion**.  
-   - *Science:* Emotional repetition strengthens neural pathways (*neuroplasticity*).  
+   - *Science:* Emotional repetition strengthens neural pathways (*neuroplasticity*).
 
 ✅ **Evening Visualization (10 min)**  
    - Close your eyes and **immerse yourself** in a scene where your hack is already true. Engage all 5 senses.  
